@@ -11,14 +11,11 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-<!-- MIDTRANS SNAP JS (PRODUCTION) -->
-<script src="https://app.midtrans.com/snap/snap.js" data-client-key="Mid-client-9M_SaFxGpxkqIh1J"></script>
+  <!-- MIDTRANS SNAP JS (PRODUCTION) -->
+  <script src="https://app.midtrans.com/snap/snap.js" data-client-key="Mid-client-9M_SaFxGpxkqIh1J"></script>
+  
   <style>
-
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap');
-
-
-    
     * { -webkit-tap-highlight-color: transparent; touch-action: manipulation; box-sizing: border-box; }
     html, body { width: 100%; height: 100%; margin: 0; padding: 0; overflow-x: hidden; font-family: 'Plus Jakarta Sans', sans-serif; background-color: #ffffff; }
     .active-cat { border: 2px solid #1e293b !important; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12); }
@@ -26,7 +23,6 @@
     ::-webkit-scrollbar { display: none; }
     @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
     .animate-slide-up { animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-    
     @media print {
       body * { visibility: hidden; }
       #print-receipt-area, #print-receipt-area * { visibility: visible; }
@@ -111,7 +107,7 @@
 
     <!-- KATALOG -->
     <div id="view-toko">
-      <div class="px-5 mb-4"><div class="bg-[#c8f537] rounded-3xl p-5 flex justify-between items-center shadow-sm relative overflow-hidden border border-[#b8e826]"><div class="z-10"><span class="bg-[#ff4500] text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider inline-block mb-1 shadow-sm">DISKON DESA</span><h2 class="text-2xl font-black text-slate-900 leading-tight">Mulai Belanja</h2><p class="text-xs text-slate-700 font-semibold mt-0.5">Antar Cepat Sampai Rumah</p></div><div class="text-orange-500 text-5xl pr-1 z-10 drop-shadow-sm"><i class="fa-solid fa-basket-shopping"></i></div></div></div>
+      <div class="px-5 mb-4"><div class="bg-[#c8f537] rounded-3xl p-5 flex justify-between items-center shadow-sm relative overflow-hidden border border-[#b8e826]"><div class="z-10"><span class="bg-[#ff4500] text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider inline-block mb-1 shadow-sm">DISKON DESA</span><h2 class="text-2xl font-black text-slate-900 leading-tight">Mulai Belanja</h2><p class="text-xs text-slate-700 font-semibold mt-0.5">Antار Cepat Sampai Rumah</p></div><div class="text-orange-500 text-5xl pr-1 z-10 drop-shadow-sm"><i class="fa-solid fa-basket-shopping"></i></div></div></div>
       <div class="px-5 mb-5"><div class="relative flex items-center"><i class="fa-solid fa-magnifying-glass absolute left-4 text-gray-400 text-sm"></i><input type="text" id="search-input" oninput="filterProducts()" placeholder="Cari makanan, minuman..." class="w-full bg-white rounded-2xl py-4 pl-11 pr-4 text-xs text-slate-800 placeholder-gray-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-400 transition-all font-medium"></div></div>
       <div class="px-5 mb-5"><h3 class="text-[11px] font-black uppercase text-slate-900 tracking-wider mb-3">KATEGORI</h3><div class="grid grid-cols-4 gap-2.5"><button type="button" onclick="selectCategory('Semua')" id="cat-Semua" class="category-btn active-cat bg-white rounded-2xl py-3 px-1 flex flex-col items-center justify-center shadow-sm border-2 border-transparent transition-all active:scale-95"><div class="w-10 h-10 rounded-full bg-orange-100 text-orange-500 flex items-center justify-center mb-1 text-base"><i class="fa-solid fa-border-all"></i></div><span class="text-[11px] font-bold text-slate-800">Semua</span></button><button type="button" onclick="selectCategory('Makanan')" id="cat-Makanan" class="category-btn bg-white rounded-2xl py-3 px-1 flex flex-col items-center justify-center shadow-sm border-2 border-transparent transition-all active:scale-95"><div class="w-10 h-10 rounded-full bg-orange-100 text-orange-500 flex items-center justify-center mb-1 text-base"><i class="fa-solid fa-burger"></i></div><span class="text-[11px] font-bold text-slate-800">Makanan</span></button><button type="button" onclick="selectCategory('Minuman')" id="cat-Minuman" class="category-btn bg-white rounded-2xl py-3 px-1 flex flex-col items-center justify-center shadow-sm border-2 border-transparent transition-all active:scale-95"><div class="w-10 h-10 rounded-full bg-orange-100 text-orange-500 flex items-center justify-center mb-1 text-base"><i class="fa-solid fa-glass-water"></i></div><span class="text-[11px] font-bold text-slate-800">Minuman</span></button><button type="button" onclick="selectCategory('Lainnya')" id="cat-Lainnya" class="category-btn bg-white rounded-2xl py-3 px-1 flex flex-col items-center justify-center shadow-sm border-2 border-transparent transition-all active:scale-95"><div class="w-10 h-10 rounded-full bg-orange-100 text-orange-500 flex items-center justify-center mb-1 text-base"><i class="fa-solid fa-ellipsis"></i></div><span class="text-[11px] font-bold text-slate-800">Lainnya</span></button></div></div>
       <div class="px-5 mb-6"><h3 class="text-[11px] font-black uppercase text-slate-900 tracking-wider mb-3">DAFTAR PRODUK</h3><div id="product-container" class="space-y-3"></div></div>
@@ -216,24 +212,25 @@
 
   <script>
     // --- KONFIGURASI API GOOGLE APPS SCRIPT ---
-var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyvSIUlQzYYvWy916YAz32DyoZHV2wYbYfuCTG0HE_iP2EDKSfgEF32G1oitfA4NxmPBA/exec"; // Ganti dengan URL /exec Anda
+    var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyvSIUlQzYYvWy916YAz32DyoZHV2wYbYfuCTG0HE_iP2EDKSfgEF32G1oitfA4NxmPBA/exec";
 
-function callApiGet(action, params = {}) {
-  var url = SCRIPT_URL + "?action=" + action;
-  for (var key in params) {
-    url += "&" + key + "=" + encodeURIComponent(params[key]);
-  }
-  return fetch(url).then(res => res.json());
-}
+    function callApiGet(action, params = {}) {
+      var url = SCRIPT_URL + "?action=" + action;
+      for (var key in params) {
+        url += "&" + key + "=" + encodeURIComponent(params[key]);
+      }
+      return fetch(url).then(res => res.json());
+    }
 
-function callApiPost(action, data = {}) {
-  data.action = action;
-  return fetch(SCRIPT_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify(data)
-  }).then(res => res.json());
-}
+    function callApiPost(action, data = {}) {
+      data.action = action;
+      return fetch(SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(data)
+      }).then(res => res.json());
+    }
+
     // --- KONFIGURASI MODEL B & TOKO ---
     var MIN_DIST_KM = 2; 
     var MIN_FEE = 5000; 
@@ -329,7 +326,7 @@ function callApiPost(action, data = {}) {
       openMainApp("🛒 Jelajah Produk");
     }
 
-function registerCustomer() {
+    function registerCustomer() {
       var name = document.getElementById('reg-name').value.trim();
       var phone = document.getElementById('reg-phone').value.trim();
       var address = document.getElementById('reg-address').value.trim();
@@ -341,18 +338,13 @@ function registerCustomer() {
       
       currentUser = { name: name, phone: phone, address: address, role: 'customer' };
       
-      // Simpan di perangkat konsumen
       safeStorage.setItem('app_customer_data', JSON.stringify(currentUser));
       safeStorage.setItem('app_active_session', JSON.stringify(currentUser));
 
-      // --- KIRIM DATA PENDAFTARAN LANGSUNG KE GOOGLE SHEETS ---
-      if (typeof google !== 'undefined' && google.script && google.script.run) {
-        google.script.run
-          .withSuccessHandler(function(res) {
-            console.log("Data pelanggan berhasil masuk sheet:", res);
-          })
-          .registerCustomerToSheet(currentUser);
-      }
+      // Kirim data pelanggan via API POST ke Google Sheet
+      callApiPost('registerCustomer', { customer: currentUser })
+        .then(res => { console.log("Data pelanggan berhasil masuk sheet:", res); })
+        .catch(err => { console.error("Gagal sinkron pelanggan:", err); });
 
       openMainApp("👤 " + currentUser.name);
       showToast("Pendaftaran berhasil disimpan!");
@@ -397,11 +389,9 @@ function registerCustomer() {
     }
 
     function checkStoreStatus() {
-      if (typeof google !== 'undefined' && google.script && google.script.run) {
-        google.script.run.withSuccessHandler(function(status) { applyStoreStatus(status || "BUKA"); }).getStoreStatusFromSheet();
-      } else {
-        applyStoreStatus(safeStorage.getItem('app_store_status') || "BUKA");
-      }
+      callApiGet('getStoreStatus')
+        .then(status => { applyStoreStatus(status || "BUKA"); })
+        .catch(err => { applyStoreStatus(safeStorage.getItem('app_store_status') || "BUKA"); });
     }
 
     function applyStoreStatus(status) {
@@ -423,11 +413,10 @@ function registerCustomer() {
       var newStatus = (storeStatus === "BUKA") ? "TUTUP" : "BUKA";
       applyStoreStatus(newStatus);
       safeStorage.setItem('app_store_status', newStatus);
-      if (typeof google !== 'undefined' && google.script && google.script.run) { google.script.run.saveStoreStatusToSheet(newStatus); }
+      callApiPost('saveStoreStatus', { status: newStatus });
       showToast("Status toko diubah ke: " + newStatus);
     }
 
-    // --- KALKULASI ONGKIR AKURAT OSRM (MODEL B) ---
     function getGPSLocation() {
       var statusText = document.getElementById('gps-status');
       if (navigator.geolocation) {
@@ -451,7 +440,6 @@ function registerCustomer() {
             updateCartUI();
             statusText.innerHTML = '<span class="text-emerald-600 font-bold"><i class="fa-solid fa-circle-check mr-1"></i> Rute jalan ditemukan!</span>';
           }).catch(err => {
-             // Fallback Haversine
              var R = 6371; var dLat = (currentCoords.lat - STORE_COORDS.lat) * Math.PI / 180; var dLng = (currentCoords.lng - STORE_COORDS.lng) * Math.PI / 180;
              var a = Math.sin(dLat/2)*Math.sin(dLat/2) + Math.cos(STORE_COORDS.lat*Math.PI/180)*Math.cos(currentCoords.lat*Math.PI/180)*Math.sin(dLng/2)*Math.sin(dLng/2);
              currentDistance = R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
@@ -465,15 +453,15 @@ function registerCustomer() {
     }
 
     function initApp() {
-      if (typeof google !== 'undefined' && google.script && google.script.run) {
-        google.script.run.withSuccessHandler(function(data) {
+      callApiGet('getProducts')
+        .then(data => {
           allProducts = (data && data.length > 0) ? data : mockDataDefault;
           renderProducts();
-        }).getProductsFromSheet();
-      } else {
-        allProducts = mockDataDefault;
-        renderProducts();
-      }
+        })
+        .catch(err => {
+          allProducts = mockDataDefault;
+          renderProducts();
+        });
     }
 
     var mockDataDefault = [
@@ -569,9 +557,7 @@ function registerCustomer() {
       if (courierWatchId) navigator.geolocation.clearWatch(courierWatchId);
       courierWatchId = navigator.geolocation.watchPosition(function(pos) {
         var cLat = pos.coords.latitude, cLng = pos.coords.longitude;
-        if (typeof google !== 'undefined' && google.script && google.script.run) {
-          google.script.run.updateCourierLocationInSheet(invId, cLat, cLng);
-        } else { safeStorage.setItem('gps_courier_' + invId, JSON.stringify({ lat: cLat, lng: cLng })); }
+        callApiPost('updateCourierLocation', { invoiceId: invId, lat: cLat, lng: cLng });
       }, function(err) {}, { enableHighAccuracy: true, maximumAge: 0, timeout: 5000 });
     }
 
@@ -579,8 +565,8 @@ function registerCustomer() {
       var container = document.getElementById('order-history-container'), isAdmin = currentUser && currentUser.role === 'admin';
       document.getElementById('status-tab-title').innerText = isAdmin ? "PANEL ADMIN/KURIR: DAFTAR PESANAN" : "RIWAYAT & STATUS PESANAN SAYA";
 
-      if (typeof google !== 'undefined' && google.script && google.script.run) {
-        google.script.run.withSuccessHandler(function(ordersFromSheet) {
+      callApiGet('getOrders')
+        .then(ordersFromSheet => {
           var orders = ordersFromSheet || []; rawOrdersList = orders;
           if (isAdmin) updateAdminDashboard(orders);
           if (!isAdmin && currentUser) { orders = orders.filter(function(o) { return o.name === currentUser.name; }); }
@@ -592,14 +578,14 @@ function registerCustomer() {
             }
           }
           displayOrderCards(container, orders, isAdmin);
-        }).getOrdersFromSheet();
-      } else {
-        var orders = JSON.parse(safeStorage.getItem('app_order_history') || '[]');
-        rawOrdersList = orders;
-        if (isAdmin) updateAdminDashboard(orders);
-        if (!isAdmin && currentUser) { orders = orders.filter(function(o) { return o.name === currentUser.name; }); }
-        displayOrderCards(container, orders, isAdmin);
-      }
+        })
+        .catch(err => {
+          var orders = JSON.parse(safeStorage.getItem('app_order_history') || '[]');
+          rawOrdersList = orders;
+          if (isAdmin) updateAdminDashboard(orders);
+          if (!isAdmin && currentUser) { orders = orders.filter(function(o) { return o.name === currentUser.name; }); }
+          displayOrderCards(container, orders, isAdmin);
+        });
     }
 
     function updateAdminDashboard(orders) {
@@ -662,9 +648,11 @@ function registerCustomer() {
     function triggerPrintProcess() { window.print(); }
 
     function updateOrderStatus(invoiceId, newStatus) {
-      if (typeof google !== 'undefined' && google.script && google.script.run) {
-        google.script.run.withSuccessHandler(function() { showToast("Status " + invoiceId + " diubah!"); renderOrderStatus(); }).updateOrderStatusInSheet(invoiceId, newStatus);
-      } else { showToast("Status diubah ke '" + newStatus + "'"); renderOrderStatus(); }
+      callApiPost('updateOrderStatus', { invoiceId: invoiceId, newStatus: newStatus })
+        .then(() => {
+          showToast("Status " + invoiceId + " diubah!");
+          renderOrderStatus();
+        });
     }
 
     function startBackgroundNotifier() {
@@ -674,8 +662,8 @@ function registerCustomer() {
 
     function checkAdminNewOrders() {
       if (currentUser && currentUser.role === 'admin') {
-        if (typeof google !== 'undefined' && google.script && google.script.run) {
-          google.script.run.withSuccessHandler(function(orders) {
+        callApiGet('getOrders')
+          .then(orders => {
             var pendingOrders = (orders || []).filter(function(o) { return o.status === 'Menunggu ACC'; });
             document.getElementById('admin-badge-count').innerText = pendingOrders.length + " PESANAN BARU";
             document.getElementById('admin-badge-count').classList.toggle('hidden', pendingOrders.length === 0);
@@ -684,8 +672,7 @@ function registerCustomer() {
               if (orders.length > knownOrderCount && knownOrderCount !== 0) { playNotificationSound(); showToast("🔔 Ada pesanan baru masuk!", false); }
               knownOrderCount = orders.length; renderOrderStatus();
             }
-          }).getOrdersFromSheet();
-        }
+          });
       }
     }
 
@@ -699,7 +686,7 @@ function registerCustomer() {
       } catch(e) {}
     }
 
-  function sendToWhatsApp() {
+    function sendToWhatsApp() {
       if (storeStatus === "TUTUP" && (!currentUser || currentUser.role !== 'admin')) { 
         alert("Maaf, toko sedang TUTUP."); 
         return; 
@@ -747,14 +734,13 @@ function registerCustomer() {
         notes: notes 
       };
 
-      // Minta Token Snap ke Google Apps Script / Midtrans
-      if (typeof google !== 'undefined' && google.script && google.script.run) {
-        google.script.run.withSuccessHandler(function(token) {
+      // Minta Token Snap Midtrans via API POST
+      callApiPost('getMidtransSnapToken', { orderData: newOrder })
+        .then(token => {
           if (token && !token.startsWith("Error")) {
             btnSubmit.disabled = false; 
             btnSubmit.innerHTML = '<i class="fa-brands fa-whatsapp text-lg"></i> PROSES & KIRIM KE WHATSAPP';
             
-            // Munculkan Popup Pembayaran Midtrans Snap
             window.snap.pay(token, {
               onSuccess: function(result) {
                 showToast("Pembayaran Berhasil! Pesanan diproses.");
@@ -780,20 +766,22 @@ function registerCustomer() {
             btnSubmit.disabled = false;
             btnSubmit.innerHTML = '<i class="fa-brands fa-whatsapp text-lg"></i> PROSES & KIRIM KE WHATSAPP';
           }
-        }).getMidtransSnapToken(newOrder);
-      } else {
-        // Simulasi jika dibuka di luar Google Apps Script
-        finalizeOrderAfterPayment(newOrder);
-      }
+        })
+        .catch(err => {
+          alert("Error koneksi: " + err.message);
+          btnSubmit.disabled = false;
+          btnSubmit.innerHTML = '<i class="fa-brands fa-whatsapp text-lg"></i> PROSES & KIRIM KE WHATSAPP';
+        });
     }
 
-    // Fungsi pendukung setelah proses pembayaran dipicu
     function finalizeOrderAfterPayment(newOrder) {
       var history = JSON.parse(safeStorage.getItem('app_order_history') || '[]');
       history.unshift(newOrder); 
       safeStorage.setItem('app_order_history', JSON.stringify(history));
 
-      // Format Pesan WhatsApp
+      // Kirim pesanan ke Google Sheets via API
+      callApiPost('processOrder', { order: newOrder });
+
       var text = "*NOTA PESANAN RESMI " + newOrder.invoiceId + "*\n----------------------------------\n👤 *Nama:* " + newOrder.name + "\n📍 *Alamat:* " + newOrder.address + "\n";
       if (newOrder.notes) text += "📝 *Catatan:* " + newOrder.notes + "\n";
       text += "💳 *Status Pembayaran:* " + newOrder.status + "\n";
@@ -809,7 +797,6 @@ function registerCustomer() {
       window.open(waUrl, '_blank');
     }
 
-    // --- PETA CARTODB VOYAGER DENGAN INVALIDATE SIZE ---
     function openLiveTracking(invId, targetLat, targetLng) {
       document.getElementById('tracking-modal').classList.remove('hidden');
       document.getElementById('tracking-invoice-id').innerText = invId;
@@ -818,7 +805,6 @@ function registerCustomer() {
       setTimeout(function() {
         if (!liveMap) {
           liveMap = L.map('map-container').setView([destCoords.lat, destCoords.lng], 15);
-          // Menggunakan CartoDB Voyager (Mirip Google Maps)
           L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { 
             attribution: '&copy; CartoDB', maxZoom: 19 
           }).addTo(liveMap);
@@ -826,7 +812,6 @@ function registerCustomer() {
           liveMap.setView([destCoords.lat, destCoords.lng], 15);
         }
         
-        // Memperbaiki masalah kotak abu-abu pada modal
         liveMap.invalidateSize();
 
         if (customerMarker) liveMap.removeLayer(customerMarker);
@@ -837,12 +822,12 @@ function registerCustomer() {
 
         if (trackingPollInterval) clearInterval(trackingPollInterval);
         trackingPollInterval = setInterval(function() {
-          if (typeof google !== 'undefined' && google.script && google.script.run) {
-            google.script.run.withSuccessHandler(function(cPos) { if (cPos) updateMapPos(cPos, destCoords); }).getCourierLocationFromSheet(invId);
-          } else {
-            var savedGps = safeStorage.getItem('gps_courier_' + invId);
-            if (savedGps) updateMapPos(JSON.parse(savedGps), destCoords);
-          }
+          callApiGet('getCourierLocation', { invoiceId: invId })
+            .then(cPos => { if (cPos) updateMapPos(cPos, destCoords); })
+            .catch(err => {
+              var savedGps = safeStorage.getItem('gps_courier_' + invId);
+              if (savedGps) updateMapPos(JSON.parse(savedGps), destCoords);
+            });
         }, 3000);
       }, 350);
     }
@@ -878,7 +863,9 @@ function registerCustomer() {
       if (!name || isNaN(price) || price <= 0) { alert("Isi Nama Produk dan Harga secara benar."); return; }
       var newProd = { id: String(Date.now()), name: name, price: price, category: category, image: image || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300", desc: desc || "Produk pilihan terbaik" };
       allProducts.unshift(newProd);
-      if (typeof google !== 'undefined' && google.script && google.script.run) { google.script.run.saveProductToSheet(newProd); }
+      
+      callApiPost('saveProduct', { product: newProd });
+      
       toggleAddProductModal(); renderProducts(); showToast("Produk '" + name + "' disimpan!");
     }
   </script>
