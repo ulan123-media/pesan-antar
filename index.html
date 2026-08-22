@@ -701,11 +701,21 @@
         });
     }
 
+    // Fungsi Diperbarui: Mereset & menghitung omset serta jumlah pesanan khusus hari ini setiap 24 jam
     function updateAdminDashboard(orders) {
       var totalOmset = 0;
-      for (var i = 0; i < orders.length; i++) { totalOmset += (orders[i].total || 0); }
+      var todayStr = new Date().toLocaleDateString('id-ID');
+      var todayOrdersCount = 0;
+
+      for (var i = 0; i < orders.length; i++) {
+        if (orders[i].date === todayStr) {
+          totalOmset += (orders[i].total || 0);
+          todayOrdersCount++;
+        }
+      }
+
       document.getElementById('dash-total-omset').innerText = "Rp " + formatRupiah(totalOmset);
-      document.getElementById('dash-total-orders').innerText = orders.length + " Pesanan";
+      document.getElementById('dash-total-orders').innerText = todayOrdersCount + " Pesanan";
     }
 
     function displayOrderCards(container, orders, isAdmin) {
