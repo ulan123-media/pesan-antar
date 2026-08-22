@@ -331,7 +331,7 @@
       openMainApp("🛒 Jelajah Produk");
     }
 
-    // FUNGSI REGISTER YANG SUDAH DIPERBARUI AGAR MENGECEK APAKAH NOMOR SUDAH ADA
+    // FUNGSI REGISTER YANG DIPERBARUI: Mengambil data asli jika nomor sudah terdaftar
     function registerCustomer() {
       var name = document.getElementById('reg-name').value.trim();
       var phone = document.getElementById('reg-phone').value.trim();
@@ -347,7 +347,11 @@
       callApiPost('registerCustomer', { customer: currentUser })
         .then(res => { 
           if (res && res.status === "Exists") {
-            alert("⚠️ Nomor WhatsApp ini sudah terdaftar! Anda akan langsung masuk ke akun Anda.");
+            // Timpa nama dan alamat dengan data asli yang pertama kali terdaftar di Google Sheet
+            if (res.name) currentUser.name = res.name;
+            if (res.address) currentUser.address = res.address;
+            
+            alert("⚠️ Nomor WhatsApp ini sudah terdaftar! Anda otomatis masuk dengan akun asli: " + currentUser.name);
           } else {
             showToast("Pendaftaran berhasil disimpan!");
           }
