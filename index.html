@@ -567,10 +567,32 @@
       callApiGet('getOrders')
         .then(ordersFromSheet => {
           var orders = ordersFromSheet || []; rawOrdersList = orders;
-          if (isAdmin) updateAdminDashboard(orders);
-          if (!isAdmin && currentUser) { orders = orders.filter(function(o) { return o.name === currentUser.name; }); }
-          if (!isAdmin) {
+          if (isAdmin) {
+            updateAdminDashboard(orders);
+          } else if (currentUser) {
+            if (currentUser.role === 'guest') {
+              orders = []; // Guest tidak menarik data riwayat dari sheet
+            } else {
+              // FILTER KETAT: Berdasarkan Nomor WhatsApp unik, fallback ke nama jika kosong
+              orders = orders.filter(function(o) {
+                if (currentUser.phone && o.phone) {
+                  return String(o.phone).trim() === String(currentUser.phone).trim();
+                }
+                return String(o.name).trim().toLowerCase() === String(currentUser.name).trim().toLowerCase();
+              });
+            }
+          }
+
+          if (!isAdmin && currentUser && currentUser.role !== 'guest') {
             var localOrders = JSON.parse(safeStorage.getItem('app_order_history') || '[]');
+            // Filter local orders juga berdasarkan nomor telepon / nama yang aktif saat ini
+            localOrders = localOrders.filter(function(lo) {
+              if (currentUser.phone && lo.phone) {
+                return String(lo.phone).trim() === String(currentUser.phone).trim();
+              }
+              return String(lo.name).trim().toLowerCase() === String(currentUser.name).trim().toLowerCase();
+            });
+
             for (var j = 0; j < localOrders.length; j++) {
               var lo = localOrders[j];
               if (!orders.some(function(so) { return so.invoiceId === lo.invoiceId; })) { orders.unshift(lo); }
@@ -579,10 +601,18 @@
           displayOrderCards(container, orders, isAdmin);
         })
         .catch(err => {
-          var orders = JSON.parse(safeStorage.getItem('app_order_history') || '[]');
+          var orders = [];
+          if (!isAdmin && currentUser && currentUser.role !== 'guest') {
+            var localOrders = JSON.parse(safeStorage.getItem('app_order_history') || '[]');
+            orders = localOrders.filter(function(lo) {
+              if (currentUser.phone && lo.phone) {
+                return String(lo.phone).trim() === String(currentUser.phone).trim();
+              }
+              return String(lo.name).trim().toLowerCase() === String(currentUser.name).trim().toLowerCase();
+            });
+          }
           rawOrdersList = orders;
           if (isAdmin) updateAdminDashboard(orders);
-          if (!isAdmin && currentUser) { orders = orders.filter(function(o) { return o.name === currentUser.name; }); }
           displayOrderCards(container, orders, isAdmin);
         });
     }
