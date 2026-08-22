@@ -687,6 +687,12 @@
 
         var actionButtons = '';
         if (isAdmin) {
+          var cleanPhone = ord.phone ? String(ord.phone).replace(/[^0-9]/g, '') : '';
+          if (cleanPhone.startsWith('0')) {
+            cleanPhone = '62' + cleanPhone.substring(1);
+          }
+          var btnChatWa = cleanPhone ? '<a href="https://wa.me/' + cleanPhone + '?text=' + encodeURIComponent('Halo ' + ord.name + ', terkait pesanan ' + ord.invoiceId + ', konfirmasi pembayarannya bagaimana ya? (QRIS / Tunai)') + '" target="_blank" class="bg-emerald-500 text-white font-black px-2.5 py-2 rounded-xl text-[10px] active:scale-95 shadow-sm inline-flex items-center gap-1"><i class="fa-brands fa-whatsapp"></i> Chat WA</a>' : '';
+
           var btnAcc = (ordStatus !== 'Selesai' && ordStatus !== 'Sedang Diantar' && ordStatus !== 'Di-ACC (Diproses)') ? '<button type="button" onclick="updateOrderStatus(\'' + ord.invoiceId + '\', \'Di-ACC (Diproses)\')" class="bg-emerald-500 text-white font-black px-3 py-2 rounded-xl text-[10px] active:scale-95 shadow-sm"><i class="fa-solid fa-check mr-1"></i> ACC</button>' : '';
           
           var btnKirim = (ordStatus !== 'Selesai' && ordStatus !== 'Sedang Diantar') ? '<button type="button" onclick="updateOrderStatus(\'' + ord.invoiceId + '\', \'Sedang Diantar\')" class="bg-orange-500 text-white font-black px-3 py-2 rounded-xl text-[10px] active:scale-95 shadow-sm"><i class="fa-solid fa-motorcycle mr-1"></i> KIRIM</button>' : '';
@@ -696,7 +702,7 @@
           var btnPeta = '<button type="button" onclick="openLiveTracking(\'' + ord.invoiceId + '\', ' + (ord.lat ? ord.lat : 'null') + ', ' + (ord.lng ? ord.lng : 'null') + ')" class="bg-slate-100 text-slate-800 font-bold px-2.5 py-2 rounded-xl text-[10px] active:scale-95"><i class="fa-solid fa-map-location-dot"></i> Peta</button>';
           var btnCetak = '<button type="button" onclick="openReceiptModal(\'' + ord.invoiceId + '\')" class="bg-amber-500 text-white font-black px-2.5 py-2 rounded-xl text-[10px] active:scale-95 shadow-sm"><i class="fa-solid fa-print mr-1"></i> Struk</button>';
           
-          actionButtons = '<div class="pt-2 border-t border-gray-100 flex flex-wrap gap-1.5 justify-end">' + btnAcc + btnKirim + btnGps + btnSelesai + btnCetak + btnPeta + '</div>';
+          actionButtons = '<div class="pt-2 border-t border-gray-100 flex flex-wrap gap-1.5 justify-end">' + btnChatWa + btnAcc + btnKirim + btnGps + btnSelesai + btnCetak + btnPeta + '</div>';
         } else {
           var btnLacak = (ordStatus === 'Sedang Diantar') ? '<button type="button" onclick="openLiveTracking(\'' + ord.invoiceId + '\', ' + (ord.lat ? ord.lat : 'null') + ', ' + (ord.lng ? ord.lng : 'null') + ')" class="bg-slate-900 text-white font-black px-3 py-1.5 rounded-xl text-[10px] flex items-center gap-1.5 shadow-sm active:scale-95"><i class="fa-solid fa-motorcycle text-orange-400"></i> Lacak Kurir</button>' : '<span class="text-[10px] font-bold text-gray-400 italic">Diantar setelah di-ACC</span>';
           actionButtons = '<div class="pt-2 border-t border-gray-100 flex justify-between items-center"><span class="text-xs font-black text-slate-900">Total: Rp ' + formatRupiah(ord.total) + '</span>' + btnLacak + '</div>';
@@ -851,6 +857,12 @@
         notes: notes 
       };
 
+      // --- MASUK KE GOOGLE SHEETS & LOCALSTORAGE SEKETIKA (BELUM LUNAS) ---
+      var history = JSON.parse(safeStorage.getItem('app_order_history') || '[]');
+      history.unshift(newOrder); 
+      safeStorage.setItem('app_order_history', JSON.stringify(history));
+      callApiPost('processOrder', { order: newOrder });
+
       callApiPost('getMidtransSnapToken', { orderData: newOrder })
         .then(token => {
           if (token && !token.startsWith("Error")) {
@@ -861,20 +873,20 @@
               onSuccess: function(result) {
                 showToast("Pembayaran Berhasil! Pesanan diproses.");
                 newOrder.status = "Menunggu ACC (Lunas)";
-                finalizeOrderAfterPayment(newOrder);
+                updateOrderStatusAfterPayment(newOrder.invoiceId, "Menunggu ACC (Lunas)");
+                finalizeOrderUI(newOrder);
               },
               onPending: function(result){
                 showToast("Menunggu Pembayaran Anda.");
-                newOrder.status = "Menunggu Pembayaran";
-                finalizeOrderAfterPayment(newOrder);
+                finalizeOrderUI(newOrder);
               },
               onError: function(result){
                 alert("Pembayaran Gagal! Silakan coba lagi.");
                 btnSubmit.disabled = false;
               },
               onClose: function(){
-                showToast("Popup pembayaran ditutup.");
-                btnSubmit.disabled = false;
+                showToast("Transaksi dicatat. Silakan selesaikan pembayaran.");
+                finalizeOrderUI(newOrder);
               }
             });
           } else {
@@ -890,13 +902,11 @@
         });
     }
 
-    function finalizeOrderAfterPayment(newOrder) {
-      var history = JSON.parse(safeStorage.getItem('app_order_history') || '[]');
-      history.unshift(newOrder); 
-      safeStorage.setItem('app_order_history', JSON.stringify(history));
+    function updateOrderStatusAfterPayment(invoiceId, newStatus) {
+      callApiPost('updateOrderStatus', { invoiceId: invoiceId, newStatus: newStatus });
+    }
 
-      callApiPost('processOrder', { order: newOrder });
-
+    function finalizeOrderUI(newOrder) {
       var text = "*NOTA PESANAN RESMI " + newOrder.invoiceId + "*\n----------------------------------\n👤 *Nama:* " + newOrder.name + "\n📍 *Alamat:* " + newOrder.address + "\n";
       if (newOrder.notes) text += "📝 *Catatan:* " + newOrder.notes + "\n";
       text += "💳 *Status Pembayaran:* " + newOrder.status + "\n";
