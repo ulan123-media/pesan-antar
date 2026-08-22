@@ -577,15 +577,55 @@
               if (!orders.some(function(so) { return so.invoiceId === lo.invoiceId; })) { orders.unshift(lo); }
             }
           }
-          displayOrderCards(container, orders, isAdmin);
-        })
-        .catch(err => {
-          var orders = JSON.parse(safeStorage.getItem('app_order_history') || '[]');
-          rawOrdersList = orders;
-          if (isAdmin) updateAdminDashboard(orders);
-          if (!isAdmin && currentUser) { orders = orders.filter(function(o) { return o.name === currentUser.name; }); }
-          displayOrderCards(container, orders, isAdmin);
-        });
+ function displayOrderCards(container, orders, isAdmin) {
+      if (!orders || orders.length === 0) { 
+        container.innerHTML = '<div class="bg-white rounded-3xl p-6 text-center text-gray-400 font-bold text-xs shadow-sm"><i class="fa-solid fa-clock-rotate-left text-3xl mb-2 text-gray-300"></i><p>Belum ada riwayat pesanan.</p></div>'; 
+        return; 
+      }
+      
+      var html = '';
+      for (var i = 0; i < orders.length; i++) {
+        var ord = orders[i], ordStatus = ord.status || 'Menunggu ACC', statusBadge = '';
+        
+        // Label Status Pembayaran & Proses yang Lebih Jelas & Berwarna
+        if (ordStatus === 'Menunggu ACC') {
+          statusBadge = '<span class="bg-amber-100 text-amber-800 text-[9px] font-black px-2.5 py-0.5 rounded-full flex items-center gap-1"><i class="fa-solid fa-hourglass-start"></i> Menunggu ACC</span>';
+        } else if (ordStatus === 'Menunggu Pembayaran') {
+          statusBadge = '<span class="bg-purple-100 text-purple-700 text-[9px] font-black px-2.5 py-0.5 rounded-full flex items-center gap-1"><i class="fa-solid fa-wallet"></i> Belum Lunas (COD/Pending)</span>';
+        } else if (ordStatus === 'Menunggu ACC (Lunas)') {
+          statusBadge = '<span class="bg-emerald-100 text-emerald-700 text-[9px] font-black px-2.5 py-0.5 rounded-full flex items-center gap-1"><i class="fa-solid fa-circle-check"></i> Lunas (Midtrans)</span>';
+        } else if (ordStatus === 'Di-ACC (Diproses)') {
+          statusBadge = '<span class="bg-blue-100 text-blue-700 text-[9px] font-black px-2.5 py-0.5 rounded-full flex items-center gap-1"><i class="fa-solid fa-box-open"></i> Diproses</span>';
+        } else if (ordStatus === 'Sedang Diantar') {
+          statusBadge = '<span class="bg-orange-100 text-orange-700 text-[9px] font-black px-2.5 py-0.5 rounded-full flex items-center gap-1 animate-pulse"><i class="fa-solid fa-motorcycle"></i> Diantar</span>';
+        } else if (ordStatus === 'Selesai') {
+          statusBadge = '<span class="bg-gray-100 text-gray-600 text-[9px] font-black px-2.5 py-0.5 rounded-full flex items-center gap-1"><i class="fa-solid fa-check-double"></i> Selesai</span>';
+        } else {
+          statusBadge = '<span class="bg-gray-100 text-gray-700 text-[9px] font-black px-2.5 py-0.5 rounded-full">' + ordStatus + '</span>';
+        }
+
+        var actionButtons = '';
+        if (isAdmin) {
+          // Tombol ACC dan Kirim Selalu Muncul untuk Semua Pesanan yang Belum Selesai
+          var btnAcc = (ordStatus !== 'Selesai' && ordStatus !== 'Sedang Diantar' && ordStatus !== 'Di-ACC (Diproses)') ? '<button type="button" onclick="updateOrderStatus(\'' + ord.invoiceId + '\', \'Di-ACC (Diproses)\')" class="bg-emerald-500 text-white font-black px-3 py-2 rounded-xl text-[10px] active:scale-95 shadow-sm"><i class="fa-solid fa-check mr-1"></i> ACC</button>' : '';
+          
+          var btnKirim = (ordStatus !== 'Selesai' && ordStatus !== 'Sedang Diantar') ? '<button type="button" onclick="updateOrderStatus(\'' + ord.invoiceId + '\', \'Sedang Diantar\')" class="bg-orange-500 text-white font-black px-3 py-2 rounded-xl text-[10px] active:scale-95 shadow-sm"><i class="fa-solid fa-motorcycle mr-1"></i> KIRIM</button>' : '';
+          
+          var btnGps = (ordStatus === 'Sedang Diantar') ? '<button type="button" onclick="startCourierGPSBroadcaster(\'' + ord.invoiceId + '\')" class="bg-emerald-600 text-white font-black px-3 py-2 rounded-xl text-[10px] active:scale-95 shadow-sm"><i class="fa-solid fa-satellite-dish mr-1"></i> GPS KURIR</button>' : '';
+          var btnSelesai = (ordStatus === 'Sedang Diantar') ? '<button type="button" onclick="updateOrderStatus(\'' + ord.invoiceId + '\', \'Selesai\')" class="bg-slate-900 text-white font-black px-3 py-2 rounded-xl text-[10px] active:scale-95 shadow-sm"><i class="fa-solid fa-flag-checkered mr-1"></i> SELESAI</button>' : '';
+          var btnPeta = '<button type="button" onclick="openLiveTracking(\'' + ord.invoiceId + '\', ' + (ord.lat ? ord.lat : 'null') + ', ' + (ord.lng ? ord.lng : 'null') + ')" class="bg-slate-100 text-slate-800 font-bold px-2.5 py-2 rounded-xl text-[10px] active:scale-95"><i class="fa-solid fa-map-location-dot"></i> Peta</button>';
+          var btnCetak = '<button type="button" onclick="openReceiptModal(\'' + ord.invoiceId + '\')" class="bg-amber-500 text-white font-black px-2.5 py-2 rounded-xl text-[10px] active:scale-95 shadow-sm"><i class="fa-solid fa-print mr-1"></i> Struk</button>';
+          
+          actionButtons = '<div class="pt-2 border-t border-gray-100 flex flex-wrap gap-1.5 justify-end">' + btnAcc + btnKirim + btnGps + btnSelesai + btnCetak + btnPeta + '</div>';
+        } else {
+          var btnLacak = (ordStatus === 'Sedang Diantar') ? '<button type="button" onclick="openLiveTracking(\'' + ord.invoiceId + '\', ' + (ord.lat ? ord.lat : 'null') + ', ' + (ord.lng ? ord.lng : 'null') + ')" class="bg-slate-900 text-white font-black px-3 py-1.5 rounded-xl text-[10px] flex items-center gap-1.5 shadow-sm active:scale-95"><i class="fa-solid fa-motorcycle text-orange-400"></i> Lacak Kurir</button>' : '<span class="text-[10px] font-bold text-gray-400 italic">Diantar setelah di-ACC</span>';
+          actionButtons = '<div class="pt-2 border-t border-gray-100 flex justify-between items-center"><span class="text-xs font-black text-slate-900">Total: Rp ' + formatRupiah(ord.total) + '</span>' + btnLacak + '</div>';
+        }
+
+        var notesHTML = ord.notes ? '<p class="text-[10px] text-orange-600 font-bold bg-orange-50 px-2 py-1 rounded-lg"><span class="font-black">Catatan:</span> ' + ord.notes + '</p>' : '';
+        html += '<div class="bg-white rounded-3xl p-4 shadow-sm border border-gray-100 space-y-2"><div class="flex justify-between items-center border-b border-gray-100 pb-2"><span class="font-black text-xs text-orange-600">' + ord.invoiceId + '</span>' + statusBadge + '</div><div class="text-xs font-semibold text-slate-800 space-y-0.5"><p><span class="font-bold">Pemesan:</span> ' + ord.name + ' (' + (ord.phone || '-') + ')</p><p class="text-[10px] text-gray-500 truncate"><span class="font-bold">Items:</span> ' + ord.itemsSummary + '</p>' + notesHTML + '<p class="text-[10px] text-gray-400"><span class="font-bold">Alamat:</span> ' + (ord.address || '-') + '</p></div>' + actionButtons + '</div>';
+      }
+      container.innerHTML = html;
     }
 
     function updateAdminDashboard(orders) {
