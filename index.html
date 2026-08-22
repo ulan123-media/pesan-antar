@@ -142,7 +142,16 @@
           <div class="flex justify-between items-center text-xs font-bold"><span class="text-gray-500 text-[10px]">Ongkir (GPS Presisi):</span><span id="display-ongkir" class="text-orange-600 font-black">Rp 6.000</span></div>
           <p id="gps-status" class="text-[10px] text-gray-500 italic">Tekan tombol agar ongkir terhitung otomatis sesuai jarak.</p>
         </div>
-        <div class="bg-slate-900 text-white p-3.5 rounded-2xl text-center"><p class="text-[10px] text-gray-300 font-semibold mb-1">PEMBAYARAN: QRIS / COD</p><div class="bg-white p-2 rounded-2xl inline-block my-1 shadow-sm"><img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=QRIS_BELI_DISINI" alt="QRIS" class="w-20 h-20 mx-auto"></div><p class="text-[10px] text-gray-400">Scan QRIS atau bayar Tunai saat barang sampai.</p></div>
+        
+        <!-- BAGIAN QRIS (UBAH URL DI BAWAH INI DENGAN LINK GAMBAR QRIS ANDA) -->
+        <div class="bg-slate-900 text-white p-3.5 rounded-2xl text-center">
+          <p class="text-[10px] text-gray-300 font-semibold mb-1">PEMBAYARAN: QRIS / COD</p>
+          <div class="bg-white p-2 rounded-2xl inline-block my-1 shadow-sm">
+            <img src="https://i.postimg.cc/TP5CkjK6/Whats-App-Image-2026-08-22-at-23-17-42.jpg" alt="QRIS Toko" class="w-20 h-20 mx-auto object-contain">
+          </div>
+          <p class="text-[10px] text-gray-400">Scan QRIS atau bayar Tunai saat barang sampai.</p>
+        </div>
+
         <div class="space-y-1 pt-1 border-t border-gray-100">
           <div class="flex justify-between text-xs text-gray-500 font-medium"><span>Subtotal Produk:</span><span id="cart-subtotal-price">Rp 0</span></div>
           <div class="flex justify-between text-xs text-gray-500 font-medium"><span>Ongkir:</span><span id="cart-ongkir-price">Rp 6.000</span></div>
@@ -331,7 +340,6 @@
       openMainApp("🛒 Jelajah Produk");
     }
 
-    // FUNGSI REGISTER YANG DIPERBARUI: Mengambil data asli jika nomor sudah terdaftar
     function registerCustomer() {
       var name = document.getElementById('reg-name').value.trim();
       var phone = document.getElementById('reg-phone').value.trim();
@@ -347,7 +355,6 @@
       callApiPost('registerCustomer', { customer: currentUser })
         .then(res => { 
           if (res && res.status === "Exists") {
-            // Timpa nama dan alamat dengan data asli yang pertama kali terdaftar di Google Sheet
             if (res.name) currentUser.name = res.name;
             if (res.address) currentUser.address = res.address;
             
@@ -444,7 +451,6 @@
       showToast("Status toko diubah ke: " + newStatus);
     }
 
-    // --- PERHITUNGAN ONGKIR PRESISI ALA GOFOOD / MAXIM ---
     function getGPSLocation() {
       var statusText = document.getElementById('gps-status');
       if (navigator.geolocation) {
@@ -458,9 +464,9 @@
           fetch(url).then(res => res.json()).then(data => {
             currentDistance = data.routes[0].distance / 1000;
             
-            var BASE_KM = 2;       // 2 km pertama masuk tarif dasar
-            var BASE_FEE = 6000;   // Tarif dasar (Rp 6.000)
-            var RATE_PER_KM = 2500;// Tarif tambahan per km berikutnya (Rp 2.500/km)
+            var BASE_KM = 2;       
+            var BASE_FEE = 6000;   
+            var RATE_PER_KM = 2500;
             
             if (currentDistance <= BASE_KM) {
               calculatedOngkir = BASE_FEE;
@@ -468,7 +474,6 @@
               var extraDistance = currentDistance - BASE_KM;
               calculatedOngkir = BASE_FEE + (extraDistance * RATE_PER_KM);
             }
-            // Dibulatkan rapi ke kelipatan Rp 500 terdekat
             calculatedOngkir = Math.round(calculatedOngkir / 500) * 500;
             if (calculatedOngkir < BASE_FEE) calculatedOngkir = BASE_FEE;
 
@@ -701,7 +706,6 @@
         });
     }
 
-    // Fungsi Diperbarui: Mereset & menghitung omset serta jumlah pesanan khusus hari ini setiap 24 jam
     function updateAdminDashboard(orders) {
       var totalOmset = 0;
       var todayStr = new Date().toLocaleDateString('id-ID');
