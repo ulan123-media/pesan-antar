@@ -139,13 +139,13 @@
         <div class="bg-gray-50 p-3.5 rounded-2xl border border-gray-200 space-y-2">
           <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-800 flex items-center gap-1.5"><i class="fa-solid fa-location-crosshairs text-orange-500"></i> Hitung Ongkir GPS</span><button type="button" onclick="getGPSLocation()" class="text-[10px] bg-slate-900 text-white px-3 py-1.5 rounded-xl font-black active:scale-95 transition-all">DAPATKAN GPS</button></div>
           <div class="flex justify-between items-center text-xs font-bold border-t pt-2 border-gray-200"><span class="text-gray-500 text-[10px]">Jarak Pengiriman:</span><span id="display-distance" class="text-slate-800">-- km</span></div>
-          <div class="flex justify-between items-center text-xs font-bold"><span class="text-gray-500 text-[10px]">Ongkir (GPS Presisi):</span><span id="display-ongkir" class="text-orange-600 font-black">Rp 5.000</span></div>
+          <div class="flex justify-between items-center text-xs font-bold"><span class="text-gray-500 text-[10px]">Ongkir (GPS Presisi):</span><span id="display-ongkir" class="text-orange-600 font-black">Rp 6.000</span></div>
           <p id="gps-status" class="text-[10px] text-gray-500 italic">Tekan tombol agar ongkir terhitung otomatis sesuai jarak.</p>
         </div>
         <div class="bg-slate-900 text-white p-3.5 rounded-2xl text-center"><p class="text-[10px] text-gray-300 font-semibold mb-1">PEMBAYARAN: QRIS / COD</p><div class="bg-white p-2 rounded-2xl inline-block my-1 shadow-sm"><img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=QRIS_BELI_DISINI" alt="QRIS" class="w-20 h-20 mx-auto"></div><p class="text-[10px] text-gray-400">Scan QRIS atau bayar Tunai saat barang sampai.</p></div>
         <div class="space-y-1 pt-1 border-t border-gray-100">
           <div class="flex justify-between text-xs text-gray-500 font-medium"><span>Subtotal Produk:</span><span id="cart-subtotal-price">Rp 0</span></div>
-          <div class="flex justify-between text-xs text-gray-500 font-medium"><span>Ongkir:</span><span id="cart-ongkir-price">Rp 5.000</span></div>
+          <div class="flex justify-between text-xs text-gray-500 font-medium"><span>Ongkir:</span><span id="cart-ongkir-price">Rp 6.000</span></div>
           <div class="flex justify-between items-center pt-1 text-slate-900 font-black text-sm border-t border-gray-200"><span>Total Tagihan:</span><span id="cart-total-price" class="text-orange-600 text-base">Rp 0</span></div>
         </div>
         <button id="btn-submit-order" type="button" onclick="sendToWhatsApp()" class="w-full bg-orange-500 text-white font-black py-4 rounded-2xl shadow-lg flex items-center justify-center gap-2 text-xs transition-all"><i class="fa-brands fa-whatsapp text-lg"></i> PROSES & KIRIM KE WHATSAPP</button>
@@ -237,9 +237,6 @@
     }
 
     // --- KONFIGURASI MODEL B & TOKO ---
-    var MIN_DIST_KM = 2; 
-    var MIN_FEE = 5000; 
-    var FEE_PER_KM = 3000;
     var WA_NUMBER = "6281993827358"; 
     var ADMIN_PIN = "1234";          
     var STORE_COORDS = { lat: -4.605417, lng: 121.960444 };
@@ -250,7 +247,7 @@
       removeItem: function(key) { try { localStorage.removeItem(key); } catch(e) {} }
     };
 
-    var currentUser = null, currentLocation = null, currentCoords = null, currentInvoiceId = "", allProducts = [], currentCategory = "Semua", cart = {}, storeStatus = "BUKA", currentDistance = 0, calculatedOngkir = 5000, rawOrdersList = [];
+    var currentUser = null, currentLocation = null, currentCoords = null, currentInvoiceId = "", allProducts = [], currentCategory = "Semua", cart = {}, storeStatus = "BUKA", currentDistance = 0, calculatedOngkir = 6000, rawOrdersList = [];
     var liveMap = null, courierMarker = null, customerMarker = null, routePolyline = null, trackingPollInterval = null, courierWatchId = null, adminNotifierInterval = null, knownOrderCount = 0;
     
     var lastKnownCustomerOrderStatus = "";
@@ -379,7 +376,6 @@
       document.getElementById('nav-keranjang-btn').classList.toggle('hidden', isAdmin);
       document.getElementById('header-cart-btn').classList.toggle('hidden', isAdmin);
 
-      // Atur tombol floating WhatsApp khusus pelanggan (disembunyikan untuk admin)
       var floatingWaBtn = document.getElementById('floating-wa-btn');
       if (floatingWaBtn) {
         floatingWaBtn.classList.toggle('hidden', isAdmin);
@@ -434,6 +430,7 @@
       showToast("Status toko diubah ke: " + newStatus);
     }
 
+    // --- PERHITUNGAN ONGKIR PRESISI ALA GOFOOD / MAXIM ---
     function getGPSLocation() {
       var statusText = document.getElementById('gps-status');
       if (navigator.geolocation) {
@@ -446,11 +443,21 @@
           
           fetch(url).then(res => res.json()).then(data => {
             currentDistance = data.routes[0].distance / 1000;
-            if (currentDistance <= MIN_DIST_KM) {
-              calculatedOngkir = MIN_FEE;
+            
+            var BASE_KM = 2;       // 2 km pertama masuk tarif dasar
+            var BASE_FEE = 6000;   // Tarif dasar (Rp 6.000)
+            var RATE_PER_KM = 2500;// Tarif tambahan per km berikutnya (Rp 2.500/km)
+            
+            if (currentDistance <= BASE_KM) {
+              calculatedOngkir = BASE_FEE;
             } else {
-              calculatedOngkir = MIN_FEE + Math.ceil(currentDistance - MIN_DIST_KM) * FEE_PER_KM;
+              var extraDistance = currentDistance - BASE_KM;
+              calculatedOngkir = BASE_FEE + (extraDistance * RATE_PER_KM);
             }
+            // Dibulatkan rapi ke kelipatan Rp 500 terdekat
+            calculatedOngkir = Math.round(calculatedOngkir / 500) * 500;
+            if (calculatedOngkir < BASE_FEE) calculatedOngkir = BASE_FEE;
+
             document.getElementById('display-distance').innerText = currentDistance.toFixed(2) + " km";
             document.getElementById('display-ongkir').innerText = "Rp " + formatRupiah(calculatedOngkir);
             document.getElementById('cart-ongkir-price').innerText = "Rp " + formatRupiah(calculatedOngkir);
@@ -460,9 +467,24 @@
              var R = 6371; var dLat = (currentCoords.lat - STORE_COORDS.lat) * Math.PI / 180; var dLng = (currentCoords.lng - STORE_COORDS.lng) * Math.PI / 180;
              var a = Math.sin(dLat/2)*Math.sin(dLat/2) + Math.cos(STORE_COORDS.lat*Math.PI/180)*Math.cos(currentCoords.lat*Math.PI/180)*Math.sin(dLng/2)*Math.sin(dLng/2);
              currentDistance = R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
-             calculatedOngkir = (currentDistance <= MIN_DIST_KM) ? MIN_FEE : MIN_FEE + Math.ceil(currentDistance - MIN_DIST_KM) * FEE_PER_KM;
+             
+             var BASE_KM = 2;       
+             var BASE_FEE = 6000;   
+             var RATE_PER_KM = 2500;
+             
+             if (currentDistance <= BASE_KM) {
+               calculatedOngkir = BASE_FEE;
+             } else {
+               var extraDistance = currentDistance - BASE_KM;
+               calculatedOngkir = BASE_FEE + (extraDistance * RATE_PER_KM);
+             }
+             calculatedOngkir = Math.round(calculatedOngkir / 500) * 500;
+             if (calculatedOngkir < BASE_FEE) calculatedOngkir = BASE_FEE;
+
              document.getElementById('display-distance').innerText = currentDistance.toFixed(2) + " km (Est)";
              document.getElementById('display-ongkir').innerText = "Rp " + formatRupiah(calculatedOngkir);
+             document.getElementById('cart-ongkir-price').innerText = "Rp " + formatRupiah(calculatedOngkir);
+             updateCartUI();
              statusText.innerHTML = '<span class="text-orange-500 font-bold">Menggunakan estimasi jarak.</span>';
           });
         }, function(err) { statusText.innerHTML = 'Gagal akses lokasi.'; }, { enableHighAccuracy: true });
