@@ -331,6 +331,7 @@
       openMainApp("🛒 Jelajah Produk");
     }
 
+    // FUNGSI REGISTER YANG SUDAH DIPERBARUI AGAR MENGECEK APAKAH NOMOR SUDAH ADA
     function registerCustomer() {
       var name = document.getElementById('reg-name').value.trim();
       var phone = document.getElementById('reg-phone').value.trim();
@@ -342,16 +343,25 @@
       }
       
       currentUser = { name: name, phone: phone, address: address, role: 'customer' };
-      
-      safeStorage.setItem('app_customer_data', JSON.stringify(currentUser));
-      safeStorage.setItem('app_active_session', JSON.stringify(currentUser));
 
       callApiPost('registerCustomer', { customer: currentUser })
-        .then(res => { console.log("Data pelanggan berhasil masuk sheet:", res); })
-        .catch(err => { console.error("Gagal sinkron pelanggan:", err); });
-
-      openMainApp("👤 " + currentUser.name);
-      showToast("Pendaftaran berhasil disimpan!");
+        .then(res => { 
+          if (res && res.status === "Exists") {
+            alert("⚠️ Nomor WhatsApp ini sudah terdaftar! Anda akan langsung masuk ke akun Anda.");
+          } else {
+            showToast("Pendaftaran berhasil disimpan!");
+          }
+          
+          safeStorage.setItem('app_customer_data', JSON.stringify(currentUser));
+          safeStorage.setItem('app_active_session', JSON.stringify(currentUser));
+          openMainApp("👤 " + currentUser.name);
+        })
+        .catch(err => { 
+          console.error("Gagal sinkron pelanggan:", err);
+          safeStorage.setItem('app_customer_data', JSON.stringify(currentUser));
+          safeStorage.setItem('app_active_session', JSON.stringify(currentUser));
+          openMainApp("👤 " + currentUser.name);
+        });
     }
 
     function checkAdminLogin() {
