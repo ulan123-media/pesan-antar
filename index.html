@@ -247,6 +247,10 @@
 
     var currentUser = null, currentLocation = null, currentCoords = null, currentInvoiceId = "", allProducts = [], currentCategory = "Semua", cart = {}, storeStatus = "BUKA", currentDistance = 0, calculatedOngkir = 5000, rawOrdersList = [];
     var liveMap = null, courierMarker = null, customerMarker = null, routePolyline = null, trackingPollInterval = null, courierWatchId = null, adminNotifierInterval = null, knownOrderCount = 0;
+    
+    // Variabel tambahan untuk Notifikasi Status Interaktif Pelanggan
+    var lastKnownCustomerOrderStatus = "";
+    var customerNotifierInterval = null;
 
     document.addEventListener("DOMContentLoaded", function() {
       checkActiveSession(); 
@@ -377,10 +381,12 @@
       }
       initApp();
       checkAdminNewOrders();
+      startCustomerNotifier(); // Menyalakan pemantau notifikasi status pesanan interaktif
     }
 
     function logout() {
       if (courierWatchId) navigator.geolocation.clearWatch(courierWatchId);
+      if (customerNotifierInterval) clearInterval(customerNotifierInterval);
       safeStorage.removeItem('app_active_session');
       currentUser = null;
       document.getElementById('main-app').classList.add('hidden');
@@ -571,9 +577,8 @@
             updateAdminDashboard(orders);
           } else if (currentUser) {
             if (currentUser.role === 'guest') {
-              orders = []; // Guest tidak menarik data riwayat dari sheet
+              orders = []; 
             } else {
-              // FILTER KETAT: Berdasarkan Nomor WhatsApp unik, fallback ke nama jika kosong
               orders = orders.filter(function(o) {
                 if (currentUser.phone && o.phone) {
                   return String(o.phone).trim() === String(currentUser.phone).trim();
@@ -585,7 +590,6 @@
 
           if (!isAdmin && currentUser && currentUser.role !== 'guest') {
             var localOrders = JSON.parse(safeStorage.getItem('app_order_history') || '[]');
-            // Filter local orders juga berdasarkan nomor telepon / nama yang aktif saat ini
             localOrders = localOrders.filter(function(lo) {
               if (currentUser.phone && lo.phone) {
                 return String(lo.phone).trim() === String(currentUser.phone).trim();
@@ -722,6 +726,41 @@
             }
           });
       }
+    }
+
+    // Fungsi Polling Pemantau Perubahan Status Pesanan untuk Pelanggan
+    function startCustomerNotifier() {
+      if (customerNotifierInterval) clearInterval(customerNotifierInterval);
+      customerNotifierInterval = setInterval(function() {
+        if (currentUser && currentUser.role === 'customer') {
+          callApiGet('getOrders')
+            .then(ordersFromSheet => {
+              var orders = ordersFromSheet || [];
+              var myOrders = orders.filter(function(o) {
+                if (currentUser.phone && o.phone) {
+                  return String(o.phone).trim() === String(currentUser.phone).trim();
+                }
+                return String(o.name).trim().toLowerCase() === String(currentUser.name).trim().toLowerCase();
+              });
+
+              if (myOrders.length > 0) {
+                var latestOrder = myOrders[0];
+                var currentStatus = latestOrder.status;
+
+                if (lastKnownCustomerOrderStatus && lastKnownCustomerOrderStatus !== currentStatus) {
+                  playNotificationSound();
+                  showToast("🔔 Status " + latestOrder.invoiceId + " berubah: " + currentStatus, false);
+                  
+                  var statusView = document.getElementById('view-status');
+                  if (statusView && !statusView.classList.contains('hidden')) {
+                    renderOrderStatus();
+                  }
+                }
+                lastKnownCustomerOrderStatus = currentStatus;
+              }
+            }).catch(err => {});
+        }
+      }, 4000);
     }
 
     function playNotificationSound() {
