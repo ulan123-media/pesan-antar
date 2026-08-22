@@ -116,6 +116,11 @@
     <!-- STATUS PESANAN -->
     <div id="view-status" class="hidden px-5 mb-6"><div class="flex justify-between items-center mb-3"><h3 id="status-tab-title" class="text-[11px] font-black uppercase text-slate-900 tracking-wider">RIWAYAT & STATUS PESANAN</h3><span id="admin-badge-count" class="hidden bg-red-500 text-white text-[10px] font-black px-2.5 py-1 rounded-full shadow-sm animate-pulse">0 PESANAN BARU</span></div><div id="order-history-container" class="space-y-3"></div></div>
 
+    <!-- TOMBOL WHATSAPP MELAYANG KHUSUS PELANGGAN -->
+    <a id="floating-wa-btn" href="#" target="_blank" class="hidden fixed bottom-20 right-5 z-40 bg-emerald-500 hover:bg-emerald-600 text-white w-14 h-14 rounded-full shadow-2xl flex items-center justify-center text-2xl transition-all active:scale-95 animate-bounce">
+      <i class="fa-brands fa-whatsapp"></i>
+    </a>
+
     <!-- NAVIGASI BAWAH -->
     <div class="fixed bottom-0 left-0 right-0 z-40 p-3"><div class="bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl py-3 px-6 flex justify-around items-center border border-white/40 max-w-md mx-auto"><button type="button" onclick="switchTab('toko')" id="nav-toko" class="flex flex-col items-center text-orange-500 font-bold transition-all active:scale-90 px-3"><i class="fa-solid fa-store text-xl mb-0.5"></i><span class="text-[10px]">Toko</span></button><button type="button" id="nav-keranjang-btn" onclick="toggleCartModal()" class="flex flex-col items-center text-gray-400 hover:text-orange-500 font-bold transition-all active:scale-90 relative px-3"><i class="fa-solid fa-basket-shopping text-xl mb-0.5"></i><span class="text-[10px]">Keranjang</span><span id="nav-cart-count" class="hidden absolute top-0 right-2 bg-red-500 text-white text-[9px] font-black px-1.5 py-0.5 rounded-full border border-white">0</span></button><button type="button" onclick="switchTab('status')" id="nav-status" class="flex flex-col items-center text-gray-400 hover:text-orange-500 font-bold transition-all active:scale-90 relative px-3"><i class="fa-solid fa-clock-rotate-left text-xl mb-0.5"></i><span id="nav-status-label" class="text-[10px]">Status</span><span id="nav-status-dot" class="hidden absolute top-0 right-2 w-2.5 h-2.5 bg-red-500 rounded-full border border-white animate-ping"></span></button></div></div>
   </div>
@@ -373,6 +378,14 @@
       document.getElementById('admin-control-bar').classList.toggle('hidden', !isAdmin);
       document.getElementById('nav-keranjang-btn').classList.toggle('hidden', isAdmin);
       document.getElementById('header-cart-btn').classList.toggle('hidden', isAdmin);
+
+      // Atur tombol floating WhatsApp khusus pelanggan (disembunyikan untuk admin)
+      var floatingWaBtn = document.getElementById('floating-wa-btn');
+      if (floatingWaBtn) {
+        floatingWaBtn.classList.toggle('hidden', isAdmin);
+        var professionalMsg = "Halo Admin Beli Disini!, saya ingin bertanya seputar ketersediaan produk dan layanan pesan-antar toko. Terima kasih.";
+        floatingWaBtn.href = "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(professionalMsg);
+      }
 
       if (!isAdmin && currentUser && currentUser.role !== 'guest') {
         document.getElementById('cust-name').value = currentUser.name || '';
@@ -857,7 +870,6 @@
         notes: notes 
       };
 
-      // --- MASUK KE GOOGLE SHEETS & LOCALSTORAGE SEKETIKA (BELUM LUNAS) ---
       var history = JSON.parse(safeStorage.getItem('app_order_history') || '[]');
       history.unshift(newOrder); 
       safeStorage.setItem('app_order_history', JSON.stringify(history));
