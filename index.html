@@ -77,19 +77,53 @@
           <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Nama Lengkap *</label><div class="relative flex items-center"><i class="fa-solid fa-user absolute left-4 text-gray-400 text-sm"></i><input type="text" id="reg-name" placeholder="Contoh: Ulan Ismanto" class="w-full bg-gray-50 rounded-2xl pl-11 pr-4 py-3.5 text-xs border border-gray-200 focus:outline-none focus:border-orange-500 font-medium"></div></div>
           <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Nomor WhatsApp *</label><div class="relative flex items-center"><i class="fa-brands fa-whatsapp absolute left-4 text-gray-400 text-base"></i><input type="tel" id="reg-phone" placeholder="Contoh: 081234567890" class="w-full bg-gray-50 rounded-2xl pl-11 pr-4 py-3.5 text-xs border border-gray-200 focus:outline-none focus:border-orange-500 font-medium"></div></div>
           <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Alamat Pengiriman *</label><div class="relative flex items-start"><i class="fa-solid fa-location-dot absolute left-4 top-3.5 text-gray-400 text-sm"></i><textarea id="reg-address" rows="2" placeholder="Nama jalan, RT/RW, Patokan..." class="w-full bg-gray-50 rounded-2xl pl-11 pr-4 py-3 text-xs border border-gray-200 focus:outline-none focus:border-orange-500 font-medium"></textarea></div></div>
-          <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Password Akun *</label><div class="relative flex items-center"><i class="fa-solid fa-lock absolute left-4 text-gray-400 text-sm"></i><input type="password" id="reg-password" placeholder="Buat password kanda" class="w-full bg-gray-50 rounded-2xl pl-11 pr-4 py-3.5 text-xs border border-gray-200 focus:outline-none focus:border-orange-500 font-medium"></div></div>
+          <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Password Akun *</label><div class="relative flex items-center"><i class="fa-solid fa-lock absolute left-4 text-gray-400 text-sm"></i><input type="password" id="reg-password" placeholder="Buat password rahasia" class="w-full bg-gray-50 rounded-2xl pl-11 pr-4 py-3.5 text-xs border border-gray-200 focus:outline-none focus:border-orange-500 font-medium"></div></div>
           <button type="button" onclick="registerCustomer()" class="w-full bg-orange-500 hover:bg-orange-600 active:scale-95 text-white font-black py-4 rounded-2xl shadow-lg shadow-orange-500/30 transition-all text-xs tracking-wider flex items-center justify-center gap-2 pt-4"><i class="fa-solid fa-user-plus text-base"></i> DAFTAR AKUN BARU</button>
         </div>
 
         <button type="button" onclick="loginAsGuest()" class="w-full bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 font-extrabold py-3.5 rounded-2xl text-xs transition-all border border-slate-200 flex items-center justify-center gap-2 mt-2"><i class="fa-solid fa-eye text-orange-500"></i> LIHAT PRODUK DULU (PENGUNJUNG)</button>
       </div>
 
-      <!-- FORM ADMIN -->
-      <div id="form-admin" class="hidden space-y-5 text-center">
-        <p class="text-xs text-gray-500 font-bold">Masukkan PIN Admin untuk masuk</p>
-        <div><input type="password" id="admin-pin-input" maxlength="6" placeholder="••••" onkeypress="handleAdminKeyPress(event)" class="w-full bg-gray-50 text-center text-4xl font-black tracking-[16px] py-5 rounded-2xl border-2 border-gray-200 focus:border-orange-500 focus:bg-white focus:outline-none transition-all text-slate-800"></div>
-        <button type="button" onclick="checkAdminLogin()" class="w-full bg-slate-900 hover:bg-slate-800 active:scale-95 text-white font-black py-4 rounded-2xl shadow-lg transition-all text-xs tracking-wider">MASUK SEBAGAI ADMIN</button>
-        <p id="admin-error-msg" class="text-red-500 text-xs font-bold hidden animate-bounce"><i class="fa-solid fa-circle-exclamation mr-1"></i> PIN Salah!</p>
+      <!-- FORM ADMIN / KURIR -->
+      <div id="form-admin" class="hidden space-y-4">
+        <!-- SUB TAB ADMIN / KURIR: PIN UTAMA / LOGIN KURIR / DAFTAR KURIR -->
+        <div class="flex bg-slate-100 p-1 rounded-xl text-[10px] font-bold mb-3 border border-slate-200">
+          <button type="button" id="adminsub-pin" onclick="switchAdminSubTab('pin')" class="flex-1 py-2 rounded-lg bg-slate-900 text-white shadow-sm transition-all text-center">PIN Utama</button>
+          <button type="button" id="adminsub-login" onclick="switchAdminSubTab('login')" class="flex-1 py-2 rounded-lg text-slate-600 transition-all text-center">Login Kurir</button>
+          <button type="button" id="adminsub-register" onclick="switchAdminSubTab('register')" class="flex-1 py-2 rounded-lg text-slate-600 transition-all text-center">Daftar Kurir</button>
+        </div>
+
+        <!-- 1. PIN UTAMA (OWNER) -->
+        <div id="admin-subsect-pin" class="space-y-4 text-center">
+          <p class="text-xs text-gray-500 font-bold">Masukkan PIN Admin Utama</p>
+          <div><input type="password" id="admin-pin-input" maxlength="6" placeholder="••••" onkeypress="handleAdminKeyPress(event)" class="w-full bg-gray-50 text-center text-4xl font-black tracking-[16px] py-5 rounded-2xl border-2 border-gray-200 focus:border-orange-500 focus:bg-white focus:outline-none transition-all text-slate-800"></div>
+          <button type="button" onclick="checkAdminLogin()" class="w-full bg-slate-900 hover:bg-slate-800 active:scale-95 text-white font-black py-4 rounded-2xl shadow-lg transition-all text-xs tracking-wider">MASUK SEBAGAI ADMIN UTAMA</button>
+          <p id="admin-error-msg" class="text-red-500 text-xs font-bold hidden animate-bounce"><i class="fa-solid fa-circle-exclamation mr-1"></i> PIN Salah!</p>
+        </div>
+
+        <!-- 2. LOGIN KURIR -->
+        <div id="admin-subsect-login" class="hidden space-y-3.5">
+          <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">WhatsApp Kurir *</label><div class="relative flex items-center"><i class="fa-brands fa-whatsapp absolute left-4 text-gray-400 text-base"></i><input type="tel" id="courier-login-phone" placeholder="Contoh: 081234567890" class="w-full bg-gray-50 rounded-2xl pl-11 pr-4 py-3.5 text-xs border border-gray-200 focus:outline-none focus:border-slate-900 font-medium"></div></div>
+          <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Password *</label><div class="relative flex items-center"><i class="fa-solid fa-lock absolute left-4 text-gray-400 text-sm"></i><input type="password" id="courier-login-password" placeholder="••••••••" class="w-full bg-gray-50 rounded-2xl pl-11 pr-4 py-3.5 text-xs border border-gray-200 focus:outline-none focus:border-slate-900 font-medium"></div></div>
+          <button type="button" onclick="loginCourier()" class="w-full bg-slate-900 hover:bg-slate-800 active:scale-95 text-white font-black py-4 rounded-2xl shadow-lg transition-all text-xs tracking-wider flex items-center justify-center gap-2 pt-4"><i class="fa-solid fa-motorcycle text-base"></i> MASUK SEBAGAI KURIR</button>
+        </div>
+
+        <!-- 3. PENDAFTARAN KURIR BARU -->
+        <div id="admin-subsect-register" class="hidden space-y-3.5">
+          <div id="courier-recruitment-open-box" class="space-y-3.5">
+            <p class="text-[11px] font-bold text-emerald-600 bg-emerald-50 p-2.5 rounded-xl border border-emerald-200 text-center"><i class="fa-solid fa-circle-check mr-1"></i> Lowongan Kurir Sedang Dibuka!</p>
+            <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Nama Lengkap Kurir *</label><div class="relative flex items-center"><i class="fa-solid fa-user absolute left-4 text-gray-400 text-sm"></i><input type="text" id="courier-reg-name" placeholder="Contoh: Budi Kurir" class="w-full bg-gray-50 rounded-2xl pl-11 pr-4 py-3.5 text-xs border border-gray-200 focus:outline-none focus:border-slate-900 font-medium"></div></div>
+            <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Nomor WhatsApp *</label><div class="relative flex items-center"><i class="fa-brands fa-whatsapp absolute left-4 text-gray-400 text-base"></i><input type="tel" id="courier-reg-phone" placeholder="Contoh: 081234567890" class="w-full bg-gray-50 rounded-2xl pl-11 pr-4 py-3.5 text-xs border border-gray-200 focus:outline-none focus:border-slate-900 font-medium"></div></div>
+            <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Jenis Kendaraan Wajib *</label><div class="relative flex items-center"><i class="fa-solid fa-motorcycle absolute left-4 text-gray-400 text-sm"></i><input type="text" id="courier-reg-vehicle" placeholder="Contoh: Motor Honda Beat - Plat DD 1234 XX" class="w-full bg-gray-50 rounded-2xl pl-11 pr-4 py-3.5 text-xs border border-gray-200 focus:outline-none focus:border-slate-900 font-medium"></div></div>
+            <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Password Akun *</label><div class="relative flex items-center"><i class="fa-solid fa-lock absolute left-4 text-gray-400 text-sm"></i><input type="password" id="courier-reg-password" placeholder="Buat password rahasia" class="w-full bg-gray-50 rounded-2xl pl-11 pr-4 py-3.5 text-xs border border-gray-200 focus:outline-none focus:border-slate-900 font-medium"></div></div>
+            <button type="button" onclick="registerCourier()" class="w-full bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-black py-4 rounded-2xl shadow-lg transition-all text-xs tracking-wider flex items-center justify-center gap-2 pt-4"><i class="fa-solid fa-paper-plane text-base"></i> KIRIM LAMARAN KURIR</button>
+          </div>
+          <div id="courier-recruitment-closed-box" class="hidden text-center py-6 px-4 bg-red-50 rounded-2xl border border-red-200">
+            <i class="fa-solid fa-store-slash text-red-500 text-3xl mb-2"></i>
+            <h4 class="text-xs font-black text-slate-900 uppercase">Lowongan Belum Dibuka</h4>
+            <p class="text-[10px] text-gray-500 mt-1">Maaf, saat ini Admin Utama belum menerima lowongan pendaftaran kurir baru.</p>
+          </div>
+        </div>
       </div>
     </div>
     <div class="text-center text-[10px] text-gray-400 pb-2">Beli Disini! © 2026</div>
@@ -110,19 +144,20 @@
       </div>
     </div>
 
-    <!-- PANEL ADMIN BAR & DASHBOARD OMSET -->
+    <!-- PANEL ADMIN BAR & DASHBOARD OMSET (KHUSUS ADMIN UTAMA & KURIR) -->
     <div id="admin-control-bar" class="hidden px-5 mb-4">
       <div class="bg-slate-900 text-white p-4 rounded-3xl flex justify-between items-center shadow-lg border border-slate-800 mb-3">
         <div class="flex items-center gap-2.5">
           <div class="w-10 h-10 rounded-2xl bg-orange-500/20 text-orange-400 flex items-center justify-center"><i class="fa-solid fa-motorcycle text-base"></i></div>
-          <div><p class="text-xs font-black">PANEL KURIR/ADMIN</p><p class="text-[10px] text-gray-400">Kelola Produk & Antar Pesanan</p></div>
+          <div><p id="panel-title-text" class="text-xs font-black">PANEL KONTROL</p><p id="panel-subtitle-text" class="text-[10px] text-gray-400">Antar Pesanan Area Terdekat</p></div>
         </div>
-        <div class="flex items-center gap-2">
+        <div id="admin-exclusive-buttons" class="flex items-center gap-2">
           <button type="button" id="btn-toggle-store" onclick="toggleStoreStatus()" class="bg-emerald-500 hover:bg-emerald-600 text-white font-black px-3 py-2.5 rounded-2xl text-[10px] flex items-center gap-1 shadow-md active:scale-95 transition-all"><i class="fa-solid fa-store"></i> TOKO BUKA</button>
+          <button type="button" id="btn-toggle-recruitment" onclick="toggleRecruitmentStatus()" class="bg-blue-500 hover:bg-blue-600 text-white font-black px-3 py-2.5 rounded-2xl text-[10px] flex items-center gap-1 shadow-md active:scale-95 transition-all"><i class="fa-solid fa-user-plus"></i> Lowongan</button>
           <button type="button" onclick="toggleAddProductModal()" class="bg-orange-500 hover:bg-orange-600 text-white font-black px-3 py-2.5 rounded-2xl text-[10px] flex items-center gap-1 shadow-md active:scale-95 transition-all"><i class="fa-solid fa-plus"></i> Produk</button>
         </div>
       </div>
-      <div class="grid grid-cols-2 gap-2">
+      <div id="admin-omset-grid" class="grid grid-cols-2 gap-2">
         <div class="bg-white p-3 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-3"><div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-sm font-black"><i class="fa-solid fa-wallet"></i></div><div><span class="text-[9px] text-gray-400 font-bold block uppercase">Omset Hari Ini</span><span id="dash-total-omset" class="text-xs font-black text-slate-900">Rp 0</span></div></div>
         <div class="bg-white p-3 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-3"><div class="w-9 h-9 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center text-sm font-black"><i class="fa-solid fa-boxes-packing"></i></div><div><span class="text-[9px] text-gray-400 font-bold block uppercase">Total Pesanan</span><span id="dash-total-orders" class="text-xs font-black text-slate-900">0 Pesanan</span></div></div>
       </div>
@@ -303,7 +338,7 @@
       removeItem: function(key) { try { localStorage.removeItem(key); } catch(e) {} }
     };
 
-    var currentUser = null, currentLocation = null, currentCoords = null, currentInvoiceId = "", allProducts = [], currentCategory = "Semua", cart = {}, storeStatus = "BUKA", currentDistance = 0, calculatedOngkir = 6000, rawOrdersList = [];
+    var currentUser = null, currentLocation = null, currentCoords = null, currentInvoiceId = "", allProducts = [], currentCategory = "Semua", cart = {}, storeStatus = "BUKA", recruitmentStatus = "TUTUP", currentDistance = 0, calculatedOngkir = 6000, rawOrdersList = [];
     var liveMap = null, courierMarker = null, customerMarker = null, routePolyline = null, trackingPollInterval = null, courierWatchId = null, adminNotifierInterval = null, knownOrderCount = 0;
     
     var lastKnownCustomerOrderStatus = "";
@@ -313,6 +348,7 @@
       checkActiveSession(); 
       generateNewInvoiceId();
       checkStoreStatus();
+      checkRecruitmentStatus();
       startBackgroundNotifier();
     });
 
@@ -322,7 +358,7 @@
         try {
           currentUser = JSON.parse(activeSession);
           if (currentUser && currentUser.role) {
-            openMainApp(currentUser.role === 'admin' ? "Mode Admin / Kurir" : currentUser.name);
+            openMainApp(currentUser.role === 'admin' ? "Admin Utama" : (currentUser.role === 'courier' ? "Kurir: " + currentUser.name : currentUser.name));
             return;
           }
         } catch(e) {}
@@ -372,6 +408,120 @@
       }
     }
 
+    function switchAdminSubTab(sub) {
+      var btnPin = document.getElementById('adminsub-pin');
+      var btnLogin = document.getElementById('adminsub-login');
+      var btnReg = document.getElementById('adminsub-register');
+      var secPin = document.getElementById('admin-subsect-pin');
+      var secLogin = document.getElementById('admin-subsect-login');
+      var secReg = document.getElementById('admin-subsect-register');
+
+      btnPin.className = "flex-1 py-2 rounded-lg text-slate-600 transition-all text-center";
+      btnLogin.className = "flex-1 py-2 rounded-lg text-slate-600 transition-all text-center";
+      btnReg.className = "flex-1 py-2 rounded-lg text-slate-600 transition-all text-center";
+      secPin.classList.add('hidden');
+      secLogin.classList.add('hidden');
+      secReg.classList.add('hidden');
+
+      if (sub === 'pin') {
+        btnPin.className = "flex-1 py-2 rounded-lg bg-slate-900 text-white shadow-sm transition-all text-center";
+        secPin.classList.remove('hidden');
+      } else if (sub === 'login') {
+        btnLogin.className = "flex-1 py-2 rounded-lg bg-slate-900 text-white shadow-sm transition-all text-center";
+        secLogin.classList.remove('hidden');
+      } else if (sub === 'register') {
+        btnReg.className = "flex-1 py-2 rounded-lg bg-emerald-600 text-white shadow-sm transition-all text-center";
+        secReg.classList.remove('hidden');
+        checkRecruitmentStatus();
+      }
+    }
+
+    function checkRecruitmentStatus() {
+      callApiGet('getRecruitmentStatus')
+        .then(status => { applyRecruitmentStatus(status || "TUTUP"); })
+        .catch(err => { applyRecruitmentStatus("TUTUP"); });
+    }
+
+    function applyRecruitmentStatus(status) {
+      recruitmentStatus = status;
+      var openBox = document.getElementById('courier-recruitment-open-box');
+      var closedBox = document.getElementById('courier-recruitment-closed-box');
+      var btnRecruit = document.getElementById('btn-toggle-recruitment');
+      
+      if (status === "BUKA") {
+        openBox.classList.remove('hidden');
+        closedBox.classList.add('hidden');
+        if (btnRecruit) {
+          btnRecruit.className = "bg-emerald-500 hover:bg-emerald-600 text-white font-black px-3 py-2.5 rounded-2xl text-[10px] flex items-center gap-1 shadow-md active:scale-95 transition-all";
+          btnRecruit.innerHTML = '<i class="fa-solid fa-user-plus"></i> Lowongan Buka';
+        }
+      } else {
+        openBox.classList.add('hidden');
+        closedBox.classList.remove('hidden');
+        if (btnRecruit) {
+          btnRecruit.className = "bg-red-500 hover:bg-red-600 text-white font-black px-3 py-2.5 rounded-2xl text-[10px] flex items-center gap-1 shadow-md active:scale-95 transition-all";
+          btnRecruit.innerHTML = '<i class="fa-solid fa-user-slash"></i> Lowongan Tutup';
+        }
+      }
+    }
+
+    function toggleRecruitmentStatus() {
+      var newStatus = (recruitmentStatus === "BUKA") ? "TUTUP" : "BUKA";
+      applyRecruitmentStatus(newStatus);
+      callApiPost('saveRecruitmentStatus', { status: newStatus });
+      showToast("Status lowongan kurir diubah ke: " + newStatus);
+    }
+
+    function registerCourier() {
+      var name = document.getElementById('courier-reg-name').value.trim();
+      var phone = document.getElementById('courier-reg-phone').value.trim();
+      var vehicle = document.getElementById('courier-reg-vehicle').value.trim();
+      var password = document.getElementById('courier-reg-password').value.trim();
+
+      if (!name || !phone || !vehicle || !password) {
+        alert("Lengkapi seluruh kolom pendaftaran kurir termasuk jenis kendaraan.");
+        return;
+      }
+
+      var courierData = { name: name, phone: phone, vehicle: vehicle, password: password };
+      callApiPost('registerCourier', { courier: courierData })
+        .then(res => {
+          if (res && res.status === "Exists") {
+            alert("⚠️ Nomor WhatsApp kurir sudah terdaftar!");
+            switchAdminSubTab('login');
+            document.getElementById('courier-login-phone').value = phone;
+          } else {
+            showToast("Pendaftaran kurir berhasil! Silakan login.");
+            switchAdminSubTab('login');
+            document.getElementById('courier-login-phone').value = phone;
+          }
+        })
+        .catch(err => { alert("Gagal terhubung ke server pendaftaran kurir."); });
+    }
+
+    function loginCourier() {
+      var phone = document.getElementById('courier-login-phone').value.trim();
+      var password = document.getElementById('courier-login-password').value.trim();
+
+      if (!phone || !password) {
+        alert("Masukkan WhatsApp dan Password Kurir.");
+        return;
+      }
+
+      callApiPost('loginCourier', { phone: phone, password: password })
+        .then(res => {
+          if (res && res.status === "Success") {
+            currentUser = { name: res.name, phone: res.phone, vehicle: res.vehicle, role: 'courier' };
+            safeStorage.setItem('app_active_session', JSON.stringify(currentUser));
+            showToast("Login Kurir Berhasil!");
+            openMainApp("Kurir: " + currentUser.name);
+          } else {
+            alert("❌ " + (res.message || "WhatsApp atau Password kurir salah!"));
+          }
+        })
+        .catch(err => { alert("Gagal terhubung ke server login kurir."); });
+    }
+
     function loginAsGuest() {
       currentUser = { name: "Pengunjung", phone: "-", address: "-", role: "guest" };
       safeStorage.setItem('app_active_session', JSON.stringify(currentUser));
@@ -404,9 +554,7 @@
             openMainApp(currentUser.name);
           }
         })
-        .catch(err => { 
-          alert("Gagal terhubung ke server pendaftaran.");
-        });
+        .catch(err => { alert("Gagal terhubung ke server pendaftaran."); });
     }
 
     function loginCustomer() {
@@ -429,9 +577,7 @@
             alert("❌ " + (res.message || "Nomor WhatsApp atau Password salah!"));
           }
         })
-        .catch(err => {
-          alert("Gagal terhubung ke server login.");
-        });
+        .catch(err => { alert("Gagal terhubung ke server login."); });
     }
 
     function forgotPassword() {
@@ -443,9 +589,9 @@
 
     function checkAdminLogin() {
       if (document.getElementById('admin-pin-input').value.trim() === ADMIN_PIN) {
-        currentUser = { name: "Admin Toko / Kurir", role: "admin" };
+        currentUser = { name: "Admin Utama", role: "admin" };
         safeStorage.setItem('app_active_session', JSON.stringify(currentUser));
-        openMainApp("Mode Admin / Kurir");
+        openMainApp("Admin Utama");
       } else {
         document.getElementById('admin-error-msg').classList.remove('hidden');
       }
@@ -459,18 +605,33 @@
       document.getElementById('greeting-name-text').innerText = greetingText;
 
       var isAdmin = currentUser && currentUser.role === 'admin';
-      document.getElementById('admin-control-bar').classList.toggle('hidden', !isAdmin);
-      document.getElementById('nav-keranjang-btn').classList.toggle('hidden', isAdmin);
-      document.getElementById('header-cart-btn').classList.toggle('hidden', isAdmin);
+      var isCourier = currentUser && currentUser.role === 'courier';
+      var isStaff = isAdmin || isCourier;
+
+      document.getElementById('admin-control-bar').classList.toggle('hidden', !isStaff);
+      document.getElementById('nav-keranjang-btn').classList.toggle('hidden', isStaff);
+      document.getElementById('header-cart-btn').classList.toggle('hidden', isStaff);
+
+      // Sembunyikan tombol eksklusif admin utama jika yang login adalah kurir biasa
+      document.getElementById('admin-exclusive-buttons').classList.toggle('hidden', !isAdmin);
+      document.getElementById('admin-omset-grid').classList.toggle('hidden', !isAdmin);
+      
+      if (isCourier) {
+        document.getElementById('panel-title-text').innerText = "PANEL KURIR: " + currentUser.name;
+        document.getElementById('panel-subtitle-text').innerText = "Kendaraan: " + (currentUser.vehicle || "Motor");
+      } else if (isAdmin) {
+        document.getElementById('panel-title-text').innerText = "PANEL ADMIN UTAMA";
+        document.getElementById('panel-subtitle-text').innerText = "Kelola Toko & Pesanan";
+      }
 
       var floatingWaBtn = document.getElementById('floating-wa-btn');
       if (floatingWaBtn) {
-        floatingWaBtn.classList.toggle('hidden', isAdmin);
+        floatingWaBtn.classList.toggle('hidden', isStaff);
         var professionalMsg = "Halo Admin Beli Disini!, saya ingin bertanya seputar ketersediaan produk dan layanan pesan-antar toko. Terima kasih.";
         floatingWaBtn.href = "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(professionalMsg);
       }
 
-      if (!isAdmin && currentUser && currentUser.role !== 'guest') {
+      if (!isStaff && currentUser && currentUser.role !== 'guest') {
         document.getElementById('cust-name').value = currentUser.name || '';
         document.getElementById('cust-address').value = currentUser.address || '';
       }
@@ -480,7 +641,7 @@
     }
 
     function openProfileModal() {
-      if (!currentUser || currentUser.role === 'guest' || currentUser.role === 'admin') {
+      if (!currentUser || currentUser.role === 'guest' || currentUser.role === 'admin' || currentUser.role === 'courier') {
         showToast("Fitur profil khusus akun konsumen.", false);
         return;
       }
@@ -490,9 +651,7 @@
       document.getElementById('profile-modal').classList.remove('hidden');
     }
 
-    function closeProfileModal() {
-      document.getElementById('profile-modal').classList.add('hidden');
-    }
+    function closeProfileModal() { document.getElementById('profile-modal').classList.add('hidden'); }
 
     function logout() {
       if (courierWatchId) navigator.geolocation.clearWatch(courierWatchId);
@@ -507,7 +666,7 @@
     function checkStoreStatus() {
       callApiGet('getStoreStatus')
         .then(status => { applyStoreStatus(status || "BUKA"); })
-        .catch(err => { applyStoreStatus(safeStorage.getItem('app_store_status') || "BUKA"); });
+        .catch(err => { applyStoreStatus("BUKA"); });
     }
 
     function applyStoreStatus(status) {
@@ -515,12 +674,16 @@
       var btn = document.getElementById('btn-toggle-store');
       var banner = document.getElementById('store-closed-banner');
       if (status === "BUKA") {
-        btn.className = "bg-emerald-500 hover:bg-emerald-600 text-white font-black px-3 py-2.5 rounded-2xl text-[10px] flex items-center gap-1 shadow-md active:scale-95 transition-all";
-        btn.innerHTML = '<i class="fa-solid fa-store"></i> TOKO BUKA';
+        if (btn) {
+          btn.className = "bg-emerald-500 hover:bg-emerald-600 text-white font-black px-3 py-2.5 rounded-2xl text-[10px] flex items-center gap-1 shadow-md active:scale-95 transition-all";
+          btn.innerHTML = '<i class="fa-solid fa-store"></i> TOKO BUKA';
+        }
         banner.classList.add('hidden');
       } else {
-        btn.className = "bg-red-500 hover:bg-red-600 text-white font-black px-3 py-2.5 rounded-2xl text-[10px] flex items-center gap-1 shadow-md active:scale-95 transition-all";
-        btn.innerHTML = '<i class="fa-solid fa-store-slash"></i> TOKO TUTUP';
+        if (btn) {
+          btn.className = "bg-red-500 hover:bg-red-600 text-white font-black px-3 py-2.5 rounded-2xl text-[10px] flex items-center gap-1 shadow-md active:scale-95 transition-all";
+          btn.innerHTML = '<i class="fa-solid fa-store-slash"></i> TOKO TUTUP';
+        }
         banner.classList.remove('hidden');
       }
     }
@@ -528,7 +691,6 @@
     function toggleStoreStatus() {
       var newStatus = (storeStatus === "BUKA") ? "TUTUP" : "BUKA";
       applyStoreStatus(newStatus);
-      safeStorage.setItem('app_store_status', newStatus);
       callApiPost('saveStoreStatus', { status: newStatus });
       showToast("Status toko diubah ke: " + newStatus);
     }
@@ -546,10 +708,7 @@
           fetch(url).then(res => res.json()).then(data => {
             currentDistance = data.routes[0].distance / 1000;
             
-            var BASE_KM = 2;       
-            var BASE_FEE = 6000;   
-            var RATE_PER_KM = 2500;
-            
+            var BASE_KM = 2, BASE_FEE = 6000, RATE_PER_KM = 2500;
             if (currentDistance <= BASE_KM) {
               calculatedOngkir = BASE_FEE;
             } else {
@@ -569,10 +728,7 @@
              var a = Math.sin(dLat/2)*Math.sin(dLat/2) + Math.cos(STORE_COORDS.lat*Math.PI/180)*Math.cos(currentCoords.lat*Math.PI/180)*Math.sin(dLng/2)*Math.sin(dLng/2);
              currentDistance = R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
              
-             var BASE_KM = 2;       
-             var BASE_FEE = 6000;   
-             var RATE_PER_KM = 2500;
-             
+             var BASE_KM = 2, BASE_FEE = 6000, RATE_PER_KM = 2500;
              if (currentDistance <= BASE_KM) {
                calculatedOngkir = BASE_FEE;
              } else {
@@ -626,14 +782,20 @@
 
       var html = '';
       for (var i = 0; i < filtered.length; i++) {
-        var p = filtered[i], pIdStr = String(p.id), qty = cart[pIdStr] ? cart[pIdStr].qty : 0, isAdmin = currentUser && currentUser.role === 'admin';
+        var p = filtered[i], pIdStr = String(p.id), qty = cart[pIdStr] ? cart[pIdStr].qty : 0;
+        var isAdmin = currentUser && currentUser.role === 'admin';
+        var isStaff = currentUser && (currentUser.role === 'admin' || currentUser.role === 'courier');
         var inStock = (p.inStock !== false);
 
         var actionUI = "";
-        if (isAdmin) {
-          var stockBtnClass = inStock ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-200" : "bg-red-100 text-red-700 hover:bg-red-200";
-          var stockText = inStock ? "Stok: Tersedia" : "Stok: Habis";
-          actionUI = '<button type="button" onclick="toggleProductStock(\'' + pIdStr + '\', ' + inStock + ')" class="w-full text-[10px] py-2 rounded-xl font-black transition-all ' + stockBtnClass + '">' + stockText + '</button>';
+        if (isStaff) {
+          if (isAdmin) {
+            var stockBtnClass = inStock ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-200" : "bg-red-100 text-red-700 hover:bg-red-200";
+            var stockText = inStock ? "Stok: Tersedia" : "Stok: Habis";
+            actionUI = '<button type="button" onclick="toggleProductStock(\'' + pIdStr + '\', ' + inStock + ')" class="w-full text-[10px] py-2 rounded-xl font-black transition-all ' + stockBtnClass + '">' + stockText + '</button>';
+          } else {
+            actionUI = '<div class="text-center"><span class="text-[10px] bg-gray-100 text-gray-500 font-bold px-3 py-1.5 rounded-xl block">Akses Kurir (Lihat Katalog)</span></div>';
+          }
         } else {
           if (!inStock) {
             actionUI = '<div class="text-center"><span class="text-[10px] bg-red-100 text-red-600 font-black px-3 py-1.5 rounded-xl uppercase tracking-wider inline-block">Stok Habis</span></div>';
@@ -666,11 +828,13 @@
       document.getElementById('image-modal').classList.remove('hidden');
     }
 
-    function closeImageModal() {
-      document.getElementById('image-modal').classList.add('hidden');
-    }
+    function closeImageModal() { document.getElementById('image-modal').classList.add('hidden'); }
 
     function toggleProductStock(productId, currentStatus) {
+      if (!currentUser || currentUser.role !== 'admin') {
+        showToast("⚠️ Hanya Admin Utama yang dapat mengubah status produk!", false);
+        return;
+      }
       var newStatus = currentStatus ? "Habis" : "Tersedia";
       for (var i = 0; i < allProducts.length; i++) {
         if (String(allProducts[i].id) === String(productId)) {
@@ -752,19 +916,21 @@
       if (courierWatchId) navigator.geolocation.clearWatch(courierWatchId);
       courierWatchId = navigator.geolocation.watchPosition(function(pos) {
         var cLat = pos.coords.latitude, cLng = pos.coords.longitude;
-        callApiPost('updateCourierLocation', { invoiceId: invId, lat: cLat, lng: cLng });
+        callApiPost('updateCourierLocation', { invoiceId: invId, lat: cLat, lng: cLng, courierName: currentUser.name });
       }, function(err) {}, { enableHighAccuracy: true, maximumAge: 0, timeout: 5000 });
     }
 
     function renderOrderStatus() {
-      var container = document.getElementById('order-history-container'), isAdmin = currentUser && currentUser.role === 'admin';
-      document.getElementById('status-tab-title').innerText = isAdmin ? "PANEL ADMIN/KURIR: DAFTAR PESANAN" : "RIWAYAT & STATUS PESANAN SAYA";
+      var container = document.getElementById('order-history-container');
+      var isStaff = currentUser && (currentUser.role === 'admin' || currentUser.role === 'courier');
+      
+      document.getElementById('status-tab-title').innerText = isStaff ? "PANEL KURIR/ADMIN: DAFTAR PESANAN" : "RIWAYAT & STATUS PESANAN SAYA";
 
       callApiGet('getOrders')
         .then(ordersFromSheet => {
           var orders = ordersFromSheet || []; rawOrdersList = orders;
-          if (isAdmin) {
-            updateAdminDashboard(orders);
+          if (isStaff) {
+            if (currentUser.role === 'admin') updateAdminDashboard(orders);
           } else if (currentUser) {
             if (currentUser.role === 'guest') {
               orders = []; 
@@ -778,7 +944,7 @@
             }
           }
 
-          if (!isAdmin && currentUser && currentUser.role !== 'guest') {
+          if (!isStaff && currentUser && currentUser.role !== 'guest') {
             var localOrders = JSON.parse(safeStorage.getItem('app_order_history') || '[]');
             localOrders = localOrders.filter(function(lo) {
               if (currentUser.phone && lo.phone) {
@@ -792,11 +958,11 @@
               if (!orders.some(function(so) { return so.invoiceId === lo.invoiceId; })) { orders.unshift(lo); }
             }
           }
-          displayOrderCards(container, orders, isAdmin);
+          displayOrderCards(container, orders, isStaff);
         })
         .catch(err => {
           var orders = [];
-          if (!isAdmin && currentUser && currentUser.role !== 'guest') {
+          if (!isStaff && currentUser && currentUser.role !== 'guest') {
             var localOrders = JSON.parse(safeStorage.getItem('app_order_history') || '[]');
             orders = localOrders.filter(function(lo) {
               if (currentUser.phone && lo.phone) {
@@ -806,28 +972,24 @@
             });
           }
           rawOrdersList = orders;
-          if (isAdmin) updateAdminDashboard(orders);
-          displayOrderCards(container, orders, isAdmin);
+          if (currentUser && currentUser.role === 'admin') updateAdminDashboard(orders);
+          displayOrderCards(container, orders, isStaff);
         });
     }
 
     function updateAdminDashboard(orders) {
-      var totalOmset = 0;
-      var todayStr = new Date().toLocaleDateString('id-ID');
-      var todayOrdersCount = 0;
-
+      var totalOmset = 0, todayStr = new Date().toLocaleDateString('id-ID'), todayOrdersCount = 0;
       for (var i = 0; i < orders.length; i++) {
         if (orders[i].date === todayStr) {
           totalOmset += (orders[i].total || 0);
           todayOrdersCount++;
         }
       }
-
       document.getElementById('dash-total-omset').innerText = "Rp " + formatRupiah(totalOmset);
       document.getElementById('dash-total-orders').innerText = todayOrdersCount + " Pesanan";
     }
 
-    function displayOrderCards(container, orders, isAdmin) {
+    function displayOrderCards(container, orders, isStaff) {
       if (!orders || orders.length === 0) { 
         container.innerHTML = '<div class="bg-white rounded-3xl p-6 text-center text-gray-400 font-bold text-xs shadow-sm"><i class="fa-solid fa-clock-rotate-left text-3xl mb-2 text-gray-300"></i><p>Belum ada riwayat pesanan.</p></div>'; 
         return; 
@@ -846,7 +1008,7 @@
         } else if (ordStatus === 'Di-ACC (Diproses)') {
           statusBadge = '<span class="bg-blue-100 text-blue-700 text-[9px] font-black px-2.5 py-0.5 rounded-full flex items-center gap-1"><i class="fa-solid fa-box-open"></i> Diproses</span>';
         } else if (ordStatus === 'Sedang Diantar') {
-          statusBadge = '<span class="bg-orange-100 text-orange-700 text-[9px] font-black px-2.5 py-0.5 rounded-full flex items-center gap-1 animate-pulse"><i class="fa-solid fa-motorcycle"></i> Diantar</span>';
+          statusBadge = '<span class="bg-orange-100 text-orange-700 text-[9px] font-black px-2.5 py-0.5 rounded-full flex items-center gap-1 animate-pulse"><i class="fa-solid fa-motorcycle"></i> Diantar (' + (ord.courierName || 'Kurir') + ')</span>';
         } else if (ordStatus === 'Selesai') {
           statusBadge = '<span class="bg-gray-100 text-gray-600 text-[9px] font-black px-2.5 py-0.5 rounded-full flex items-center gap-1"><i class="fa-solid fa-check-double"></i> Selesai</span>';
         } else {
@@ -854,18 +1016,20 @@
         }
 
         var actionButtons = '';
-        if (isAdmin) {
+        if (isStaff) {
           var cleanPhone = ord.phone ? String(ord.phone).replace(/[^0-9]/g, '') : '';
-          if (cleanPhone.startsWith('0')) {
-            cleanPhone = '62' + cleanPhone.substring(1);
-          }
-          var btnChatWa = cleanPhone ? '<a href="https://wa.me/' + cleanPhone + '?text=' + encodeURIComponent('Halo ' + ord.name + ', terkait pesanan ' + ord.invoiceId + ', konfirmasi pembayarannya bagaimana ya? (QRIS / Tunai)') + '" target="_blank" class="bg-emerald-500 text-white font-black px-2.5 py-2 rounded-xl text-[10px] active:scale-95 shadow-sm inline-flex items-center gap-1"><i class="fa-brands fa-whatsapp"></i> Chat WA</a>' : '';
+          if (cleanPhone.startsWith('0')) cleanPhone = '62' + cleanPhone.substring(1);
+          
+          // Jika kurir yang sedang mengambil/mengantar, chat WA pembeli terhubung ke nomor KURIR tersebut. Jika belum ada kurir, ke Admin Utama.
+          var chatTargetPhone = (ord.courierPhone && ord.courierPhone !== "") ? ord.courierPhone : WA_NUMBER;
+          var btnChatWa = cleanPhone ? '<a href="https://wa.me/' + cleanPhone + '?text=' + encodeURIComponent('Halo ' + ord.name + ', saya kurir pengantar ' + (currentUser.name || '') + ' terkait pesanan ' + ord.invoiceId + '. Mohon konfirmasi alamat pengantaran Anda.') + '" target="_blank" class="bg-emerald-500 text-white font-black px-2.5 py-2 rounded-xl text-[10px] active:scale-95 shadow-sm inline-flex items-center gap-1"><i class="fa-brands fa-whatsapp"></i> Chat Pemesan</a>' : '';
 
           var btnAcc = (ordStatus !== 'Selesai' && ordStatus !== 'Sedang Diantar' && ordStatus !== 'Di-ACC (Diproses)') ? '<button type="button" onclick="updateOrderStatus(\'' + ord.invoiceId + '\', \'Di-ACC (Diproses)\')" class="bg-emerald-500 text-white font-black px-3 py-2 rounded-xl text-[10px] active:scale-95 shadow-sm"><i class="fa-solid fa-check mr-1"></i> ACC</button>' : '';
           
-          var btnKirim = (ordStatus !== 'Selesai' && ordStatus !== 'Sedang Diantar') ? '<button type="button" onclick="updateOrderStatus(\'' + ord.invoiceId + '\', \'Sedang Diantar\')" class="bg-orange-500 text-white font-black px-3 py-2 rounded-xl text-[10px] active:scale-95 shadow-sm"><i class="fa-solid fa-motorcycle mr-1"></i> KIRIM</button>' : '';
+          var btnKirim = (ordStatus !== 'Selesai' && ordStatus !== 'Sedang Diantar') ? '<button type="button" onclick="assignAndDeliver(\'' + ord.invoiceId + '\')" class="bg-orange-500 text-white font-black px-3 py-2 rounded-xl text-[10px] active:scale-95 shadow-sm"><i class="fa-solid fa-motorcycle mr-1"></i> AMBIL & KIRIM</button>' : '';
           
-          var btnGps = (ordStatus === 'Sedang Diantar') ? '<button type="button" onclick="startCourierGPSBroadcaster(\'' + ord.invoiceId + '\')" class="bg-emerald-600 text-white font-black px-3 py-2 rounded-xl text-[10px] active:scale-95 shadow-sm"><i class="fa-solid fa-satellite-dish mr-1"></i> GPS KURIR</button>' : '';
+          var isAssignedToMe = (currentUser.role === 'admin' || ord.courierPhone === currentUser.phone);
+          var btnGps = (ordStatus === 'Sedang Diantar' && isAssignedToMe) ? '<button type="button" onclick="startCourierGPSBroadcaster(\'' + ord.invoiceId + '\')" class="bg-emerald-600 text-white font-black px-3 py-2 rounded-xl text-[10px] active:scale-95 shadow-sm"><i class="fa-solid fa-satellite-dish mr-1"></i> GPS SAYA</button>' : '';
           var btnSelesai = (ordStatus === 'Sedang Diantar') ? '<button type="button" onclick="updateOrderStatus(\'' + ord.invoiceId + '\', \'Selesai\')" class="bg-slate-900 text-white font-black px-3 py-2 rounded-xl text-[10px] active:scale-95 shadow-sm"><i class="fa-solid fa-flag-checkered mr-1"></i> SELESAI</button>' : '';
           var btnPeta = '<button type="button" onclick="openLiveTracking(\'' + ord.invoiceId + '\', ' + (ord.lat ? ord.lat : 'null') + ', ' + (ord.lng ? ord.lng : 'null') + ')" class="bg-slate-100 text-slate-800 font-bold px-2.5 py-2 rounded-xl text-[10px] active:scale-95"><i class="fa-solid fa-map-location-dot"></i> Peta</button>';
           var btnCetak = '<button type="button" onclick="openReceiptModal(\'' + ord.invoiceId + '\')" class="bg-amber-500 text-white font-black px-2.5 py-2 rounded-xl text-[10px] active:scale-95 shadow-sm"><i class="fa-solid fa-print mr-1"></i> Struk</button>';
@@ -876,10 +1040,25 @@
           actionButtons = '<div class="pt-2 border-t border-gray-100 flex justify-between items-center"><span class="text-xs font-black text-slate-900">Total: Rp ' + formatRupiah(ord.total) + '</span>' + btnLacak + '</div>';
         }
 
+        var courierInfoBadge = ord.courierName ? '<p class="text-[10px] text-blue-600 font-bold bg-blue-50 px-2 py-1 rounded-lg"><i class="fa-solid fa-motorcycle mr-1"></i> Kurir bertugas: <strong>' + ord.courierName + '</strong> (' + (ord.courierPhone || '-') + ')</p>' : '';
         var notesHTML = ord.notes ? '<p class="text-[10px] text-orange-600 font-bold bg-orange-50 px-2 py-1 rounded-lg"><span class="font-black">Catatan:</span> ' + ord.notes + '</p>' : '';
-        html += '<div class="bg-white rounded-3xl p-4 shadow-sm border border-gray-100 space-y-2"><div class="flex justify-between items-center border-b border-gray-100 pb-2"><span class="font-black text-xs text-orange-600">' + ord.invoiceId + '</span>' + statusBadge + '</div><div class="text-xs font-semibold text-slate-800 space-y-0.5"><p><span class="font-bold">Pemesan:</span> ' + ord.name + ' (' + (ord.phone || '-') + ')</p><p class="text-[10px] text-gray-500 truncate"><span class="font-bold">Items:</span> ' + ord.itemsSummary + '</p>' + notesHTML + '<p class="text-[10px] text-gray-400"><span class="font-bold">Alamat:</span> ' + (ord.address || '-') + '</p></div>' + actionButtons + '</div>';
+        
+        html += '<div class="bg-white rounded-3xl p-4 shadow-sm border border-gray-100 space-y-2"><div class="flex justify-between items-center border-b border-gray-100 pb-2"><span class="font-black text-xs text-orange-600">' + ord.invoiceId + '</span>' + statusBadge + '</div><div class="text-xs font-semibold text-slate-800 space-y-0.5"><p><span class="font-bold">Pemesan:</span> ' + ord.name + ' (' + (ord.phone || '-') + ')</p><p class="text-[10px] text-gray-500 truncate"><span class="font-bold">Items:</span> ' + ord.itemsSummary + '</p>' + notesHTML + courierInfoBadge + '<p class="text-[10px] text-gray-400"><span class="font-bold">Alamat:</span> ' + (ord.address || '-') + '</p></div>' + actionButtons + '</div>';
       }
       container.innerHTML = html;
+    }
+
+    function assignAndDeliver(invoiceId) {
+      var courierName = currentUser.name;
+      var courierPhone = currentUser.phone || WA_NUMBER;
+      callApiPost('assignCourierAndDeliver', { invoiceId: invoiceId, courierName: courierName, courierPhone: courierPhone })
+        .then(() => {
+          showToast("Pesanan diambil oleh " + courierName + "!");
+          renderOrderStatus();
+          if (currentUser.role === 'courier') {
+            startCourierGPSBroadcaster(invoiceId);
+          }
+        });
     }
 
     function openReceiptModal(invId) {
@@ -918,7 +1097,8 @@
     }
 
     function checkAdminNewOrders() {
-      if (currentUser && currentUser.role === 'admin') {
+      var isStaff = currentUser && (currentUser.role === 'admin' || currentUser.role === 'courier');
+      if (isStaff) {
         callApiGet('getOrders')
           .then(orders => {
             var pendingOrders = (orders || []).filter(function(o) { return o.status === 'Menunggu ACC'; });
@@ -1148,7 +1328,13 @@
       if (trackingPollInterval) clearInterval(trackingPollInterval);
     }
 
-    function toggleAddProductModal() { document.getElementById('add-product-modal').classList.toggle('hidden'); }
+    function toggleAddProductModal() {
+      if (!currentUser || currentUser.role !== 'admin') {
+        showToast("⚠️ Hanya Admin Utama yang dapat menambah produk!", false);
+        return;
+      }
+      document.getElementById('add-product-modal').classList.toggle('hidden');
+    }
 
     function saveNewProduct() {
       var name = document.getElementById('new-prod-name').value.trim(), price = parseInt(document.getElementById('new-prod-price').value.trim()), category = document.getElementById('new-prod-category').value, image = document.getElementById('new-prod-image').value.trim(), desc = document.getElementById('new-prod-desc').value.trim();
