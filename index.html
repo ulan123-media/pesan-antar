@@ -144,14 +144,14 @@
       </div>
     </div>
 
-    <!-- PANEL ADMIN BAR & DASHBOARD OMSET (KINI DENGAN SATU TOMBOL RAPI "AKSES ADMIN") -->
+    <!-- PANEL ADMIN BAR & DASHBOARD OMSET -->
     <div id="admin-control-bar" class="hidden px-5 mb-4">
       <div class="bg-slate-900 text-white p-4 rounded-3xl flex justify-between items-center shadow-lg border border-slate-800 mb-3">
         <div class="flex items-center gap-2.5">
           <div class="w-10 h-10 rounded-2xl bg-orange-500/20 text-orange-400 flex items-center justify-center"><i class="fa-solid fa-motorcycle text-base"></i></div>
           <div><p id="panel-title-text" class="text-xs font-black">PANEL KONTROL</p><p id="panel-subtitle-text" class="text-[10px] text-gray-400">Antar Pesanan Area Terdekat</p></div>
         </div>
-        <!-- TOMBOL EKSKLUSIF ADMIN UTAMA DIUBAH JADI SATU TOMBOL RAPI "AKSES ADMIN" -->
+        <!-- TOMBOL AKSES ADMIN UTAMA -->
         <div id="admin-exclusive-buttons">
           <button type="button" onclick="toggleAdminMenuModal()" class="bg-orange-500 hover:bg-orange-600 text-white font-black px-4 py-2.5 rounded-2xl text-[11px] flex items-center gap-1.5 shadow-md active:scale-95 transition-all">
             <i class="fa-solid fa-sliders text-xs"></i> Akses Admin
@@ -195,7 +195,6 @@
         <button type="button" onclick="toggleAdminMenuModal()" class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 font-bold active:scale-90"><i class="fa-solid fa-xmark text-xs"></i></button>
       </div>
       <div class="space-y-3 pt-1">
-        <!-- Pengaturan Status Toko -->
         <div class="bg-gray-50 p-4 rounded-2xl flex justify-between items-center border border-gray-100">
           <div>
             <p class="text-xs font-black text-slate-900">Status Toko</p>
@@ -203,7 +202,6 @@
           </div>
           <button type="button" id="modal-btn-toggle-store" onclick="toggleStoreStatus(); updateAdminMenuModalUI();" class="px-4 py-2.5 rounded-xl text-xs font-black text-white shadow-sm active:scale-95 transition-all">Buka / Tutup</button>
         </div>
-        <!-- Pengaturan Status Lowongan Kurir -->
         <div class="bg-gray-50 p-4 rounded-2xl flex justify-between items-center border border-gray-100">
           <div>
             <p class="text-xs font-black text-slate-900">Lowongan Kurir</p>
@@ -211,7 +209,6 @@
           </div>
           <button type="button" id="modal-btn-toggle-recruitment" onclick="toggleRecruitmentStatus(); updateAdminMenuModalUI();" class="px-4 py-2.5 rounded-xl text-xs font-black text-white shadow-sm active:scale-95 transition-all">Buka / Tutup</button>
         </div>
-        <!-- Tambah Produk Baru -->
         <button type="button" onclick="toggleAdminMenuModal(); toggleAddProductModal();" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-black py-3.5 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-orange-500/20 active:scale-95 transition-all">
           <i class="fa-solid fa-plus-circle text-sm"></i> Tambah Produk Baru
         </button>
@@ -975,15 +972,30 @@
 
     function renderOrderStatus() {
       var container = document.getElementById('order-history-container');
-      var isStaff = currentUser && (currentUser.role === 'admin' || currentUser.role === 'courier');
+      var isAdmin = currentUser && currentUser.role === 'admin';
+      var isCourier = currentUser && currentUser.role === 'courier';
+      var isStaff = isAdmin || isCourier;
       
-      document.getElementById('status-tab-title').innerText = isStaff ? "PANEL KURIR/ADMIN: DAFTAR PESANAN" : "RIWAYAT & STATUS PESANAN SAYA";
+      document.getElementById('status-tab-title').innerText = isStaff ? (isAdmin ? "PANEL ADMIN UTAMA: SEMUA PESANAN" : "PANEL KURIR: TUGAS & TERSEDIA") : "RIWAYAT & STATUS PESANAN SAYA";
 
       callApiGet('getOrders')
         .then(ordersFromSheet => {
           var orders = ordersFromSheet || []; rawOrdersList = orders;
-          if (isStaff) {
-            if (currentUser.role === 'admin') updateAdminDashboard(orders);
+          
+          if (isCourier) {
+            // FILTER KHUSUS KURIR: Kurir B tidak melihat pesanan yang sudah diambil Kurir A
+            // Kurir hanya melihat:
+            // 1. Pesanan yang siap diantar ("Di-ACC (Diproses)") dan BELUM ada kurir yang mengambil.
+            // 2. Pesanan yang sedang/telah diambil oleh kurir tersebut sendiri.
+            orders = orders.filter(function(o) {
+              var isReadyForDelivery = (o.status === 'Di-ACC (Diproses)' && (!o.courierPhone || o.courierPhone === ''));
+              var isAssignedToMe = (o.courierPhone && String(o.courierPhone).trim() === String(currentUser.phone).trim());
+              var isCompletedByMe = (o.status === 'Selesai' && o.courierPhone && String(o.courierPhone).trim() === String(currentUser.phone).trim());
+              return isReadyForDelivery || isAssignedToMe || isCompletedByMe;
+            });
+          } else if (isAdmin) {
+            updateAdminDashboard(orders);
+            // Admin Utama melihat SEMUA pesanan tanpa ada yang disembunyikan/hilang
           } else if (currentUser) {
             if (currentUser.role === 'guest') {
               orders = []; 
