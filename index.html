@@ -110,7 +110,7 @@
       <div class="px-5 mb-4"><div class="bg-[#c8f537] rounded-3xl p-5 flex justify-between items-center shadow-sm relative overflow-hidden border border-[#b8e826]"><div class="z-10"><span class="bg-[#ff4500] text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider inline-block mb-1 shadow-sm">DISKON DESA</span><h2 class="text-2xl font-black text-slate-900 leading-tight">Mulai Belanja</h2><p class="text-xs text-slate-700 font-semibold mt-0.5">Antar Cepat Sampai Rumah</p></div><div class="text-orange-500 text-5xl pr-1 z-10 drop-shadow-sm"><i class="fa-solid fa-basket-shopping"></i></div></div></div>
       <div class="px-5 mb-5"><div class="relative flex items-center"><i class="fa-solid fa-magnifying-glass absolute left-4 text-gray-400 text-sm"></i><input type="text" id="search-input" oninput="filterProducts()" placeholder="Cari makanan, minuman..." class="w-full bg-white rounded-2xl py-4 pl-11 pr-4 text-xs text-slate-800 placeholder-gray-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-400 transition-all font-medium"></div></div>
       <div class="px-5 mb-5"><h3 class="text-[11px] font-black uppercase text-slate-900 tracking-wider mb-3">KATEGORI</h3><div class="grid grid-cols-4 gap-2.5"><button type="button" onclick="selectCategory('Semua')" id="cat-Semua" class="category-btn active-cat bg-white rounded-2xl py-3 px-1 flex flex-col items-center justify-center shadow-sm border-2 border-transparent transition-all active:scale-95"><div class="w-10 h-10 rounded-full bg-orange-100 text-orange-500 flex items-center justify-center mb-1 text-base"><i class="fa-solid fa-border-all"></i></div><span class="text-[11px] font-bold text-slate-800">Semua</span></button><button type="button" onclick="selectCategory('Makanan')" id="cat-Makanan" class="category-btn bg-white rounded-2xl py-3 px-1 flex flex-col items-center justify-center shadow-sm border-2 border-transparent transition-all active:scale-95"><div class="w-10 h-10 rounded-full bg-orange-100 text-orange-500 flex items-center justify-center mb-1 text-base"><i class="fa-solid fa-burger"></i></div><span class="text-[11px] font-bold text-slate-800">Makanan</span></button><button type="button" onclick="selectCategory('Minuman')" id="cat-Minuman" class="category-btn bg-white rounded-2xl py-3 px-1 flex flex-col items-center justify-center shadow-sm border-2 border-transparent transition-all active:scale-95"><div class="w-10 h-10 rounded-full bg-orange-100 text-orange-500 flex items-center justify-center mb-1 text-base"><i class="fa-solid fa-glass-water"></i></div><span class="text-[11px] font-bold text-slate-800">Minuman</span></button><button type="button" onclick="selectCategory('Lainnya')" id="cat-Lainnya" class="category-btn bg-white rounded-2xl py-3 px-1 flex flex-col items-center justify-center shadow-sm border-2 border-transparent transition-all active:scale-95"><div class="w-10 h-10 rounded-full bg-orange-100 text-orange-500 flex items-center justify-center mb-1 text-base"><i class="fa-solid fa-ellipsis"></i></div><span class="text-[11px] font-bold text-slate-800">Lainnya</span></button></div></div>
-      <div class="px-5 mb-6"><h3 class="text-[11px] font-black uppercase text-slate-900 tracking-wider mb-3">DAFTAR PRODUK</h3><div id="product-container" class="space-y-4"></div></div>
+      <div class="px-5 mb-6"><h3 class="text-[11px] font-black uppercase text-slate-900 tracking-wider mb-3">DAFTAR PRODUK</h3><div id="product-container" class="grid grid-cols-2 gap-3"></div></div>
     </div>
 
     <!-- STATUS PESANAN -->
@@ -540,7 +540,7 @@
         return matchesCategory && matchesSearch;
       });
 
-      if (filtered.length === 0) { container.innerHTML = '<div class="bg-white rounded-3xl p-6 text-center text-gray-500 font-bold text-xs shadow-sm">Tidak ada produk.</div>'; return; }
+      if (filtered.length === 0) { container.innerHTML = '<div class="bg-white rounded-3xl p-6 text-center text-gray-500 font-bold text-xs shadow-sm col-span-2">Tidak ada produk.</div>'; return; }
 
       var html = '';
       for (var i = 0; i < filtered.length; i++) {
@@ -551,25 +551,25 @@
         if (isAdmin) {
           var stockBtnClass = inStock ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-200" : "bg-red-100 text-red-700 hover:bg-red-200";
           var stockText = inStock ? "Stok: Tersedia" : "Stok: Habis";
-          actionUI = '<button type="button" onclick="toggleProductStock(\'' + pIdStr + '\', ' + inStock + ')" class="text-[10px] px-3 py-2 rounded-xl font-black transition-all ' + stockBtnClass + '">' + stockText + '</button>';
+          actionUI = '<button type="button" onclick="toggleProductStock(\'' + pIdStr + '\', ' + inStock + ')" class="w-full text-[10px] py-2 rounded-xl font-black transition-all ' + stockBtnClass + '">' + stockText + '</button>';
         } else {
           if (!inStock) {
-            actionUI = '<span class="text-[10px] bg-red-100 text-red-600 font-black px-3 py-1.5 rounded-xl uppercase tracking-wider">Stok Habis</span>';
+            actionUI = '<div class="text-center"><span class="text-[10px] bg-red-100 text-red-600 font-black px-3 py-1.5 rounded-xl uppercase tracking-wider inline-block">Stok Habis</span></div>';
           } else {
-            actionUI = '<div class="bg-gray-100 rounded-full p-1 flex items-center space-x-2 flex-shrink-0"><button type="button" onclick="updateQty(\'' + pIdStr + '\', -1)" class="w-8 h-8 rounded-full bg-white text-slate-800 flex items-center justify-center font-black text-xs shadow-sm active:scale-90 ' + (qty === 0 ? 'opacity-40' : '') + '">-</button><span class="text-xs font-black text-slate-900 w-5 text-center">' + qty + '</span><button type="button" onclick="updateQty(\'' + pIdStr + '\', 1)" class="w-8 h-8 rounded-full bg-orange-500 text-white flex items-center justify-center font-black text-xs shadow-sm active:scale-90">+</button></div>';
+            actionUI = '<div class="bg-gray-100 rounded-full p-1 flex items-center justify-between w-full"><button type="button" onclick="updateQty(\'' + pIdStr + '\', -1)" class="w-8 h-8 rounded-full bg-white text-slate-800 flex items-center justify-center font-black text-xs shadow-sm active:scale-90 ' + (qty === 0 ? 'opacity-40' : '') + '">-</button><span class="text-xs font-black text-slate-900">' + qty + '</span><button type="button" onclick="updateQty(\'' + pIdStr + '\', 1)" class="w-8 h-8 rounded-full bg-orange-500 text-white flex items-center justify-center font-black text-xs shadow-sm active:scale-90">+</button></div>';
           }
         }
         
-        // TATA LETAK VERTIKAL: Foto besar di atas, teks & tombol aksi rapi di bawah
-        html += '<div class="bg-white rounded-3xl p-4 shadow-sm border border-white/60 space-y-3 ' + (!inStock ? 'opacity-75 bg-gray-50' : '') + '">' +
-                  '<img src="' + p.image + '" class="w-full h-44 rounded-2xl object-cover bg-gray-100 shadow-sm">' +
+        // TATA LETAK 2 KOLOM GRID DENGAN KARTU VERTIKAL (Foto di atas, teks & tombol aksi rapi di bawah)
+        html += '<div class="bg-white rounded-3xl p-3 shadow-sm border border-white/60 flex flex-col justify-between ' + (!inStock ? 'opacity-75 bg-gray-50' : '') + '">' +
                   '<div>' +
-                    '<h4 class="font-extrabold text-slate-900 text-sm mb-1">' + p.name + '</h4>' +
-                    '<p class="text-[11px] text-gray-400 line-clamp-2 mb-3 font-medium">' + p.desc + '</p>' +
-                    '<div class="flex items-center justify-between pt-1 border-t border-gray-100">' +
-                      '<span class="text-sm font-black text-orange-600">Rp ' + formatRupiah(p.price) + '</span>' +
-                      actionUI +
-                    '</div>' +
+                    '<img src="' + p.image + '" class="w-full h-28 rounded-2xl object-cover bg-gray-100 shadow-sm mb-2.5">' +
+                    '<h4 class="font-extrabold text-slate-900 text-xs mb-1 truncate">' + p.name + '</h4>' +
+                    '<p class="text-[10px] text-gray-400 line-clamp-2 mb-2 font-medium">' + p.desc + '</p>' +
+                  '</div>' +
+                  '<div>' +
+                    '<div class="text-xs font-black text-orange-600 mb-2.5">Rp ' + formatRupiah(p.price) + '</div>' +
+                    actionUI +
                   '</div>' +
                 '</div>';
       }
