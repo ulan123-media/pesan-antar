@@ -40,16 +40,18 @@
 
   <!-- HALAMAN AUTENTIKASI -->
   <div id="auth-screen" class="fixed inset-0 z-50 flex flex-col justify-between bg-white p-6 overflow-y-auto">
+    <!-- TOP BAR IKON KONSUMEN & ADMIN DI POJOK ATAS -->
+    <div class="flex justify-between items-center w-full pt-1">
+      <button id="tab-btn-user" type="button" onclick="switchAuthTab('user')" class="w-10 h-10 rounded-2xl bg-orange-500 text-white flex items-center justify-center shadow-md active:scale-90 transition-all text-sm" title="Mode Konsumen"><i class="fa-solid fa-user"></i></button>
+      <span class="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest">Portal Akses</span>
+      <button id="tab-btn-admin" type="button" onclick="switchAuthTab('admin')" class="w-10 h-10 rounded-2xl bg-gray-100 text-slate-600 flex items-center justify-center shadow-md active:scale-90 transition-all text-sm" title="Mode Admin / Kurir"><i class="fa-solid fa-user-shield"></i></button>
+    </div>
+
     <div class="w-full my-auto py-4">
       <div class="text-center mb-6">
         <div class="w-20 h-20 bg-orange-100 rounded-3xl flex items-center justify-center mx-auto mb-4 text-orange-500 shadow-sm"><i class="fa-solid fa-store text-4xl"></i></div>
         <h2 class="text-3xl font-black text-slate-900 tracking-tight">Beli Disini!</h2>
         <p class="text-gray-400 text-xs font-bold mt-1">Aplikasi Belanja Cepat & Praktis</p>
-      </div>
-
-      <div class="bg-gray-100 p-1.5 rounded-2xl flex mb-5 font-extrabold text-xs">
-        <button id="tab-btn-user" type="button" onclick="switchAuthTab('user')" class="flex-1 py-3.5 rounded-xl transition-all active-tab shadow-sm flex items-center justify-center gap-2 text-xs"><i class="fa-solid fa-user"></i> Konsumen</button>
-        <button id="tab-btn-admin" type="button" onclick="switchAuthTab('admin')" class="flex-1 py-3.5 rounded-xl transition-all text-gray-500 hover:text-slate-900 flex items-center justify-center gap-2 text-xs"><i class="fa-solid fa-user-shield"></i> Admin / Kurir</button>
       </div>
 
       <!-- FORM CONSUMER -->
@@ -90,6 +92,7 @@
         <p id="admin-error-msg" class="text-red-500 text-xs font-bold hidden animate-bounce"><i class="fa-solid fa-circle-exclamation mr-1"></i> PIN Salah!</p>
       </div>
     </div>
+    <div class="text-center text-[10px] text-gray-400 pb-2">Beli Disini! © 2026</div>
   </div>
 
   <!-- APLIKASI UTAMA -->
@@ -343,13 +346,13 @@
 
     function switchAuthTab(tab) {
       if (tab === 'user') {
-        document.getElementById('tab-btn-user').className = "flex-1 py-3.5 rounded-xl transition-all active-tab shadow-sm flex items-center justify-center gap-2 text-xs";
-        document.getElementById('tab-btn-admin').className = "flex-1 py-3.5 rounded-xl transition-all text-gray-500 flex items-center justify-center gap-2 text-xs";
+        document.getElementById('tab-btn-user').className = "w-10 h-10 rounded-2xl bg-orange-500 text-white flex items-center justify-center shadow-md active:scale-90 transition-all text-sm";
+        document.getElementById('tab-btn-admin').className = "w-10 h-10 rounded-2xl bg-gray-100 text-slate-600 flex items-center justify-center shadow-md active:scale-90 transition-all text-sm";
         document.getElementById('form-user').classList.remove('hidden');
         document.getElementById('form-admin').classList.add('hidden');
       } else {
-        document.getElementById('tab-btn-admin').className = "flex-1 py-3.5 rounded-xl transition-all active-tab shadow-sm flex items-center justify-center gap-2 text-xs";
-        document.getElementById('tab-btn-user').className = "flex-1 py-3.5 rounded-xl transition-all text-gray-500 flex items-center justify-center gap-2 text-xs";
+        document.getElementById('tab-btn-admin').className = "w-10 h-10 rounded-2xl bg-slate-900 text-white flex items-center justify-center shadow-md active:scale-90 transition-all text-sm";
+        document.getElementById('tab-btn-user').className = "w-10 h-10 rounded-2xl bg-gray-100 text-slate-600 flex items-center justify-center shadow-md active:scale-90 transition-all text-sm";
         document.getElementById('form-admin').classList.remove('hidden');
         document.getElementById('form-user').classList.add('hidden');
       }
