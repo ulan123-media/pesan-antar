@@ -238,14 +238,28 @@
     </div>
   </div>
 
-  <!-- MODAL PROFIL PELANGGAN -->
+  <!-- MODAL PROFIL AKUN (KONSUMEN & KURIR) -->
   <div id="profile-modal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center hidden backdrop-blur-sm p-4">
-    <div class="bg-white rounded-3xl w-full max-w-xs p-6 shadow-2xl space-y-4 relative animate-slide-up">
-      <div class="flex justify-between items-center border-b pb-3"><h3 class="text-sm font-black text-slate-900 flex items-center gap-2"><i class="fa-solid fa-id-card text-orange-500"></i> Profil Akun Saya</h3><button type="button" onclick="closeProfileModal()" class="w-7 h-7 bg-gray-100 rounded-full text-gray-500 flex items-center justify-center text-xs font-bold active:scale-90"><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="bg-white rounded-3xl w-full max-w-xs p-6 shadow-2xl space-y-4 relative animate-slide-up max-h-[85vh] overflow-y-auto">
+      <div class="flex justify-between items-center border-b pb-3">
+        <h3 id="profile-modal-title" class="text-sm font-black text-slate-900 flex items-center gap-2"><i class="fa-solid fa-id-card text-orange-500"></i> Profil Akun Saya</h3>
+        <button type="button" onclick="closeProfileModal()" class="w-7 h-7 bg-gray-100 rounded-full text-gray-500 flex items-center justify-center text-xs font-bold active:scale-90"><i class="fa-solid fa-xmark"></i></button>
+      </div>
       <div class="space-y-3 text-xs">
         <div class="bg-gray-50 p-3.5 rounded-2xl"><span class="text-[10px] text-gray-400 font-bold uppercase block mb-0.5">Nama Lengkap</span><span id="profile-name" class="font-extrabold text-slate-900 text-sm">--</span></div>
         <div class="bg-gray-50 p-3.5 rounded-2xl"><span class="text-[10px] text-gray-400 font-bold uppercase block mb-0.5">Nomor WhatsApp</span><span id="profile-phone" class="font-extrabold text-slate-900 text-sm">--</span></div>
-        <div class="bg-gray-50 p-3.5 rounded-2xl"><span class="text-[10px] text-gray-400 font-bold uppercase block mb-0.5">Alamat Pengiriman</span><span id="profile-address" class="font-extrabold text-slate-900">--</span></div>
+        <div class="bg-gray-50 p-3.5 rounded-2xl"><span id="profile-address-label" class="text-[10px] text-gray-400 font-bold uppercase block mb-0.5">Alamat Pengiriman</span><span id="profile-address" class="font-extrabold text-slate-900">--</span></div>
+        
+        <!-- GALERI DOKUMEN KURIR (DINAMIS) -->
+        <div id="profile-courier-docs" class="hidden space-y-2 pt-1 border-t border-gray-100">
+          <span class="text-[10px] text-slate-500 font-extrabold uppercase block">Galeri Dokumen & Verifikasi Kurir</span>
+          <div class="grid grid-cols-4 gap-1.5">
+            <div class="text-center"><img id="p-veh" src="" onclick="openImageModal(this.src, 'Foto Kendaraan')" class="w-full h-14 object-cover rounded-xl cursor-pointer border bg-gray-100 mb-1"><span class="text-[8px] text-gray-500 font-bold">Kendaraan</span></div>
+            <div class="text-center"><img id="p-ktp" src="" onclick="openImageModal(this.src, 'Foto KTP')" class="w-full h-14 object-cover rounded-xl cursor-pointer border bg-gray-100 mb-1"><span class="text-[8px] text-gray-500 font-bold">KTP</span></div>
+            <div class="text-center"><img id="p-stnk" src="" onclick="openImageModal(this.src, 'Foto STNK')" class="w-full h-14 object-cover rounded-xl cursor-pointer border bg-gray-100 mb-1"><span class="text-[8px] text-gray-500 font-bold">STNK</span></div>
+            <div class="text-center"><img id="p-sim" src="" onclick="openImageModal(this.src, 'Foto SIM')" class="w-full h-14 object-cover rounded-xl cursor-pointer border bg-gray-100 mb-1"><span class="text-[8px] text-gray-500 font-bold">SIM</span></div>
+          </div>
+        </div>
       </div>
       <button type="button" onclick="logout()" class="w-full bg-red-50 hover:bg-red-100 text-red-600 font-black py-3 rounded-2xl text-xs transition-all flex items-center justify-center gap-2 active:scale-95"><i class="fa-solid fa-right-from-bracket"></i> KELUAR AKUN</button>
     </div>
@@ -511,7 +525,6 @@
       showToast("Status lowongan kurir diubah ke: " + newStatus);
     }
 
-    // FUNGSI PENDAFTARAN KURIR DENGAN DOKUMEN FILE UPLOAD
     function registerCourier() {
       var name = document.getElementById('courier-reg-name').value.trim();
       var phone = document.getElementById('courier-reg-phone').value.trim();
@@ -532,7 +545,6 @@
       btn.disabled = true;
       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Mengunggah Dokumen...';
 
-      // Konversi file gambar ke Base64
       readFilesAsBase64([fileVehicle, fileKtp, fileStnk, fileSim], function(base64Arr) {
         var courierData = {
           name: name,
@@ -606,7 +618,6 @@
         .catch(err => { alert("Gagal terhubung ke server login kurir."); });
     }
 
-    // MODAL PERSETUJUAN / VERIFIKASI KURIR OLEH ADMIN
     function checkPendingCouriersCount() {
       callApiGet('getPendingCouriers')
         .then(list => {
@@ -778,12 +789,51 @@
       startCustomerNotifier();
     }
 
+    // FUNGSI PROFIL MANDIRI (KONSUMEN & KURIR)
     function openProfileModal() {
-      if (!currentUser || currentUser.role === 'guest' || currentUser.role === 'admin' || currentUser.role === 'courier') return;
-      document.getElementById('profile-name').innerText = currentUser.name || '-';
-      document.getElementById('profile-phone').innerText = currentUser.phone || '-';
-      document.getElementById('profile-address').innerText = currentUser.address || '-';
-      document.getElementById('profile-modal').classList.remove('hidden');
+      if (!currentUser || currentUser.role === 'guest' || currentUser.role === 'admin') {
+        showToast("Fitur profil khusus akun konsumen dan kurir.", false);
+        return;
+      }
+
+      var docsBox = document.getElementById('profile-courier-docs');
+      var addrLabel = document.getElementById('profile-address-label');
+      var modalTitle = document.getElementById('profile-modal-title');
+
+      if (currentUser.role === 'customer') {
+        modalTitle.innerHTML = '<i class="fa-solid fa-id-card text-orange-500"></i> Profil Akun Konsumen';
+        addrLabel.innerText = "Alamat Pengiriman";
+        document.getElementById('profile-name').innerText = currentUser.name || '-';
+        document.getElementById('profile-phone').innerText = currentUser.phone || '-';
+        document.getElementById('profile-address').innerText = currentUser.address || '-';
+        docsBox.classList.add('hidden');
+        document.getElementById('profile-modal').classList.remove('hidden');
+      } else if (currentUser.role === 'courier') {
+        modalTitle.innerHTML = '<i class="fa-solid fa-motorcycle text-orange-500"></i> Profil & Dokumen Kurir';
+        addrLabel.innerText = "Kendaraan Operasional";
+        
+        callApiGet('getCourierProfile', { phone: currentUser.phone })
+          .then(profile => {
+            if (profile) {
+              document.getElementById('profile-name').innerText = profile.name || '-';
+              document.getElementById('profile-phone').innerText = profile.phone || '-';
+              document.getElementById('profile-address').innerText = profile.vehicle || '-';
+              
+              document.getElementById('p-veh').src = profile.vehiclePhoto || '';
+              document.getElementById('p-ktp').src = profile.ktpPhoto || '';
+              document.getElementById('p-stnk').src = profile.stnkPhoto || '';
+              document.getElementById('p-sim').src = profile.simPhoto || '';
+              docsBox.classList.remove('hidden');
+            }
+            document.getElementById('profile-modal').classList.remove('hidden');
+          }).catch(err => {
+            document.getElementById('profile-name').innerText = currentUser.name || '-';
+            document.getElementById('profile-phone').innerText = currentUser.phone || '-';
+            document.getElementById('profile-address').innerText = currentUser.vehicle || '-';
+            docsBox.classList.add('hidden');
+            document.getElementById('profile-modal').classList.remove('hidden');
+          });
+      }
     }
 
     function closeProfileModal() { document.getElementById('profile-modal').classList.add('hidden'); }
@@ -1025,7 +1075,7 @@
               var seenKey = 'seen_assigned_' + o.invoiceId;
               var seenTime = safeStorage.getItem(seenKey);
               if (!seenTime) { safeStorage.setItem(seenKey, now); seenTime = now; } else { seenTime = parseInt(seenTime); }
-              return (now - seenTime) < 120000; // Jeda waktu 2 menit khusus Kurir B
+              return (now - seenTime) < 120000;
             }
             return isReadyForDelivery || isAssignedToMe || isCompletedByMe;
           });
