@@ -180,6 +180,15 @@
     </div>
   </div>
 
+  <!-- MODAL ZOOM / PRATINJAU FOTO PRODUK -->
+  <div id="image-modal" class="fixed inset-0 bg-black/85 z-[80] flex items-center justify-center hidden backdrop-blur-md p-4" onclick="closeImageModal()">
+    <div class="relative max-w-sm w-full flex flex-col items-center" onclick="event.stopPropagation()">
+      <button type="button" onclick="closeImageModal()" class="absolute -top-12 right-0 w-10 h-10 rounded-full bg-white/20 text-white flex items-center justify-center font-bold text-base active:scale-90"><i class="fa-solid fa-xmark"></i></button>
+      <img id="modal-zoom-img" src="" class="w-full max-h-[70vh] object-contain rounded-3xl shadow-2xl bg-black/40" alt="Preview Foto">
+      <h4 id="modal-zoom-title" class="text-white text-xs font-black mt-3 text-center truncate w-full px-2"></h4>
+    </div>
+  </div>
+
   <!-- MODAL STRUK -->
   <div id="receipt-modal" class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center hidden backdrop-blur-sm p-4">
     <div class="bg-white rounded-3xl w-full max-w-xs p-5 shadow-2xl space-y-4">
@@ -560,10 +569,13 @@
           }
         }
         
-        // TATA LETAK 2 KOLOM GRID DENGAN KARTU VERTIKAL (Foto di atas, teks & tombol aksi rapi di bawah)
+        // FOTO KLIK UNTUK ZOOM (LIGHTBOX)
+        var safeImgUrl = p.image.replace(/'/g, "\\'");
+        var safeName = p.name.replace(/'/g, "\\'");
+
         html += '<div class="bg-white rounded-3xl p-3 shadow-sm border border-white/60 flex flex-col justify-between ' + (!inStock ? 'opacity-75 bg-gray-50' : '') + '">' +
                   '<div>' +
-                    '<img src="' + p.image + '" class="w-full h-28 rounded-2xl object-cover bg-gray-100 shadow-sm mb-2.5">' +
+                    '<img src="' + p.image + '" onclick="openImageModal(\'' + safeImgUrl + '\', \'' + safeName + '\')" class="w-full h-28 rounded-2xl object-cover bg-gray-100 shadow-sm mb-2.5 cursor-pointer hover:opacity-90 transition-all" title="Klik untuk lihat foto utuh">' +
                     '<h4 class="font-extrabold text-slate-900 text-xs mb-1 truncate">' + p.name + '</h4>' +
                     '<p class="text-[10px] text-gray-400 line-clamp-2 mb-2 font-medium">' + p.desc + '</p>' +
                   '</div>' +
@@ -574,6 +586,16 @@
                 '</div>';
       }
       container.innerHTML = html;
+    }
+
+    function openImageModal(imgUrl, prodName) {
+      document.getElementById('modal-zoom-img').src = imgUrl;
+      document.getElementById('modal-zoom-title').innerText = prodName;
+      document.getElementById('image-modal').classList.remove('hidden');
+    }
+
+    function closeImageModal() {
+      document.getElementById('image-modal').classList.add('hidden');
     }
 
     function toggleProductStock(productId, currentStatus) {
