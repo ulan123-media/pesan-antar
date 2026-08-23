@@ -424,6 +424,7 @@
 
     var currentUser = null, currentLocation = null, currentCoords = null, currentInvoiceId = "", allProducts = [], currentCategory = "Semua", cart = {}, storeStatus = "BUKA", recruitmentStatus = "TUTUP", currentDistance = 0, calculatedOngkir = 6000, rawOrdersList = [];
     var liveMap = null, courierMarker = null, customerMarker = null, routePolyline = null, trackingPollInterval = null, courierWatchId = null, adminNotifierInterval = null, knownOrderCount = 0;
+    var courierHeartbeatInterval = null;
     
     var lastKnownCustomerOrderStatus = "";
     var customerNotifierInterval = null;
@@ -690,7 +691,7 @@
       document.getElementById('courier-approval-modal').classList.add('hidden');
     }
 
-    /* FUNGSI PANTAU SEMUA KURIR & WHATSAPP OLEH ADMIN UTAMA */
+    /* FUNGSI PANTAU SEMUA KURIR & WHATSAPP OLEH ADMIN UTAMA DENGAN STATUS ONLINE/OFFLINE */
     function openAllCouriersModal() {
       toggleAdminMenuModal();
       var container = document.getElementById('all-couriers-container');
@@ -706,10 +707,16 @@
           var html = '';
           for (var i = 0; i < list.length; i++) {
             var c = list[i];
-            var isBusy = c.status === "Sedang Mengantar";
-            var statusBadge = isBusy ? 
-              '<span class="bg-orange-100 text-orange-700 text-[9px] font-black px-2.5 py-0.5 rounded-full animate-pulse">Sedang Mengantar</span>' : 
-              '<span class="bg-emerald-100 text-emerald-700 text-[9px] font-black px-2.5 py-0.5 rounded-full">Standby (Aktif)</span>';
+            var isOnline = c.isOnline;
+            var statusBadge = '';
+
+            if (!isOnline) {
+              statusBadge = '<span class="bg-red-100 text-red-700 text-[9px] font-black px-2.5 py-0.5 rounded-full flex items-center gap-1.5 w-max"><span class="w-2 h-2 rounded-full bg-red-500"></span> Offline</span>';
+            } else if (c.status === "Sedang Mengantar") {
+              statusBadge = '<span class="bg-orange-100 text-orange-700 text-[9px] font-black px-2.5 py-0.5 rounded-full flex items-center gap-1.5 w-max animate-pulse"><span class="w-2 h-2 rounded-full bg-orange-500"></span> Sedang Mengantar</span>';
+            } else {
+              statusBadge = '<span class="bg-emerald-100 text-emerald-700 text-[9px] font-black px-2.5 py-0.5 rounded-full flex items-center gap-1.5 w-max"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span> Online (Standby)</span>';
+            }
             
             var cleanPhone = c.phone.startsWith('0') ? '62' + c.phone.substring(1) : c.phone;
 
@@ -717,7 +724,7 @@
                       '<div>' +
                         '<h4 class="font-black text-xs text-slate-900">' + c.name + '</h4>' +
                         '<p class="text-[10px] text-gray-500 font-medium">Kendaraan: ' + c.vehicle + '</p>' +
-                        '<div class="mt-1">' + statusBadge + '</div>' +
+                        '<div class="mt-1.5">' + statusBadge + '</div>' +
                       '</div>' +
                       '<a href="https://wa.me/' + cleanPhone + '?text=' + encodeURIComponent('Halo ' + c.name + ', ada informasi terkait pengantaran.') + '" target="_blank" class="bg-emerald-500 hover:bg-emerald-600 text-white font-black px-3.5 py-2.5 rounded-xl text-xs flex items-center gap-1.5 shadow-sm active:scale-95 transition-all">' +
                         '<i class="fa-brands fa-whatsapp text-sm"></i> Chat WA' +
@@ -835,6 +842,13 @@
       if (isCourier) {
         document.getElementById('panel-title-text').innerText = "PANEL KURIR: " + currentUser.name;
         document.getElementById('panel-subtitle-text').innerText = "Kendaraan: " + (currentUser.vehicle || "Motor");
+        
+        // Kirim sinyal heartbeat otomatis setiap 30 detik saat aplikasi kurir dibuka
+        if (courierHeartbeatInterval) clearInterval(courierHeartbeatInterval);
+        courierHeartbeatInterval = setInterval(function() {
+          callApiPost('courierHeartbeat', { phone: currentUser.phone });
+        }, 30000);
+        callApiPost('courierHeartbeat', { phone: currentUser.phone }); // Kirim pertama kali saat dibuka
       } else if (isAdmin) {
         document.getElementById('panel-title-text').innerText = "PANEL ADMIN UTAMA";
         document.getElementById('panel-subtitle-text').innerText = "Kelola Toko & Pesanan";
@@ -926,6 +940,7 @@
 
     function logout() {
       if (courierWatchId) navigator.geolocation.clearWatch(courierWatchId);
+      if (courierHeartbeatInterval) clearInterval(courierHeartbeatInterval);
       if (customerNotifierInterval) clearInterval(customerNotifierInterval);
       safeStorage.removeItem('app_active_session');
       currentUser = null;
@@ -943,7 +958,6 @@
       document.getElementById('store-closed-banner').classList.toggle('hidden', status === "BUKA");
       updateAdminMenuModalUI();
       
-      // Update status tombol hubungi admin untuk kurir secara live jika status toko berubah
       var btnContactAdminWa = document.getElementById('btn-contact-admin-wa');
       if (currentUser && currentUser.role === 'courier' && btnContactAdminWa) {
         if (status === "BUKA") {
