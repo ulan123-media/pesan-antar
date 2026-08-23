@@ -983,19 +983,32 @@
           var orders = ordersFromSheet || []; rawOrdersList = orders;
           
           if (isCourier) {
-            // FILTER KHUSUS KURIR: Kurir B tidak melihat pesanan yang sudah diambil Kurir A
-            // Kurir hanya melihat:
-            // 1. Pesanan yang siap diantar ("Di-ACC (Diproses)") dan BELUM ada kurir yang mengambil.
-            // 2. Pesanan yang sedang/telah diambil oleh kurir tersebut sendiri.
+            var now = Date.now();
             orders = orders.filter(function(o) {
               var isReadyForDelivery = (o.status === 'Di-ACC (Diproses)' && (!o.courierPhone || o.courierPhone === ''));
               var isAssignedToMe = (o.courierPhone && String(o.courierPhone).trim() === String(currentUser.phone).trim());
               var isCompletedByMe = (o.status === 'Selesai' && o.courierPhone && String(o.courierPhone).trim() === String(currentUser.phone).trim());
+              
+              var isAssignedToOther = (o.courierPhone && String(o.courierPhone).trim() !== String(currentUser.phone).trim());
+              
+              if (isAssignedToOther) {
+                var seenKey = 'seen_assigned_' + o.invoiceId;
+                var seenTime = safeStorage.getItem(seenKey);
+                if (!seenTime) {
+                  safeStorage.setItem(seenKey, now);
+                  seenTime = now;
+                } else {
+                  seenTime = parseInt(seenTime);
+                }
+                var elapsed = now - seenTime;
+                // Kurir B hanya melihat selama 2 menit (120.000 ms), setelah itu hilang dari daftar Kurir B
+                return elapsed < 120000;
+              }
+
               return isReadyForDelivery || isAssignedToMe || isCompletedByMe;
             });
           } else if (isAdmin) {
             updateAdminDashboard(orders);
-            // Admin Utama melihat SEMUA pesanan tanpa ada yang disembunyikan/hilang
           } else if (currentUser) {
             if (currentUser.role === 'guest') {
               orders = []; 
@@ -1081,24 +1094,31 @@
         }
 
         var actionButtons = '';
-        if (isStaff) {
-          var cleanPhone = ord.phone ? String(ord.phone).replace(/[^0-9]/g, '') : '';
-          if (cleanPhone.startsWith('0')) cleanPhone = '62' + cleanPhone.substring(1);
-          
-          var chatTargetPhone = (ord.courierPhone && ord.courierPhone !== "") ? ord.courierPhone : WA_NUMBER;
-          var btnChatWa = cleanPhone ? '<a href="https://wa.me/' + cleanPhone + '?text=' + encodeURIComponent('Halo ' + ord.name + ', saya kurir pengantar ' + (currentUser.name || '') + ' terkait pesanan ' + ord.invoiceId + '. Mohon konfirmasi alamat pengantaran Anda.') + '" target="_blank" class="bg-emerald-500 text-white font-black px-2.5 py-2 rounded-xl text-[10px] active:scale-95 shadow-sm inline-flex items-center gap-1"><i class="fa-brands fa-whatsapp"></i> Chat Pemesan</a>' : '';
+        var isCourier = currentUser && currentUser.role === 'courier';
+        var isAssignedToOther = isCourier && ord.courierPhone && String(ord.courierPhone).trim() !== String(currentUser.phone).trim();
 
-          var btnAcc = (ordStatus !== 'Selesai' && ordStatus !== 'Sedang Diantar' && ordStatus !== 'Di-ACC (Diproses)') ? '<button type="button" onclick="updateOrderStatus(\'' + ord.invoiceId + '\', \'Di-ACC (Diproses)\')" class="bg-emerald-500 text-white font-black px-3 py-2 rounded-xl text-[10px] active:scale-95 shadow-sm"><i class="fa-solid fa-check mr-1"></i> ACC</button>' : '';
-          
-          var btnKirim = (ordStatus !== 'Selesai' && ordStatus !== 'Sedang Diantar') ? '<button type="button" onclick="assignAndDeliver(\'' + ord.invoiceId + '\')" class="bg-orange-500 text-white font-black px-3 py-2 rounded-xl text-[10px] active:scale-95 shadow-sm"><i class="fa-solid fa-motorcycle mr-1"></i> AMBIL & KIRIM</button>' : '';
-          
-          var isAssignedToMe = (currentUser.role === 'admin' || ord.courierPhone === currentUser.phone);
-          var btnGps = (ordStatus === 'Sedang Diantar' && isAssignedToMe) ? '<button type="button" onclick="startCourierGPSBroadcaster(\'' + ord.invoiceId + '\')" class="bg-emerald-600 text-white font-black px-3 py-2 rounded-xl text-[10px] active:scale-95 shadow-sm"><i class="fa-solid fa-satellite-dish mr-1"></i> GPS SAYA</button>' : '';
-          var btnSelesai = (ordStatus === 'Sedang Diantar') ? '<button type="button" onclick="updateOrderStatus(\'' + ord.invoiceId + '\', \'Selesai\')" class="bg-slate-900 text-white font-black px-3 py-2 rounded-xl text-[10px] active:scale-95 shadow-sm"><i class="fa-solid fa-flag-checkered mr-1"></i> SELESAI</button>' : '';
-          var btnPeta = '<button type="button" onclick="openLiveTracking(\'' + ord.invoiceId + '\', ' + (ord.lat ? ord.lat : 'null') + ', ' + (ord.lng ? ord.lng : 'null') + ')" class="bg-slate-100 text-slate-800 font-bold px-2.5 py-2 rounded-xl text-[10px] active:scale-95"><i class="fa-solid fa-map-location-dot"></i> Peta</button>';
-          var btnCetak = '<button type="button" onclick="openReceiptModal(\'' + ord.invoiceId + '\')" class="bg-amber-500 text-white font-black px-2.5 py-2 rounded-xl text-[10px] active:scale-95 shadow-sm"><i class="fa-solid fa-print mr-1"></i> Struk</button>';
-          
-          actionButtons = '<div class="pt-2 border-t border-gray-100 flex flex-wrap gap-1.5 justify-end">' + btnChatWa + btnAcc + btnKirim + btnGps + btnSelesai + btnCetak + btnPeta + '</div>';
+        if (isStaff) {
+          if (isAssignedToOther) {
+            // Kurir B melihat pesanan yang diambil Kurir A (selama jendela 2 menit) -> tombol/aksi dinonaktifkan total
+            actionButtons = '<div class="pt-2 border-t border-gray-100 text-center"><span class="text-[10px] text-gray-400 italic">Pesanan ini diambil oleh <strong>' + ord.courierName + '</strong>. Menu tindakan ditutup.</span></div>';
+          } else {
+            var cleanPhone = ord.phone ? String(ord.phone).replace(/[^0-9]/g, '') : '';
+            if (cleanPhone.startsWith('0')) cleanPhone = '62' + cleanPhone.substring(1);
+            
+            var btnChatWa = cleanPhone ? '<a href="https://wa.me/' + cleanPhone + '?text=' + encodeURIComponent('Halo ' + ord.name + ', saya kurir pengantar ' + (currentUser.name || '') + ' terkait pesanan ' + ord.invoiceId + '. Mohon konfirmasi alamat pengantaran Anda.') + '" target="_blank" class="bg-emerald-500 text-white font-black px-2.5 py-2 rounded-xl text-[10px] active:scale-95 shadow-sm inline-flex items-center gap-1"><i class="fa-brands fa-whatsapp"></i> Chat Pemesan</a>' : '';
+
+            var btnAcc = (ordStatus !== 'Selesai' && ordStatus !== 'Sedang Diantar' && ordStatus !== 'Di-ACC (Diproses)') ? '<button type="button" onclick="updateOrderStatus(\'' + ord.invoiceId + '\', \'Di-ACC (Diproses)\')" class="bg-emerald-500 text-white font-black px-3 py-2 rounded-xl text-[10px] active:scale-95 shadow-sm"><i class="fa-solid fa-check mr-1"></i> ACC</button>' : '';
+            
+            var btnKirim = (ordStatus !== 'Selesai' && ordStatus !== 'Sedang Diantar') ? '<button type="button" onclick="assignAndDeliver(\'' + ord.invoiceId + '\')" class="bg-orange-500 text-white font-black px-3 py-2 rounded-xl text-[10px] active:scale-95 shadow-sm"><i class="fa-solid fa-motorcycle mr-1"></i> AMBIL & KIRIM</button>' : '';
+            
+            var isAssignedToMe = (currentUser.role === 'admin' || ord.courierPhone === currentUser.phone);
+            var btnGps = (ordStatus === 'Sedang Diantar' && isAssignedToMe) ? '<button type="button" onclick="startCourierGPSBroadcaster(\'' + ord.invoiceId + '\')" class="bg-emerald-600 text-white font-black px-3 py-2 rounded-xl text-[10px] active:scale-95 shadow-sm"><i class="fa-solid fa-satellite-dish mr-1"></i> GPS SAYA</button>' : '';
+            var btnSelesai = (ordStatus === 'Sedang Diantar') ? '<button type="button" onclick="updateOrderStatus(\'' + ord.invoiceId + '\', \'Selesai\')" class="bg-slate-900 text-white font-black px-3 py-2 rounded-xl text-[10px] active:scale-95 shadow-sm"><i class="fa-solid fa-flag-checkered mr-1"></i> SELESAI</button>' : '';
+            var btnPeta = '<button type="button" onclick="openLiveTracking(\'' + ord.invoiceId + '\', ' + (ord.lat ? ord.lat : 'null') + ', ' + (ord.lng ? ord.lng : 'null') + ')" class="bg-slate-100 text-slate-800 font-bold px-2.5 py-2 rounded-xl text-[10px] active:scale-95"><i class="fa-solid fa-map-location-dot"></i> Peta</button>';
+            var btnCetak = '<button type="button" onclick="openReceiptModal(\'' + ord.invoiceId + '\')" class="bg-amber-500 text-white font-black px-2.5 py-2 rounded-xl text-[10px] active:scale-95 shadow-sm"><i class="fa-solid fa-print mr-1"></i> Struk</button>';
+            
+            actionButtons = '<div class="pt-2 border-t border-gray-100 flex flex-wrap gap-1.5 justify-end">' + btnChatWa + btnAcc + btnKirim + btnGps + btnSelesai + btnCetak + btnPeta + '</div>';
+          }
         } else {
           var btnLacak = (ordStatus === 'Sedang Diantar') ? '<button type="button" onclick="openLiveTracking(\'' + ord.invoiceId + '\', ' + (ord.lat ? ord.lat : 'null') + ', ' + (ord.lng ? ord.lng : 'null') + ')" class="bg-slate-900 text-white font-black px-3 py-1.5 rounded-xl text-[10px] flex items-center gap-1.5 shadow-sm active:scale-95"><i class="fa-solid fa-motorcycle text-orange-400"></i> Lacak Kurir</button>' : '<span class="text-[10px] font-bold text-gray-400 italic">Diantar setelah di-ACC</span>';
           actionButtons = '<div class="pt-2 border-t border-gray-100 flex justify-between items-center"><span class="text-xs font-black text-slate-900">Total: Rp ' + formatRupiah(ord.total) + '</span>' + btnLacak + '</div>';
