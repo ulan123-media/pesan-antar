@@ -176,6 +176,13 @@
       </div>
     </div>
 
+    <!-- TOMBOL AKSES ADMIN UTAMA UNTUK KURIR (AKTIF KETIKA HARI KERJA/BUKA & ONLINE) -->
+    <div id="courier-admin-contact-box" class="hidden px-5 mb-3">
+      <a id="btn-contact-admin-wa" href="#" target="_blank" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-3 px-4 rounded-2xl shadow-md flex items-center justify-center gap-2 text-xs transition-all">
+        <i class="fa-brands fa-whatsapp text-base"></i> Hubungi Admin Utama (Bantuan Kendala)
+      </a>
+    </div>
+
     <div id="store-closed-banner" class="hidden px-5 mb-3"><div class="bg-red-500 text-white font-black text-center text-xs py-3 px-4 rounded-2xl shadow-md flex items-center justify-center gap-2 animate-bounce"><i class="fa-solid fa-store-slash text-sm"></i> MAAF, TOKO SEDANG TUTUP! PESANAN BELUM BISA DIPROSES.</div></div>
 
     <!-- KATALOG -->
@@ -218,6 +225,10 @@
         <button type="button" onclick="openCourierApprovalModal()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-black py-3.5 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-md active:scale-95 transition-all">
           <i class="fa-solid fa-users-gear text-sm"></i> Verifikasi Calon Kurir (<span id="pending-courier-count">0</span>)
         </button>
+        <!-- TOMBOL PEMANTAUAN KURIR AKTIF & WHATSAPP OLEH ADMIN -->
+        <button type="button" onclick="openAllCouriersModal()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-black py-3.5 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-md active:scale-95 transition-all">
+          <i class="fa-solid fa-motorcycle text-orange-400 text-sm"></i> Pantau Kurir Aktif & Kontak WA
+        </button>
         <button type="button" onclick="toggleAdminMenuModal(); toggleAddProductModal();" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-black py-3.5 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-orange-500/20 active:scale-95 transition-all">
           <i class="fa-solid fa-plus-circle text-sm"></i> Tambah Produk Baru
         </button>
@@ -234,6 +245,19 @@
       </div>
       <div id="pending-couriers-list" class="space-y-3">
         <p class="text-xs text-gray-400 text-center py-4">Memuat data pelamar...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL PANTAU & KONTROL KURIR OLEH ADMIN -->
+  <div id="all-couriers-modal" class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center hidden backdrop-blur-sm p-4">
+    <div class="bg-white rounded-3xl w-full max-w-md p-6 shadow-2xl space-y-4 max-h-[85vh] overflow-y-auto animate-slide-up">
+      <div class="flex justify-between items-center border-b pb-3">
+        <h3 class="text-sm font-black text-slate-900 flex items-center gap-2"><i class="fa-solid fa-users text-orange-500"></i> Pantau Kurir & Hubungi WA</h3>
+        <button type="button" onclick="closeAllCouriersModal()" class="w-7 h-7 bg-gray-100 rounded-full text-gray-500 flex items-center justify-center text-xs font-bold"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div id="all-couriers-container" class="space-y-3">
+        <p class="text-xs text-gray-400 text-center py-4">Memuat data kurir...</p>
       </div>
     </div>
   </div>
@@ -666,6 +690,48 @@
       document.getElementById('courier-approval-modal').classList.add('hidden');
     }
 
+    /* FUNGSI PANTAU SEMUA KURIR & WHATSAPP OLEH ADMIN UTAMA */
+    function openAllCouriersModal() {
+      toggleAdminMenuModal();
+      var container = document.getElementById('all-couriers-container');
+      container.innerHTML = '<p class="text-xs text-gray-400 text-center py-4">Memuat data kurir...</p>';
+      document.getElementById('all-couriers-modal').classList.remove('hidden');
+
+      callApiGet('getAllCouriersWithStatus')
+        .then(list => {
+          if (!list || list.length === 0) {
+            container.innerHTML = '<div class="text-center py-6 text-gray-400 text-xs font-bold"><p>Belum ada kurir yang disetujui.</p></div>';
+            return;
+          }
+          var html = '';
+          for (var i = 0; i < list.length; i++) {
+            var c = list[i];
+            var isBusy = c.status === "Sedang Mengantar";
+            var statusBadge = isBusy ? 
+              '<span class="bg-orange-100 text-orange-700 text-[9px] font-black px-2.5 py-0.5 rounded-full animate-pulse">Sedang Mengantar</span>' : 
+              '<span class="bg-emerald-100 text-emerald-700 text-[9px] font-black px-2.5 py-0.5 rounded-full">Standby (Aktif)</span>';
+            
+            var cleanPhone = c.phone.startsWith('0') ? '62' + c.phone.substring(1) : c.phone;
+
+            html += '<div class="bg-gray-50 p-3.5 rounded-2xl border border-gray-200 flex justify-between items-center">' +
+                      '<div>' +
+                        '<h4 class="font-black text-xs text-slate-900">' + c.name + '</h4>' +
+                        '<p class="text-[10px] text-gray-500 font-medium">Kendaraan: ' + c.vehicle + '</p>' +
+                        '<div class="mt-1">' + statusBadge + '</div>' +
+                      '</div>' +
+                      '<a href="https://wa.me/' + cleanPhone + '?text=' + encodeURIComponent('Halo ' + c.name + ', ada informasi terkait pengantaran.') + '" target="_blank" class="bg-emerald-500 hover:bg-emerald-600 text-white font-black px-3.5 py-2.5 rounded-xl text-xs flex items-center gap-1.5 shadow-sm active:scale-95 transition-all">' +
+                        '<i class="fa-brands fa-whatsapp text-sm"></i> Chat WA' +
+                      '</a>' +
+                    '</div>';
+          }
+          container.innerHTML = html;
+        });
+    }
+
+    function closeAllCouriersModal() {
+      document.getElementById('all-couriers-modal').classList.add('hidden');
+    }
+
     function approveCourier(phone, name) {
       callApiPost('approveCourier', { phone: phone })
         .then(() => {
@@ -774,6 +840,27 @@
         document.getElementById('panel-subtitle-text').innerText = "Kelola Toko & Pesanan";
       }
 
+      // KONTROL TOMBOL HUBUNGI ADMIN UNTUK KURIR (AKTIF HANYA KETIKA HARI KERJA/BUKA DAN KURIR ONLINE)
+      var courierContactBox = document.getElementById('courier-admin-contact-box');
+      var btnContactAdminWa = document.getElementById('btn-contact-admin-wa');
+      if (isCourier) {
+        courierContactBox.classList.remove('hidden');
+        if (storeStatus === "BUKA") {
+          btnContactAdminWa.classList.remove('pointer-events-none', 'opacity-50', 'bg-gray-400');
+          btnContactAdminWa.classList.add('bg-emerald-600', 'hover:bg-emerald-700');
+          var waAdminLink = "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent("Halo Admin Utama, saya kurir " + currentUser.name + " ingin melaporkan kendala di lapangan.");
+          btnContactAdminWa.href = waAdminLink;
+          btnContactAdminWa.innerHTML = '<i class="fa-brands fa-whatsapp text-base"></i> Hubungi Admin Utama (Bantuan Kendala)';
+        } else {
+          btnContactAdminWa.classList.add('pointer-events-none', 'opacity-50', 'bg-gray-400');
+          btnContactAdminWa.classList.remove('bg-emerald-600', 'hover:bg-emerald-700');
+          btnContactAdminWa.href = "#";
+          btnContactAdminWa.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-base"></i> Tombol Non-Aktif (Toko/Hari Kerja Tutup)';
+        }
+      } else {
+        courierContactBox.classList.add('hidden');
+      }
+
       var floatingWaBtn = document.getElementById('floating-wa-btn');
       if (floatingWaBtn) {
         floatingWaBtn.classList.toggle('hidden', isStaff);
@@ -855,6 +942,23 @@
       storeStatus = status;
       document.getElementById('store-closed-banner').classList.toggle('hidden', status === "BUKA");
       updateAdminMenuModalUI();
+      
+      // Update status tombol hubungi admin untuk kurir secara live jika status toko berubah
+      var btnContactAdminWa = document.getElementById('btn-contact-admin-wa');
+      if (currentUser && currentUser.role === 'courier' && btnContactAdminWa) {
+        if (status === "BUKA") {
+          btnContactAdminWa.classList.remove('pointer-events-none', 'opacity-50', 'bg-gray-400');
+          btnContactAdminWa.classList.add('bg-emerald-600', 'hover:bg-emerald-700');
+          var waAdminLink = "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent("Halo Admin Utama, saya kurir " + currentUser.name + " ingin melaporkan kendala di lapangan.");
+          btnContactAdminWa.href = waAdminLink;
+          btnContactAdminWa.innerHTML = '<i class="fa-brands fa-whatsapp text-base"></i> Hubungi Admin Utama (Bantuan Kendala)';
+        } else {
+          btnContactAdminWa.classList.add('pointer-events-none', 'opacity-50', 'bg-gray-400');
+          btnContactAdminWa.classList.remove('bg-emerald-600', 'hover:bg-emerald-700');
+          btnContactAdminWa.href = "#";
+          btnContactAdminWa.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-base"></i> Tombol Non-Aktif (Toko/Hari Kerja Tutup)';
+        }
+      }
     }
 
     function toggleStoreStatus() {
