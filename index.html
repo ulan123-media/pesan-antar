@@ -41,28 +41,45 @@
   <!-- HALAMAN AUTENTIKASI -->
   <div id="auth-screen" class="fixed inset-0 z-50 flex flex-col justify-between bg-white p-6 overflow-y-auto">
     <div class="w-full my-auto py-4">
-      <div class="text-center mb-8">
+      <div class="text-center mb-6">
         <div class="w-20 h-20 bg-orange-100 rounded-3xl flex items-center justify-center mx-auto mb-4 text-orange-500 shadow-sm"><i class="fa-solid fa-store text-4xl"></i></div>
         <h2 class="text-3xl font-black text-slate-900 tracking-tight">Beli Disini!</h2>
         <p class="text-gray-400 text-xs font-bold mt-1">Aplikasi Belanja Cepat & Praktis</p>
       </div>
 
-      <div class="bg-gray-100 p-1.5 rounded-2xl flex mb-6 font-extrabold text-xs">
+      <div class="bg-gray-100 p-1.5 rounded-2xl flex mb-5 font-extrabold text-xs">
         <button id="tab-btn-user" type="button" onclick="switchAuthTab('user')" class="flex-1 py-3.5 rounded-xl transition-all active-tab shadow-sm flex items-center justify-center gap-2 text-xs"><i class="fa-solid fa-user"></i> Konsumen</button>
         <button id="tab-btn-admin" type="button" onclick="switchAuthTab('admin')" class="flex-1 py-3.5 rounded-xl transition-all text-gray-500 hover:text-slate-900 flex items-center justify-center gap-2 text-xs"><i class="fa-solid fa-user-shield"></i> Admin / Kurir</button>
       </div>
 
       <!-- FORM CONSUMER -->
       <div id="form-user" class="space-y-4">
-        <div id="saved-user-banner" class="hidden bg-orange-50 border border-orange-200 rounded-2xl p-4 text-center mb-2">
-          <p class="text-xs text-slate-700 font-bold mb-2.5">Halo kembali, <span id="saved-user-name" class="text-orange-600 font-black"></span>!</p>
-          <button type="button" onclick="loginAsSavedUser()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-black py-3.5 rounded-xl text-xs transition-all shadow-md active:scale-95">LANJUT SEBAGAI AKUN SAYA <i class="fa-solid fa-arrow-right ml-1"></i></button>
+        <!-- SUB TAB CONSUMER: MASUK / DAFTAR -->
+        <div class="flex bg-orange-50 p-1 rounded-xl text-xs font-bold mb-3 border border-orange-100">
+          <button type="button" id="subtab-login" onclick="switchConsumerMode('login')" class="flex-1 py-2.5 rounded-lg bg-orange-500 text-white shadow-sm transition-all text-center">Masuk Akun</button>
+          <button type="button" id="subtab-register" onclick="switchConsumerMode('register')" class="flex-1 py-2.5 rounded-lg text-slate-600 transition-all text-center">Daftar Baru</button>
         </div>
-        <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Nama Lengkap *</label><div class="relative flex items-center"><i class="fa-solid fa-user absolute left-4 text-gray-400 text-sm"></i><input type="text" id="reg-name" placeholder="Contoh: Ulan Ismanto" class="w-full bg-gray-50 rounded-2xl pl-11 pr-4 py-4 text-xs border border-gray-200 focus:outline-none focus:border-orange-500 font-medium"></div></div>
-        <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Nomor WhatsApp *</label><div class="relative flex items-center"><i class="fa-brands fa-whatsapp absolute left-4 text-gray-400 text-base"></i><input type="tel" id="reg-phone" placeholder="Contoh: 081234567890" class="w-full bg-gray-50 rounded-2xl pl-11 pr-4 py-4 text-xs border border-gray-200 focus:outline-none focus:border-orange-500 font-medium"></div></div>
-        <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Alamat Pengiriman *</label><div class="relative flex items-start"><i class="fa-solid fa-location-dot absolute left-4 top-4 text-gray-400 text-sm"></i><textarea id="reg-address" rows="2" placeholder="Nama jalan, RT/RW, Patokan..." class="w-full bg-gray-50 rounded-2xl pl-11 pr-4 py-3.5 text-xs border border-gray-200 focus:outline-none focus:border-orange-500 font-medium"></textarea></div></div>
-        <button type="button" onclick="registerCustomer()" class="w-full bg-orange-500 hover:bg-orange-600 active:scale-95 text-white font-black py-4 rounded-2xl shadow-lg shadow-orange-500/30 transition-all text-xs tracking-wider flex items-center justify-center gap-2 pt-4"><i class="fa-solid fa-bag-shopping text-base"></i> DAFTAR & MULAI BELANJA</button>
-        <button type="button" onclick="loginAsGuest()" class="w-full bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 font-extrabold py-3.5 rounded-2xl text-xs transition-all border border-slate-200 flex items-center justify-center gap-2"><i class="fa-solid fa-eye text-orange-500"></i> LIHAT PRODUK DULU (PENGUNJUNG)</button>
+
+        <!-- KONTEN LOGIN KONSUMEN -->
+        <div id="consumer-login-section" class="space-y-3.5">
+          <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Nomor WhatsApp *</label><div class="relative flex items-center"><i class="fa-brands fa-whatsapp absolute left-4 text-gray-400 text-base"></i><input type="tel" id="login-phone" placeholder="Contoh: 081234567890" class="w-full bg-gray-50 rounded-2xl pl-11 pr-4 py-3.5 text-xs border border-gray-200 focus:outline-none focus:border-orange-500 font-medium"></div></div>
+          <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Password *</label><div class="relative flex items-center"><i class="fa-solid fa-lock absolute left-4 text-gray-400 text-sm"></i><input type="password" id="login-password" placeholder="••••••••" class="w-full bg-gray-50 rounded-2xl pl-11 pr-4 py-3.5 text-xs border border-gray-200 focus:outline-none focus:border-orange-500 font-medium"></div></div>
+          <div class="flex justify-between items-center text-[11px] pt-1">
+            <button type="button" onclick="forgotPassword()" class="text-orange-600 font-bold hover:underline">Lupa Password?</button>
+          </div>
+          <button type="button" onclick="loginCustomer()" class="w-full bg-orange-500 hover:bg-orange-600 active:scale-95 text-white font-black py-4 rounded-2xl shadow-lg shadow-orange-500/30 transition-all text-xs tracking-wider flex items-center justify-center gap-2 pt-4"><i class="fa-solid fa-right-to-bracket text-base"></i> MASUK SEKARANG</button>
+        </div>
+
+        <!-- KONTEN DAFTAR KONSUMEN -->
+        <div id="consumer-register-section" class="space-y-3.5 hidden">
+          <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Nama Lengkap *</label><div class="relative flex items-center"><i class="fa-solid fa-user absolute left-4 text-gray-400 text-sm"></i><input type="text" id="reg-name" placeholder="Contoh: Ulan Ismanto" class="w-full bg-gray-50 rounded-2xl pl-11 pr-4 py-3.5 text-xs border border-gray-200 focus:outline-none focus:border-orange-500 font-medium"></div></div>
+          <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Nomor WhatsApp *</label><div class="relative flex items-center"><i class="fa-brands fa-whatsapp absolute left-4 text-gray-400 text-base"></i><input type="tel" id="reg-phone" placeholder="Contoh: 081234567890" class="w-full bg-gray-50 rounded-2xl pl-11 pr-4 py-3.5 text-xs border border-gray-200 focus:outline-none focus:border-orange-500 font-medium"></div></div>
+          <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Alamat Pengiriman *</label><div class="relative flex items-start"><i class="fa-solid fa-location-dot absolute left-4 top-3.5 text-gray-400 text-sm"></i><textarea id="reg-address" rows="2" placeholder="Nama jalan, RT/RW, Patokan..." class="w-full bg-gray-50 rounded-2xl pl-11 pr-4 py-3 text-xs border border-gray-200 focus:outline-none focus:border-orange-500 font-medium"></textarea></div></div>
+          <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Password Akun *</label><div class="relative flex items-center"><i class="fa-solid fa-lock absolute left-4 text-gray-400 text-sm"></i><input type="password" id="reg-password" placeholder="Buat password rahasia" class="w-full bg-gray-50 rounded-2xl pl-11 pr-4 py-3.5 text-xs border border-gray-200 focus:outline-none focus:border-orange-500 font-medium"></div></div>
+          <button type="button" onclick="registerCustomer()" class="w-full bg-orange-500 hover:bg-orange-600 active:scale-95 text-white font-black py-4 rounded-2xl shadow-lg shadow-orange-500/30 transition-all text-xs tracking-wider flex items-center justify-center gap-2 pt-4"><i class="fa-solid fa-user-plus text-base"></i> DAFTAR AKUN BARU</button>
+        </div>
+
+        <button type="button" onclick="loginAsGuest()" class="w-full bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 font-extrabold py-3.5 rounded-2xl text-xs transition-all border border-slate-200 flex items-center justify-center gap-2 mt-2"><i class="fa-solid fa-eye text-orange-500"></i> LIHAT PRODUK DULU (PENGUNJUNG)</button>
       </div>
 
       <!-- FORM ADMIN -->
@@ -78,7 +95,12 @@
   <!-- APLIKASI UTAMA -->
   <div id="main-app" class="hidden w-full min-h-screen bg-[#9ce60b] relative pb-32">
     <div class="flex justify-between items-center px-5 pt-6 pb-3">
-      <div><h1 class="text-2xl font-black text-slate-900 tracking-tight">Beli Disini!</h1><p id="user-greeting" class="text-[11px] font-bold text-slate-800 bg-white/80 backdrop-blur-sm px-3 py-1 rounded-full inline-block mt-1 shadow-sm"></p></div>
+      <div>
+        <h1 class="text-2xl font-black text-slate-900 tracking-tight">Beli Disini!</h1>
+        <button type="button" onclick="openProfileModal()" class="text-left mt-1 active:scale-95 transition-all">
+          <p id="user-greeting" class="text-[11px] font-bold text-slate-800 bg-white/80 backdrop-blur-sm px-3 py-1 rounded-full inline-block shadow-sm flex items-center gap-1.5"><i class="fa-solid fa-user-circle text-orange-500"></i> <span id="greeting-name-text"></span></p>
+        </button>
+      </div>
       <div class="flex items-center gap-2.5">
         <button type="button" onclick="logout()" title="Keluar" class="w-11 h-11 bg-white/80 rounded-2xl flex items-center justify-center shadow-sm text-slate-700 active:scale-90 transition-all"><i class="fa-solid fa-right-from-bracket text-sm"></i></button>
         <button type="button" id="header-cart-btn" onclick="toggleCartModal()" class="w-11 h-11 bg-white rounded-2xl flex items-center justify-center shadow-md text-orange-500 active:scale-90 transition-all relative"><i class="fa-solid fa-cart-shopping text-base"></i><span id="cart-badge" class="hidden absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow-sm">0</span></button>
@@ -125,6 +147,19 @@
     <div class="fixed bottom-0 left-0 right-0 z-40 p-3"><div class="bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl py-3 px-6 flex justify-around items-center border border-white/40 max-w-md mx-auto"><button type="button" onclick="switchTab('toko')" id="nav-toko" class="flex flex-col items-center text-orange-500 font-bold transition-all active:scale-90 px-3"><i class="fa-solid fa-store text-xl mb-0.5"></i><span class="text-[10px]">Toko</span></button><button type="button" id="nav-keranjang-btn" onclick="toggleCartModal()" class="flex flex-col items-center text-gray-400 hover:text-orange-500 font-bold transition-all active:scale-90 relative px-3"><i class="fa-solid fa-basket-shopping text-xl mb-0.5"></i><span class="text-[10px]">Keranjang</span><span id="nav-cart-count" class="hidden absolute top-0 right-2 bg-red-500 text-white text-[9px] font-black px-1.5 py-0.5 rounded-full border border-white">0</span></button><button type="button" onclick="switchTab('status')" id="nav-status" class="flex flex-col items-center text-gray-400 hover:text-orange-500 font-bold transition-all active:scale-90 relative px-3"><i class="fa-solid fa-clock-rotate-left text-xl mb-0.5"></i><span id="nav-status-label" class="text-[10px]">Status</span><span id="nav-status-dot" class="hidden absolute top-0 right-2 w-2.5 h-2.5 bg-red-500 rounded-full border border-white animate-ping"></span></button></div></div>
   </div>
 
+  <!-- MODAL PROFIL PELANGGAN -->
+  <div id="profile-modal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center hidden backdrop-blur-sm p-4">
+    <div class="bg-white rounded-3xl w-full max-w-xs p-6 shadow-2xl space-y-4 relative animate-slide-up">
+      <div class="flex justify-between items-center border-b pb-3"><h3 class="text-sm font-black text-slate-900 flex items-center gap-2"><i class="fa-solid fa-id-card text-orange-500"></i> Profil Akun Saya</h3><button type="button" onclick="closeProfileModal()" class="w-7 h-7 bg-gray-100 rounded-full text-gray-500 flex items-center justify-center text-xs font-bold active:scale-90"><i class="fa-solid fa-xmark"></i></button></div>
+      <div class="space-y-3 text-xs">
+        <div class="bg-gray-50 p-3.5 rounded-2xl"><span class="text-[10px] text-gray-400 font-bold uppercase block mb-0.5">Nama Lengkap</span><span id="profile-name" class="font-extrabold text-slate-900 text-sm">--</span></div>
+        <div class="bg-gray-50 p-3.5 rounded-2xl"><span class="text-[10px] text-gray-400 font-bold uppercase block mb-0.5">Nomor WhatsApp</span><span id="profile-phone" class="font-extrabold text-slate-900 text-sm">--</span></div>
+        <div class="bg-gray-50 p-3.5 rounded-2xl"><span class="text-[10px] text-gray-400 font-bold uppercase block mb-0.5">Alamat Pengiriman</span><span id="profile-address" class="font-extrabold text-slate-900">--</span></div>
+      </div>
+      <button type="button" onclick="logout()" class="w-full bg-red-50 hover:bg-red-100 text-red-600 font-black py-3 rounded-2xl text-xs transition-all flex items-center justify-center gap-2 active:scale-95"><i class="fa-solid fa-right-from-bracket"></i> KELUAR AKUN</button>
+    </div>
+  </div>
+
   <!-- MODAL CHECKOUT -->
   <div id="cart-modal" class="fixed inset-0 bg-black/60 z-50 flex items-end justify-center hidden backdrop-blur-sm transition-all">
     <div class="bg-white rounded-t-[32px] w-full p-6 max-h-[88vh] overflow-y-auto relative animate-slide-up shadow-2xl">
@@ -133,7 +168,7 @@
       <div class="bg-orange-50 border border-orange-200 rounded-2xl p-3 my-3 flex justify-between items-center text-xs"><div><span class="text-gray-500 font-medium block text-[10px]">Nomor Invoice:</span><span id="invoice-id-display" class="font-black text-orange-600 text-xs">#INV-00000</span></div><span class="bg-orange-200 text-orange-800 text-[9px] font-black px-2 py-1 rounded-lg">OTOMATIS</span></div>
       <div id="cart-items" class="py-2 space-y-2"></div>
       <div class="border-t border-gray-100 pt-3 space-y-3">
-        <div><label class="text-[11px] font-extrabold text-slate-700 block mb-1">Nama Pemesan *</label><input type="text" id="cust-name" placeholder="Masukkan nama Anda" class="w-full bg-gray-50 rounded-2xl px-4 py-3.5 text-xs border border-gray-200 font-medium"></div>
+        <div><label class="text-[11px] font-extrabold text-slate-700 block mb-1">Nama Pemesan *</label><input type="text" id="cust-name" readonly class="w-full bg-gray-100 rounded-2xl px-4 py-3.5 text-xs border border-gray-200 font-medium text-slate-600 cursor-not-allowed"></div>
         <div><label class="text-[11px] font-extrabold text-slate-700 block mb-1">Alamat Lengkap *</label><textarea id="cust-address" rows="2" placeholder="Nama jalan, nomor rumah, RT/RW..." class="w-full bg-gray-50 rounded-2xl px-4 py-3 text-xs border border-gray-200 font-medium"></textarea></div>
         <div><label class="text-[11px] font-extrabold text-slate-700 block mb-1">Catatan Pesanan (Opsional)</label><input type="text" id="cust-notes" placeholder="Contoh: Pedas, es sedikit, tanpa bawang..." class="w-full bg-gray-50 rounded-2xl px-4 py-3 text-xs border border-gray-200 font-medium"></div>
         <div class="bg-gray-50 p-3.5 rounded-2xl border border-gray-200 space-y-2">
@@ -284,24 +319,10 @@
         try {
           currentUser = JSON.parse(activeSession);
           if (currentUser && currentUser.role) {
-            openMainApp(currentUser.role === 'admin' ? "🔑 Mode Admin / Kurir" : "👤 " + currentUser.name);
+            openMainApp(currentUser.role === 'admin' ? "Mode Admin / Kurir" : currentUser.name);
             return;
           }
         } catch(e) {}
-      }
-      checkSavedUser();
-    }
-
-    function checkSavedUser() {
-      var saved = safeStorage.getItem('app_customer_data');
-      if (saved) {
-        try {
-          var parsed = JSON.parse(saved);
-          if (parsed && parsed.name) {
-            document.getElementById('saved-user-name').innerText = parsed.name;
-            document.getElementById('saved-user-banner').classList.remove('hidden');
-          }
-        } catch(e){}
       }
     }
 
@@ -334,61 +355,94 @@
       }
     }
 
-    function loginAsSavedUser() {
-      var saved = safeStorage.getItem('app_customer_data');
-      if (saved) {
-        currentUser = JSON.parse(saved);
-        safeStorage.setItem('app_active_session', JSON.stringify(currentUser));
-        openMainApp("👤 " + currentUser.name);
+    function switchConsumerMode(mode) {
+      if (mode === 'login') {
+        document.getElementById('subtab-login').className = "flex-1 py-2.5 rounded-lg bg-orange-500 text-white shadow-sm transition-all text-center";
+        document.getElementById('subtab-register').className = "flex-1 py-2.5 rounded-lg text-slate-600 transition-all text-center";
+        document.getElementById('consumer-login-section').classList.remove('hidden');
+        document.getElementById('consumer-register-section').classList.add('hidden');
+      } else {
+        document.getElementById('subtab-register').className = "flex-1 py-2.5 rounded-lg bg-orange-500 text-white shadow-sm transition-all text-center";
+        document.getElementById('subtab-login').className = "flex-1 py-2.5 rounded-lg text-slate-600 transition-all text-center";
+        document.getElementById('consumer-register-section').classList.remove('hidden');
+        document.getElementById('consumer-login-section').classList.add('hidden');
       }
     }
 
     function loginAsGuest() {
-      currentUser = { name: "Pelanggan", phone: "", address: "", role: "guest" };
+      currentUser = { name: "Pengunjung", phone: "-", address: "-", role: "guest" };
       safeStorage.setItem('app_active_session', JSON.stringify(currentUser));
-      openMainApp("🛒 Jelajah Produk");
+      openMainApp("Jelajah Produk");
     }
 
     function registerCustomer() {
       var name = document.getElementById('reg-name').value.trim();
       var phone = document.getElementById('reg-phone').value.trim();
       var address = document.getElementById('reg-address').value.trim();
+      var password = document.getElementById('reg-password').value.trim();
       
-      if (!name || !phone || !address) { 
-        alert("Lengkapi Nama, WhatsApp, dan Alamat Anda."); 
+      if (!name || !phone || !address || !password) { 
+        alert("Lengkapi seluruh kolom pendaftaran (Nama, WhatsApp, Alamat, dan Password)."); 
         return; 
       }
       
-      currentUser = { name: name, phone: phone, address: address, role: 'customer' };
+      var customerData = { name: name, phone: phone, address: address, password: password };
 
-      callApiPost('registerCustomer', { customer: currentUser })
+      callApiPost('registerCustomer', { customer: customerData })
         .then(res => { 
           if (res && res.status === "Exists") {
-            if (res.name) currentUser.name = res.name;
-            if (res.address) currentUser.address = res.address;
-            
-            alert("⚠️ Nomor WhatsApp ini sudah terdaftar! Anda otomatis masuk dengan akun asli: " + currentUser.name);
+            alert("⚠️ Akun Anda sudah pernah terdaftar! Silakan gunakan menu Masuk Akun.");
+            switchConsumerMode('login');
+            document.getElementById('login-phone').value = phone;
           } else {
-            showToast("Pendaftaran berhasil disimpan!");
+            showToast("Pendaftaran akun berhasil!");
+            currentUser = { name: name, phone: phone, address: address, role: 'customer' };
+            safeStorage.setItem('app_active_session', JSON.stringify(currentUser));
+            openMainApp(currentUser.name);
           }
-          
-          safeStorage.setItem('app_customer_data', JSON.stringify(currentUser));
-          safeStorage.setItem('app_active_session', JSON.stringify(currentUser));
-          openMainApp("👤 " + currentUser.name);
         })
         .catch(err => { 
-          console.error("Gagal sinkron pelanggan:", err);
-          safeStorage.setItem('app_customer_data', JSON.stringify(currentUser));
-          safeStorage.setItem('app_active_session', JSON.stringify(currentUser));
-          openMainApp("👤 " + currentUser.name);
+          alert("Gagal terhubung ke server pendaftaran.");
         });
+    }
+
+    function loginCustomer() {
+      var phone = document.getElementById('login-phone').value.trim();
+      var password = document.getElementById('login-password').value.trim();
+
+      if (!phone || !password) {
+        alert("Masukkan Nomor WhatsApp dan Password Anda.");
+        return;
+      }
+
+      callApiPost('loginCustomer', { phone: phone, password: password })
+        .then(res => {
+          if (res && res.status === "Success") {
+            currentUser = { name: res.name, phone: res.phone, address: res.address, role: 'customer' };
+            safeStorage.setItem('app_active_session', JSON.stringify(currentUser));
+            showToast("Login Berhasil!");
+            openMainApp(currentUser.name);
+          } else {
+            alert("❌ " + (res.message || "Nomor WhatsApp atau Password salah!"));
+          }
+        })
+        .catch(err => {
+          alert("Gagal terhubung ke server login.");
+        });
+    }
+
+    function forgotPassword() {
+      var phoneInput = document.getElementById('login-phone').value.trim();
+      var msg = "Halo Admin Beli Disini!, saya lupa password akun saya dengan nomor WhatsApp " + (phoneInput || "[nomor saya]") + ". Mohon bantuannya untuk reset password.";
+      var waLink = "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(msg);
+      window.open(waLink, '_blank');
     }
 
     function checkAdminLogin() {
       if (document.getElementById('admin-pin-input').value.trim() === ADMIN_PIN) {
         currentUser = { name: "Admin Toko / Kurir", role: "admin" };
         safeStorage.setItem('app_active_session', JSON.stringify(currentUser));
-        openMainApp("🔑 Mode Admin / Kurir");
+        openMainApp("Mode Admin / Kurir");
       } else {
         document.getElementById('admin-error-msg').classList.remove('hidden');
       }
@@ -399,7 +453,7 @@
     function openMainApp(greetingText) {
       document.getElementById('auth-screen').classList.add('hidden');
       document.getElementById('main-app').classList.remove('hidden');
-      document.getElementById('user-greeting').innerText = greetingText;
+      document.getElementById('greeting-name-text').innerText = greetingText;
 
       var isAdmin = currentUser && currentUser.role === 'admin';
       document.getElementById('admin-control-bar').classList.toggle('hidden', !isAdmin);
@@ -422,12 +476,28 @@
       startCustomerNotifier();
     }
 
+    function openProfileModal() {
+      if (!currentUser || currentUser.role === 'guest' || currentUser.role === 'admin') {
+        showToast("Fitur profil khusus akun konsumen.", false);
+        return;
+      }
+      document.getElementById('profile-name').innerText = currentUser.name || '-';
+      document.getElementById('profile-phone').innerText = currentUser.phone || '-';
+      document.getElementById('profile-address').innerText = currentUser.address || '-';
+      document.getElementById('profile-modal').classList.remove('hidden');
+    }
+
+    function closeProfileModal() {
+      document.getElementById('profile-modal').classList.add('hidden');
+    }
+
     function logout() {
       if (courierWatchId) navigator.geolocation.clearWatch(courierWatchId);
       if (customerNotifierInterval) clearInterval(customerNotifierInterval);
       safeStorage.removeItem('app_active_session');
       currentUser = null;
       document.getElementById('main-app').classList.add('hidden');
+      document.getElementById('profile-modal').classList.add('hidden');
       document.getElementById('auth-screen').classList.remove('hidden');
     }
 
@@ -569,7 +639,6 @@
           }
         }
         
-        // FOTO KLIK UNTUK ZOOM (LIGHTBOX)
         var safeImgUrl = p.image.replace(/'/g, "\\'");
         var safeName = p.name.replace(/'/g, "\\'");
 
@@ -622,7 +691,7 @@
     function filterProducts() { renderProducts(); }
 
     function updateQty(id, delta) {
-      if (currentUser && currentUser.role === 'guest' && delta > 0) { showToast("⚠️ Silakan daftar/login dulu untuk belanja!", false); setTimeout(function() { logout(); switchAuthTab('user'); }, 1000); return; }
+      if (currentUser && currentUser.role === 'guest' && delta > 0) { showToast("⚠️ Silakan login dulu untuk belanja!", false); return; }
       var targetIdStr = String(id), p = null;
       for (var i = 0; i < allProducts.length; i++) { if (String(allProducts[i].id) === targetIdStr) { p = allProducts[i]; break; } }
       if (!p) return;
@@ -649,7 +718,7 @@
     }
 
     function toggleCartModal() {
-      if (currentUser && currentUser.role === 'guest') { showToast("⚠️ Silakan daftar/login dulu untuk belanja!", false); setTimeout(function() { logout(); switchAuthTab('user'); }, 1000); return; }
+      if (currentUser && currentUser.role === 'guest') { showToast("⚠️ Silakan login dulu untuk belanja!", false); return; }
       var modal = document.getElementById('cart-modal'), cartContainer = document.getElementById('cart-items');
       if (modal.classList.contains('hidden')) {
         var cartList = Object.values(cart);
