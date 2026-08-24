@@ -1073,7 +1073,6 @@
       renderProducts();
     }
 
-    // LOGIKA RENDER PRODUK DENGAN FITUR OTOMATIS TERLARIS DI MENU "SEMUA WARUNG"
     function renderProducts() {
       var container = document.getElementById('product-container');
       var searchVal = document.getElementById('search-input').value.toLowerCase();
@@ -1087,7 +1086,6 @@
         }
       });
 
-      // Fallback cerdas: Jika belum ada produk yang dicentang terlaris di sheets, tampilkan semua produk
       if (currentStoreId === "Semua" && filtered.length === 0 && !searchVal) {
         filtered = allProducts.filter(function(p) {
           return p.name.toLowerCase().indexOf(searchVal) !== -1;
@@ -1169,7 +1167,7 @@
       for (var i = 0; i < allProducts.length; i++) { if (String(allProducts[i].id) === targetIdStr) { p = allProducts[i]; break; } }
       if (!p || (p.inStock === false && delta > 0)) return;
 
-      if (!cart[targetIdStr]) { cart[targetIdStr] = { id: targetIdStr, name: p.name, price: p.price, qty: 0 }; }
+      if (!cart[targetIdStr]) { cart[targetIdStr] = { id: targetIdStr, name: p.name, price: p.price, storeId: p.storeId, qty: 0 }; }
       cart[targetIdStr].qty += delta;
       if (cart[targetIdStr].qty <= 0) delete cart[targetIdStr];
       updateCartUI(); renderProducts();
@@ -1321,17 +1319,24 @@
 
         var courierInfoBadge = ord.courierName ? '<p class="text-[10px] text-rose-300 font-bold bg-rose-500/10 px-3 py-1.5 rounded-xl flex items-center gap-1.5 border border-rose-500/20"><i class="fa-solid fa-motorcycle text-rose-400"></i> Kurir: <strong>' + ord.courierName + '</strong></p>' : '';
         
+        // Kotak Penjemputan Toko yang jelas untuk kurir/staff
+        var storePickupBox = isStaff ? '<div class="bg-amber-500/10 border border-amber-500/30 p-3 rounded-2xl space-y-1">' +
+                                         '<p class="text-[10px] text-amber-400 font-black uppercase"><i class="fa-solid fa-store mr-1"></i> Titik Penjemputan (Warung):</p>' +
+                                         '<p class="text-xs font-extrabold text-white">' + (ord.storeName || 'Warung Mitra') + '</p>' +
+                                       '</div>' : '';
+
         var cardBg = isStaff ? "bg-slate-900 border border-slate-800 text-slate-100 shadow-xl rounded-3xl p-5 space-y-3" : "bg-white border border-slate-200/80 text-slate-800 shadow-xs rounded-3xl p-5 space-y-3";
         var textMuted = isStaff ? "text-slate-400" : "text-slate-500";
         var textBold = isStaff ? "text-white" : "text-slate-900";
 
         html += '<div class="' + cardBg + '">' +
                   '<div class="flex justify-between items-center border-b ' + (isStaff ? 'border-slate-800' : 'border-slate-100') + ' pb-3"><span class="font-black text-xs text-rose-400">' + ord.invoiceId + '</span>' + statusBadge + '</div>' +
+                  storePickupBox +
                   '<div class="text-xs font-semibold space-y-1.5">' +
                     '<p><span class="font-bold ' + textBold + '">Pemesan:</span> <span class="' + textMuted + '">' + ord.name + '</span></p>' +
-                    '<p class="truncate"><span class="font-bold ' + textBold + '">Items:</span> <span class="' + textMuted + '">' + ord.itemsSummary + '</span></p>' +
+                    '<p class="truncate"><span class="font-bold ' + textBold + '">Detail Pesanan:</span> <span class="' + textMuted + '">' + ord.itemsSummary + '</span></p>' +
                     courierInfoBadge +
-                    '<p class="text-[11px] ' + textMuted + '"><span class="font-bold ' + textBold + '">Alamat:</span> ' + ord.address + '</p>' +
+                    '<p class="text-[11px] ' + textMuted + '"><span class="font-bold ' + textBold + '">Alamat Tujuan:</span> ' + ord.address + '</p>' +
                     (!isStaff ? '' : '<p class="text-[11px] text-emerald-400 font-black pt-1">Total Tagihan: Rp ' + formatRupiah(ord.total) + '</p>') +
                   '</div>' +
                   actionButtons +
@@ -1454,8 +1459,18 @@
       var subtotal = 0, itemsArr = [];
       for (var i = 0; i < cartList.length; i++) { subtotal += cartList[i].price * cartList[i].qty; itemsArr.push(cartList[i].name + " (" + cartList[i].qty + "x)"); }
       
+      // Ambil nama warung dari item pertama di keranjang
+      var targetStoreId = cartList[0] ? cartList[0].storeId : "";
+      var targetStoreName = "Warung Mitra";
+      for (var s = 0; s < allStores.length; s++) {
+        if (String(allStores[s].id) === String(targetStoreId)) {
+          targetStoreName = allStores[s].name;
+          break;
+        }
+      }
+
       var initialStatus = (selectedPaymentMethod === 'qris') ? "Menunggu Verifikasi QRIS (Belum Lunas)" : "Menunggu Pembayaran";
-      var newOrder = { invoiceId: currentInvoiceId, name: name, phone: currentUser ? currentUser.phone : "", address: address, total: subtotal + calculatedOngkir, itemsSummary: itemsArr.join(", "), status: initialStatus, location: currentLocation || "-", lat: currentCoords ? currentCoords.lat : "", lng: currentCoords ? currentCoords.lng : "", date: new Date().toLocaleDateString('id-ID'), ongkir: calculatedOngkir, notes: notes };
+      var newOrder = { invoiceId: currentInvoiceId, name: name, phone: currentUser ? currentUser.phone : "", address: address, total: subtotal + calculatedOngkir, itemsSummary: itemsArr.join(", "), status: initialStatus, location: currentLocation || "-", lat: currentCoords ? currentCoords.lat : "", lng: currentCoords ? currentCoords.lng : "", date: new Date().toLocaleDateString('id-ID'), ongkir: calculatedOngkir, notes: notes, storeName: targetStoreName };
 
       callApiPost('processOrder', { order: newOrder });
 
@@ -1479,6 +1494,7 @@
       var formattedItems = "- " + newOrder.itemsSummary.replace(/, /g, "\n- ");
       var message = "Halo Admin, saya sudah memesan:\n\n" +
                     "📋 *No Invoice:* " + newOrder.invoiceId + "\n" +
+                    "🏪 *Warung Asal:* " + newOrder.storeName + "\n" +
                     "👤 *Pemesan:* " + newOrder.name + "\n" +
                     "📍 *Alamat:* " + newOrder.address + "\n" +
                     "📝 *Catatan:* " + (newOrder.notes || "-") + "\n\n" +
