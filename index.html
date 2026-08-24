@@ -342,10 +342,20 @@
           <p id="gps-status" class="text-[10px] text-slate-400 italic">Tekan tombol agar ongkir terhitung otomatis sesuai jarak.</p>
         </div>
         
-        <div class="bg-slate-900 text-white p-4 rounded-2xl text-center shadow-md">
-          <p class="text-[10px] text-slate-300 font-semibold mb-1.5 uppercase tracking-wider">PEMBAYARAN: QRIS / COD</p>
-          <div class="bg-white p-2.5 rounded-2xl inline-block my-1 shadow-sm"><img src="https://i.postimg.cc/TP5CkjK6/Whats-App-Image-2026-08-22-at-23-17-42.jpg" alt="QRIS Toko" class="w-24 h-24 mx-auto object-contain"></div>
-          <p class="text-[10px] text-slate-400 mt-1">Scan QRIS atau bayar Tunai saat barang sampai.</p>
+        <!-- PILIHAN METODE PEMBAYARAN -->
+        <div class="space-y-2 pt-1">
+          <label class="text-[11px] font-extrabold text-slate-700 block">Pilih Metode Pembayaran *</label>
+          <div class="grid grid-cols-2 gap-2">
+            <button type="button" id="pay-method-midtrans" onclick="setPaymentMethod('midtrans')" class="py-3 px-3 rounded-2xl border-2 border-orange-500 bg-orange-50 text-orange-600 font-black text-xs text-center transition-all">Gateway Midtrans</button>
+            <button type="button" id="pay-method-qris" onclick="setPaymentMethod('qris')" class="py-3 px-3 rounded-2xl border-2 border-slate-200 bg-slate-50 text-slate-700 font-bold text-xs text-center transition-all">Scan QRIS Manual</button>
+          </div>
+        </div>
+
+        <!-- BOX QRIS MANUAL -->
+        <div id="qris-manual-box" class="hidden bg-slate-900 text-white p-4 rounded-2xl text-center shadow-md space-y-2">
+          <p class="text-[10px] text-slate-300 font-semibold uppercase tracking-wider">SCAN QRIS TOKO</p>
+          <div class="bg-white p-2.5 rounded-2xl inline-block shadow-sm"><img src="https://i.postimg.cc/TP5CkjK6/Whats-App-Image-2026-08-22-at-23-17-42.jpg" alt="QRIS Toko" class="w-28 h-28 mx-auto object-contain"></div>
+          <p class="text-[10px] text-slate-400">Scan QRIS di atas, lalu tekan tombol kirim pesanan untuk konfirmasi lunas ke WhatsApp Admin.</p>
         </div>
 
         <div class="space-y-1.5 pt-1 border-t border-slate-100">
@@ -353,7 +363,7 @@
           <div class="flex justify-between text-xs text-slate-500 font-medium"><span>Ongkir:</span><span id="cart-ongkir-price">Rp 6.000</span></div>
           <div class="flex justify-between items-center pt-2 text-slate-900 font-black text-sm border-t border-slate-200"><span>Total Tagihan:</span><span id="cart-total-price" class="text-orange-600 text-lg">Rp 0</span></div>
         </div>
-        <button id="btn-submit-order" type="button" onclick="sendToWhatsApp()" class="w-full bg-orange-500 hover:bg-orange-600 active:scale-95 text-white font-black py-4 rounded-2xl shadow-lg shadow-orange-500/25 flex items-center justify-center gap-2 text-xs transition-all"><i class="fa-brands fa-whatsapp text-lg"></i> PROSES & KIRIM KE WHATSAPP</button>
+        <button id="btn-submit-order" type="button" onclick="sendToWhatsApp()" class="w-full bg-orange-500 hover:bg-orange-600 active:scale-95 text-white font-black py-4 rounded-2xl shadow-lg shadow-orange-500/25 flex items-center justify-center gap-2 text-xs transition-all"><i class="fa-brands fa-whatsapp text-lg"></i> BAYAR VIA MIDTRANS & KIRIM WA</button>
       </div>
     </div>
   </div>
@@ -456,6 +466,7 @@
     var currentUser = null, currentLocation = null, currentCoords = null, currentInvoiceId = "", allProducts = [], currentCategory = "Semua", cart = {}, storeStatus = "BUKA", recruitmentStatus = "TUTUP", currentDistance = 0, calculatedOngkir = 6000, rawOrdersList = [];
     var liveMap = null, courierMarker = null, customerMarker = null, routePolyline = null, courierWatchId = null, adminNotifierInterval = null;
     var courierHeartbeatInterval = null, lastKnownCustomerOrderStatus = "", customerNotifierInterval = null;
+    var selectedPaymentMethod = 'midtrans'; // 'midtrans' atau 'qris'
     var lastSentTime = 0;
 
     document.addEventListener("DOMContentLoaded", function() {
@@ -466,6 +477,26 @@
       startBackgroundNotifier();
       checkPendingCouriersCount();
     });
+
+    function setPaymentMethod(method) {
+      selectedPaymentMethod = method;
+      var btnMid = document.getElementById('pay-method-midtrans');
+      var btnQris = document.getElementById('pay-method-qris');
+      var qrisBox = document.getElementById('qris-manual-box');
+      var submitBtn = document.getElementById('btn-submit-order');
+
+      if (method === 'midtrans') {
+        btnMid.className = "py-3 px-3 rounded-2xl border-2 border-orange-500 bg-orange-50 text-orange-600 font-black text-xs text-center transition-all";
+        btnQris.className = "py-3 px-3 rounded-2xl border-2 border-slate-200 bg-slate-50 text-slate-700 font-bold text-xs text-center transition-all";
+        qrisBox.classList.add('hidden');
+        submitBtn.innerHTML = '<i class="fa-brands fa-whatsapp text-lg"></i> BAYAR VIA MIDTRANS & KIRIM WA';
+      } else {
+        btnQris.className = "py-3 px-3 rounded-2xl border-2 border-orange-500 bg-orange-50 text-orange-600 font-black text-xs text-center transition-all";
+        btnMid.className = "py-3 px-3 rounded-2xl border-2 border-slate-200 bg-slate-50 text-slate-700 font-bold text-xs text-center transition-all";
+        qrisBox.classList.remove('hidden');
+        submitBtn.innerHTML = '<i class="fa-brands fa-whatsapp text-lg"></i> KONFIRMASI QRIS LUNAS & KIRIM WA';
+      }
+    }
 
     function checkActiveSession() {
       var activeSession = safeStorage.getItem('app_active_session');
@@ -1129,8 +1160,8 @@
       for (var i = 0; i < orders.length; i++) {
         var ord = orders[i], ordStatus = ord.status || 'Menunggu ACC', statusBadge = '';
         if (ordStatus === 'Menunggu ACC') statusBadge = '<span class="bg-amber-500/20 text-amber-300 text-[9px] font-black px-2.5 py-1 rounded-full border border-amber-500/30">Menunggu ACC</span>';
-        else if (ordStatus === 'Menunggu Pembayaran') statusBadge = '<span class="bg-purple-500/20 text-purple-300 text-[9px] font-black px-2.5 py-1 rounded-full border border-purple-500/30">Belum Lunas</span>';
-        else if (ordStatus === 'Menunggu ACC (Lunas)') statusBadge = '<span class="bg-emerald-500/20 text-emerald-300 text-[9px] font-black px-2.5 py-1 rounded-full border border-emerald-500/30">Lunas</span>';
+        else if (ordStatus.includes('Menunggu Pembayaran') || ordStatus.includes('BELUM LUNAS')) statusBadge = '<span class="bg-purple-500/20 text-purple-300 text-[9px] font-black px-2.5 py-1 rounded-full border border-purple-500/30">Belum Lunas</span>';
+        else if (ordStatus.includes('LUNAS') || ordStatus.includes('Menunggu ACC (Lunas)')) statusBadge = '<span class="bg-emerald-500/20 text-emerald-300 text-[9px] font-black px-2.5 py-1 rounded-full border border-emerald-500/30">Lunas (Lunas)</span>';
         else if (ordStatus === 'Di-ACC (Diproses)') statusBadge = '<span class="bg-blue-500/20 text-blue-300 text-[9px] font-black px-2.5 py-1 rounded-full border border-blue-500/30">Diproses</span>';
         else if (ordStatus === 'Sedang Diantar') statusBadge = '<span class="bg-orange-500/20 text-orange-300 text-[9px] font-black px-2.5 py-1 rounded-full animate-pulse border border-orange-500/30">Diantar (' + (ord.courierName || 'Kurir') + ')</span>';
         else if (ordStatus === 'Selesai') statusBadge = '<span class="bg-slate-700 text-slate-300 text-[9px] font-black px-2.5 py-1 rounded-full border border-slate-600">Selesai</span>';
@@ -1255,27 +1286,36 @@
 
       var subtotal = 0, itemsArr = [];
       for (var i = 0; i < cartList.length; i++) { subtotal += cartList[i].price * cartList[i].qty; itemsArr.push(cartList[i].name + " (" + cartList[i].qty + "x)"); }
-      var newOrder = { invoiceId: currentInvoiceId, name: name, phone: currentUser ? currentUser.phone : "", address: address, total: subtotal + calculatedOngkir, itemsSummary: itemsArr.join(", "), status: "Menunggu Pembayaran", location: currentLocation || "-", lat: currentCoords ? currentCoords.lat : "", lng: currentCoords ? currentCoords.lng : "", date: new Date().toLocaleDateString('id-ID'), ongkir: calculatedOngkir, notes: notes };
+      
+      var initialStatus = (selectedPaymentMethod === 'qris') ? "LUNAS (Scan QRIS Manual Toko)" : "Menunggu Pembayaran";
+      
+      var newOrder = { invoiceId: currentInvoiceId, name: name, phone: currentUser ? currentUser.phone : "", address: address, total: subtotal + calculatedOngkir, itemsSummary: itemsArr.join(", "), status: initialStatus, location: currentLocation || "-", lat: currentCoords ? currentCoords.lat : "", lng: currentCoords ? currentCoords.lng : "", date: new Date().toLocaleDateString('id-ID'), ongkir: calculatedOngkir, notes: notes };
 
       callApiPost('processOrder', { order: newOrder });
-      callApiPost('getMidtransSnapToken', { orderData: newOrder }).then(token => {
-        if (token && !token.startsWith("Error")) {
-          window.snap.pay(token, {
-            onSuccess: function() { 
-              showToast("Pembayaran Berhasil!"); 
-              finalizeOrderUI(newOrder, "LUNAS (Midtrans/QRIS)"); 
-            },
-            onPending: function() { 
-              showToast("Menunggu Pembayaran."); 
-              finalizeOrderUI(newOrder, "MENUNGGU PEMBAYARAN (Pending)"); 
-            },
-            onClose: function() { 
-              showToast("Transaksi dicatat."); 
-              finalizeOrderUI(newOrder, "BELUM LUNAS (Popup ditutup / Bayar nanti atau COD)"); 
-            }
-          });
-        }
-      });
+
+      if (selectedPaymentMethod === 'qris') {
+        showToast("Pesanan QRIS Manual Dicatat!");
+        finalizeOrderUI(newOrder, "LUNAS (QRIS Manual Toko)");
+      } else {
+        callApiPost('getMidtransSnapToken', { orderData: newOrder }).then(token => {
+          if (token && !token.startsWith("Error")) {
+            window.snap.pay(token, {
+              onSuccess: function() { 
+                showToast("Pembayaran Berhasil!"); 
+                finalizeOrderUI(newOrder, "LUNAS (Gateway Midtrans/QRIS)"); 
+              },
+              onPending: function() { 
+                showToast("Menunggu Pembayaran."); 
+                finalizeOrderUI(newOrder, "MENUNGGU PEMBAYARAN (Midtrans Pending)"); 
+              },
+              onClose: function() { 
+                showToast("Transaksi dicatat."); 
+                finalizeOrderUI(newOrder, "BELUM LUNAS (Popup Midtrans ditutup / Bayar nanti atau COD)"); 
+              }
+            });
+          }
+        });
+      }
     }
 
     function finalizeOrderUI(newOrder, paymentStatus) {
