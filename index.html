@@ -18,7 +18,7 @@
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap');
     * { -webkit-tap-highlight-color: transparent; touch-action: manipulation; box-sizing: border-box; }
     html, body { width: 100%; height: 100%; margin: 0; padding: 0; overflow-x: hidden; font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f1f5f9; }
-    .active-cat { border: 2px solid #0f172a !important; background-color: #fff7ed !important; box-shadow: 0 4px 12px rgba(249, 115, 22, 0.15); }
+    .active-cat { border: 2px solid #991b1b !important; background-color: #fff1f2 !important; box-shadow: 0 4px 12px rgba(153, 27, 27, 0.15); }
     ::-webkit-scrollbar { display: none; }
     @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
     .animate-slide-up { animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
@@ -29,7 +29,7 @@
     }
   </style>
 </head>
-<body id="body-root" class="bg-slate-100 min-h-screen text-slate-800 antialiased selection:bg-orange-500 selection:text-white relative">
+<body id="body-root" class="bg-slate-100 min-h-screen text-slate-800 antialiased selection:bg-rose-600 selection:text-white relative">
 
   <!-- TOAST NOTIFIKASI -->
   <div id="toast-notification" class="fixed top-5 left-1/2 -translate-x-1/2 z-[60] bg-slate-900/95 backdrop-blur-md text-white text-xs font-bold px-5 py-3 rounded-2xl shadow-xl flex items-center gap-3 transition-all duration-300 opacity-0 pointer-events-none -translate-y-6 w-[92%] max-w-sm justify-center border border-slate-800">
@@ -40,14 +40,14 @@
   <!-- HALAMAN AUTENTIKASI -->
   <div id="auth-screen" class="fixed inset-0 z-50 flex flex-col justify-between bg-white p-6 overflow-y-auto max-w-md mx-auto shadow-2xl">
     <div class="flex justify-between items-center w-full pt-2">
-      <button id="tab-btn-user" type="button" onclick="switchAuthTab('user')" class="w-11 h-11 rounded-2xl bg-orange-500 text-white flex items-center justify-center shadow-md shadow-orange-500/20 active:scale-95 transition-all text-sm" title="Mode Konsumen"><i class="fa-solid fa-user"></i></button>
+      <button id="tab-btn-user" type="button" onclick="switchAuthTab('user')" class="w-11 h-11 rounded-2xl bg-rose-600 text-white flex items-center justify-center shadow-md shadow-rose-600/20 active:scale-95 transition-all text-sm" title="Mode Konsumen"><i class="fa-solid fa-user"></i></button>
       <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest bg-slate-100 px-3 py-1 rounded-full">Portal Akses Aman</span>
       <button id="tab-btn-admin" type="button" onclick="switchAuthTab('admin')" class="w-11 h-11 rounded-2xl bg-slate-100 text-slate-600 flex items-center justify-center shadow-sm active:scale-95 transition-all text-sm" title="Mode Admin / Kurir"><i class="fa-solid fa-user-shield"></i></button>
     </div>
 
     <div class="w-full my-auto py-6">
       <div class="text-center mb-8">
-        <div class="w-20 h-20 bg-orange-50 border border-orange-100 rounded-3xl flex items-center justify-center mx-auto mb-4 text-orange-500 shadow-inner"><i class="fa-solid fa-store text-3xl"></i></div>
+        <div class="w-20 h-20 bg-rose-50 border border-rose-100 rounded-3xl flex items-center justify-center mx-auto mb-4 text-rose-600 shadow-inner"><i class="fa-solid fa-store text-3xl"></i></div>
         <h2 class="text-3xl font-black text-slate-900 tracking-tight">Beli Disini!</h2>
         <p class="text-slate-400 text-xs font-semibold mt-1">Layanan Belanja & Kurir Cepat Terpercaya</p>
       </div>
@@ -55,28 +55,28 @@
       <!-- FORM CONSUMER -->
       <div id="form-user" class="space-y-4">
         <div class="flex bg-slate-100 p-1 rounded-2xl text-xs font-bold mb-4 border border-slate-200/60">
-          <button type="button" id="subtab-login" onclick="switchConsumerMode('login')" class="flex-1 py-3 rounded-xl bg-orange-500 text-white shadow-md shadow-orange-500/20 transition-all text-center">Masuk Akun</button>
+          <button type="button" id="subtab-login" onclick="switchConsumerMode('login')" class="flex-1 py-3 rounded-xl bg-rose-600 text-white shadow-md shadow-rose-600/20 transition-all text-center">Masuk Akun</button>
           <button type="button" id="subtab-register" onclick="switchConsumerMode('register')" class="flex-1 py-3 rounded-xl text-slate-600 transition-all text-center">Daftar Baru</button>
         </div>
 
         <div id="consumer-login-section" class="space-y-4">
-          <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1.5">Nomor WhatsApp *</label><div class="relative flex items-center"><i class="fa-brands fa-whatsapp absolute left-4 text-slate-400 text-base"></i><input type="tel" id="login-phone" placeholder="Contoh: 081234567890" class="w-full bg-slate-50 rounded-2xl pl-11 pr-4 py-4 text-xs border border-slate-200 focus:outline-none focus:border-orange-500 focus:bg-white font-medium transition-all"></div></div>
-          <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1.5">Password *</label><div class="relative flex items-center"><i class="fa-solid fa-lock absolute left-4 text-slate-400 text-sm"></i><input type="password" id="login-password" placeholder="••••••••" class="w-full bg-slate-50 rounded-2xl pl-11 pr-4 py-4 text-xs border border-slate-200 focus:outline-none focus:border-orange-500 focus:bg-white font-medium transition-all"></div></div>
+          <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1.5">Nomor WhatsApp *</label><div class="relative flex items-center"><i class="fa-brands fa-whatsapp absolute left-4 text-slate-400 text-base"></i><input type="tel" id="login-phone" placeholder="Contoh: 081234567890" class="w-full bg-slate-50 rounded-2xl pl-11 pr-4 py-4 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 focus:bg-white font-medium transition-all"></div></div>
+          <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1.5">Password *</label><div class="relative flex items-center"><i class="fa-solid fa-lock absolute left-4 text-slate-400 text-sm"></i><input type="password" id="login-password" placeholder="••••••••" class="w-full bg-slate-50 rounded-2xl pl-11 pr-4 py-4 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 focus:bg-white font-medium transition-all"></div></div>
           <div class="flex justify-between items-center text-[11px] pt-1">
-            <button type="button" onclick="forgotPassword()" class="text-orange-600 font-bold hover:underline">Lupa Password?</button>
+            <button type="button" onclick="forgotPassword()" class="text-rose-600 font-bold hover:underline">Lupa Password?</button>
           </div>
-          <button type="button" onclick="loginCustomer()" class="w-full bg-orange-500 hover:bg-orange-600 active:scale-95 text-white font-black py-4 rounded-2xl shadow-lg shadow-orange-500/25 transition-all text-xs tracking-wider flex items-center justify-center gap-2 pt-4"><i class="fa-solid fa-right-to-bracket text-base"></i> MASUK SEKARANG</button>
+          <button type="button" onclick="loginCustomer()" class="w-full bg-rose-600 hover:bg-rose-700 active:scale-95 text-white font-black py-4 rounded-2xl shadow-lg shadow-rose-600/25 transition-all text-xs tracking-wider flex items-center justify-center gap-2 pt-4"><i class="fa-solid fa-right-to-bracket text-base"></i> MASUK SEKARANG</button>
         </div>
 
         <div id="consumer-register-section" class="space-y-4 hidden">
-          <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1.5">Nama Lengkap *</label><div class="relative flex items-center"><i class="fa-solid fa-user absolute left-4 text-slate-400 text-sm"></i><input type="text" id="reg-name" placeholder="Contoh: Ulan Ismanto" class="w-full bg-slate-50 rounded-2xl pl-11 pr-4 py-4 text-xs border border-slate-200 focus:outline-none focus:border-orange-500 focus:bg-white font-medium transition-all"></div></div>
-          <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1.5">Nomor WhatsApp *</label><div class="relative flex items-center"><i class="fa-brands fa-whatsapp absolute left-4 text-slate-400 text-base"></i><input type="tel" id="reg-phone" placeholder="Contoh: 081234567890" class="w-full bg-slate-50 rounded-2xl pl-11 pr-4 py-4 text-xs border border-slate-200 focus:outline-none focus:border-orange-500 focus:bg-white font-medium transition-all"></div></div>
-          <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1.5">Alamat Pengiriman *</label><div class="relative flex items-start"><i class="fa-solid fa-location-dot absolute left-4 top-4 text-slate-400 text-sm"></i><textarea id="reg-address" rows="2" placeholder="Nama jalan, RT/RW, Patokan..." class="w-full bg-slate-50 rounded-2xl pl-11 pr-4 py-3 text-xs border border-slate-200 focus:outline-none focus:border-orange-500 focus:bg-white font-medium transition-all"></textarea></div></div>
-          <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1.5">Password Akun *</label><div class="relative flex items-center"><i class="fa-solid fa-lock absolute left-4 text-slate-400 text-sm"></i><input type="password" id="reg-password" placeholder="Buat password rahasia" class="w-full bg-slate-50 rounded-2xl pl-11 pr-4 py-4 text-xs border border-slate-200 focus:outline-none focus:border-orange-500 focus:bg-white font-medium transition-all"></div></div>
-          <button type="button" onclick="registerCustomer()" class="w-full bg-orange-500 hover:bg-orange-600 active:scale-95 text-white font-black py-4 rounded-2xl shadow-lg shadow-orange-500/25 transition-all text-xs tracking-wider flex items-center justify-center gap-2 pt-4"><i class="fa-solid fa-user-plus text-base"></i> DAFTAR AKUN BARU</button>
+          <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1.5">Nama Lengkap *</label><div class="relative flex items-center"><i class="fa-solid fa-user absolute left-4 text-slate-400 text-sm"></i><input type="text" id="reg-name" placeholder="Contoh: Ulan Ismanto" class="w-full bg-slate-50 rounded-2xl pl-11 pr-4 py-4 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 focus:bg-white font-medium transition-all"></div></div>
+          <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1.5">Nomor WhatsApp *</label><div class="relative flex items-center"><i class="fa-brands fa-whatsapp absolute left-4 text-slate-400 text-base"></i><input type="tel" id="reg-phone" placeholder="Contoh: 081234567890" class="w-full bg-slate-50 rounded-2xl pl-11 pr-4 py-4 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 focus:bg-white font-medium transition-all"></div></div>
+          <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1.5">Alamat Pengiriman *</label><div class="relative flex items-start"><i class="fa-solid fa-location-dot absolute left-4 top-4 text-slate-400 text-sm"></i><textarea id="reg-address" rows="2" placeholder="Nama jalan, RT/RW, Patokan..." class="w-full bg-slate-50 rounded-2xl pl-11 pr-4 py-3 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 focus:bg-white font-medium transition-all"></textarea></div></div>
+          <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1.5">Password Akun *</label><div class="relative flex items-center"><i class="fa-solid fa-lock absolute left-4 text-slate-400 text-sm"></i><input type="password" id="reg-password" placeholder="Buat password rahasia" class="w-full bg-slate-50 rounded-2xl pl-11 pr-4 py-4 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 focus:bg-white font-medium transition-all"></div></div>
+          <button type="button" onclick="registerCustomer()" class="w-full bg-rose-600 hover:bg-rose-700 active:scale-95 text-white font-black py-4 rounded-2xl shadow-lg shadow-rose-600/25 transition-all text-xs tracking-wider flex items-center justify-center gap-2 pt-4"><i class="fa-solid fa-user-plus text-base"></i> DAFTAR AKUN BARU</button>
         </div>
 
-        <button type="button" onclick="loginAsGuest()" class="w-full bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 font-extrabold py-4 rounded-2xl text-xs transition-all border border-slate-200 flex items-center justify-center gap-2 mt-3"><i class="fa-solid fa-eye text-orange-500"></i> LIHAT PRODUK DULU (PENGUNJUNG)</button>
+        <button type="button" onclick="loginAsGuest()" class="w-full bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 font-extrabold py-4 rounded-2xl text-xs transition-all border border-slate-200 flex items-center justify-center gap-2 mt-3"><i class="fa-solid fa-eye text-rose-600"></i> LIHAT PRODUK DULU (PENGUNJUNG)</button>
       </div>
 
       <!-- FORM ADMIN / KURIR -->
@@ -147,12 +147,12 @@
       <div>
         <h1 id="app-title-main" class="text-xl font-black text-slate-900 tracking-tight">Beli Disini!</h1>
         <button type="button" onclick="openProfileModal()" class="text-left mt-0.5 active:scale-95 transition-all">
-          <p id="user-greeting" class="text-[11px] font-bold text-slate-700 bg-slate-100 px-3.5 py-1.5 rounded-full inline-block shadow-xs flex items-center gap-1.5"><i class="fa-solid fa-user-circle text-orange-500 text-xs"></i> <span id="greeting-name-text"></span></p>
+          <p id="user-greeting" class="text-[11px] font-bold text-slate-700 bg-slate-100 px-3.5 py-1.5 rounded-full inline-block shadow-xs flex items-center gap-1.5"><i class="fa-solid fa-user-circle text-rose-600 text-xs"></i> <span id="greeting-name-text"></span></p>
         </button>
       </div>
       <div class="flex items-center gap-2">
         <button type="button" onclick="logout()" title="Keluar" class="w-10 h-10 bg-slate-100 hover:bg-red-50 hover:text-red-500 rounded-2xl flex items-center justify-center shadow-xs text-slate-600 active:scale-90 transition-all"><i class="fa-solid fa-right-from-bracket text-xs"></i></button>
-        <button type="button" id="header-cart-btn" onclick="toggleCartModal()" class="w-10 h-10 bg-orange-500 text-white rounded-2xl flex items-center justify-center shadow-md shadow-orange-500/20 active:scale-90 transition-all relative"><i class="fa-solid fa-cart-shopping text-sm"></i><span id="cart-badge" class="hidden absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow-xs">0</span></button>
+        <button type="button" id="header-cart-btn" onclick="toggleCartModal()" class="w-10 h-10 bg-rose-600 text-white rounded-2xl flex items-center justify-center shadow-md shadow-rose-600/20 active:scale-90 transition-all relative"><i class="fa-solid fa-cart-shopping text-sm"></i><span id="cart-badge" class="hidden absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow-xs">0</span></button>
       </div>
     </div>
 
@@ -160,11 +160,11 @@
     <div id="admin-control-bar" class="hidden px-6 pt-5 mb-6">
       <div id="panel-card-box" class="bg-slate-900 text-white p-5 rounded-3xl flex flex-col sm:flex-row justify-between items-start sm:items-center shadow-xl border border-slate-800 gap-4 mb-4">
         <div class="flex items-center gap-3.5">
-          <div class="w-12 h-12 rounded-2xl bg-orange-500/20 text-orange-400 flex items-center justify-center text-xl"><i class="fa-solid fa-motorcycle"></i></div>
-          <div><p id="panel-title-text" class="text-xs font-black tracking-wide uppercase text-orange-400">PANEL KONTROL</p><p id="panel-subtitle-text" class="text-xs text-slate-300 font-medium mt-0.5">Antar Pesanan Area Terdekat</p></div>
+          <div class="w-12 h-12 rounded-2xl bg-rose-600/20 text-rose-400 flex items-center justify-center text-xl"><i class="fa-solid fa-motorcycle"></i></div>
+          <div><p id="panel-title-text" class="text-xs font-black tracking-wide uppercase text-rose-400">PANEL KONTROL</p><p id="panel-subtitle-text" class="text-xs text-slate-300 font-medium mt-0.5">Antar Pesanan Area Terdekat</p></div>
         </div>
         <div id="admin-exclusive-buttons" class="w-full sm:w-auto">
-          <button type="button" onclick="toggleAdminMenuModal()" class="w-full sm:w-auto bg-orange-500 hover:bg-orange-600 text-white font-black px-5 py-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-md shadow-orange-500/20 active:scale-95 transition-all">
+          <button type="button" onclick="toggleAdminMenuModal()" class="w-full sm:w-auto bg-rose-600 hover:bg-rose-700 text-white font-black px-5 py-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-md shadow-rose-600/20 active:scale-95 transition-all">
             <i class="fa-solid fa-sliders"></i> Menu Kontrol Admin
           </button>
         </div>
@@ -173,7 +173,7 @@
       <!-- OMSET & STATISTIK ADMIN -->
       <div id="admin-omset-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div class="bg-white p-4 rounded-2xl shadow-xs border border-slate-200/80 flex items-center gap-3.5"><div class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-base font-black"><i class="fa-solid fa-wallet"></i></div><div><span class="text-[10px] text-slate-400 font-extrabold block uppercase tracking-wider">Omset Hari Ini</span><span id="dash-total-omset" class="text-sm font-black text-slate-900">Rp 0</span></div></div>
-        <div class="bg-white p-4 rounded-2xl shadow-xs border border-slate-200/80 flex items-center gap-3.5"><div class="w-11 h-11 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center text-base font-black"><i class="fa-solid fa-boxes-packing"></i></div><div><span class="text-[10px] text-slate-400 font-extrabold block uppercase tracking-wider">Total Pesanan Masuk</span><span id="dash-total-orders" class="text-sm font-black text-slate-900">0 Pesanan</span></div></div>
+        <div class="bg-white p-4 rounded-2xl shadow-xs border border-slate-200/80 flex items-center gap-3.5"><div class="w-11 h-11 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-base font-black"><i class="fa-solid fa-boxes-packing"></i></div><div><span class="text-[10px] text-slate-400 font-extrabold block uppercase tracking-wider">Total Pesanan Masuk</span><span id="dash-total-orders" class="text-sm font-black text-slate-900">0 Pesanan</span></div></div>
       </div>
     </div>
 
@@ -189,30 +189,30 @@
     <!-- KATALOG TOKO -->
     <div id="view-toko">
       <div class="px-6 pt-3 mb-5">
-        <div class="bg-gradient-to-r from-orange-500 to-amber-500 rounded-3xl p-6 flex justify-between items-center shadow-lg shadow-orange-500/15 relative overflow-hidden text-white">
+        <div class="bg-gradient-to-r from-red-900 via-rose-700 to-rose-600 rounded-3xl p-6 flex justify-between items-center shadow-lg shadow-rose-900/20 relative overflow-hidden text-white">
           <div class="z-10">
             <span class="bg-white/20 backdrop-blur-md text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider inline-block mb-2 shadow-xs">DISKON SPESIAL</span>
             <h2 class="text-2xl sm:text-3xl font-black tracking-tight leading-tight">Mulai Belanja</h2>
-            <p class="text-xs sm:text-sm text-orange-100 font-medium mt-1">Antar Cepat Sampai Rumah Anda</p>
+            <p class="text-xs sm:text-sm text-rose-100 font-medium mt-1">Antar Cepat Sampai Rumah Anda</p>
           </div>
-          <div class="text-white/25 text-6xl pr-2 z-10"><i class="fa-solid fa-basket-shopping"></i></div>
+          <div class="text-white/20 text-6xl pr-2 z-10"><i class="fa-solid fa-basket-shopping"></i></div>
         </div>
       </div>
       
       <div class="px-6 mb-5">
         <div class="relative flex items-center">
           <i class="fa-solid fa-magnifying-glass absolute left-4 text-slate-400 text-sm"></i>
-          <input type="text" id="search-input" oninput="filterProducts()" placeholder="Cari makanan, minuman..." class="w-full bg-white rounded-2xl py-4 pl-11 pr-4 text-xs sm:text-sm text-slate-800 placeholder-slate-400 shadow-xs border border-slate-200 focus:outline-none focus:border-orange-500 font-medium">
+          <input type="text" id="search-input" oninput="filterProducts()" placeholder="Cari makanan, minuman..." class="w-full bg-white rounded-2xl py-4 pl-11 pr-4 text-xs sm:text-sm text-slate-800 placeholder-slate-400 shadow-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium">
         </div>
       </div>
 
       <div class="px-6 mb-6">
         <h3 class="text-[11px] font-black uppercase text-slate-400 tracking-wider mb-3">KATEGORI PILIHAN</h3>
         <div class="grid grid-cols-4 gap-3">
-          <button type="button" onclick="selectCategory('Semua')" id="cat-Semua" class="category-btn active-cat bg-white rounded-2xl py-3.5 px-1 flex flex-col items-center justify-center shadow-xs border border-slate-200/80 transition-all active:scale-95"><div class="w-10 h-10 rounded-full bg-orange-50 text-orange-500 flex items-center justify-center mb-1 text-base"><i class="fa-solid fa-border-all"></i></div><span class="text-[11px] font-bold text-slate-700">Semua</span></button>
-          <button type="button" onclick="selectCategory('Makanan')" id="cat-Makanan" class="category-btn bg-white rounded-2xl py-3.5 px-1 flex flex-col items-center justify-center shadow-xs border border-slate-200/80 transition-all active:scale-95"><div class="w-10 h-10 rounded-full bg-orange-50 text-orange-500 flex items-center justify-center mb-1 text-base"><i class="fa-solid fa-burger"></i></div><span class="text-[11px] font-bold text-slate-700">Makanan</span></button>
-          <button type="button" onclick="selectCategory('Minuman')" id="cat-Minuman" class="category-btn bg-white rounded-2xl py-3.5 px-1 flex flex-col items-center justify-center shadow-xs border border-slate-200/80 transition-all active:scale-95"><div class="w-10 h-10 rounded-full bg-orange-50 text-orange-500 flex items-center justify-center mb-1 text-base"><i class="fa-solid fa-glass-water"></i></div><span class="text-[11px] font-bold text-slate-700">Minuman</span></button>
-          <button type="button" onclick="selectCategory('Lainnya')" id="cat-Lainnya" class="category-btn bg-white rounded-2xl py-3.5 px-1 flex flex-col items-center justify-center shadow-xs border border-slate-200/80 transition-all active:scale-95"><div class="w-10 h-10 rounded-full bg-orange-50 text-orange-500 flex items-center justify-center mb-1 text-base"><i class="fa-solid fa-ellipsis"></i></div><span class="text-[11px] font-bold text-slate-700">Lainnya</span></button>
+          <button type="button" onclick="selectCategory('Semua')" id="cat-Semua" class="category-btn active-cat bg-white rounded-2xl py-3.5 px-1 flex flex-col items-center justify-center shadow-xs border border-slate-200/80 transition-all active:scale-95"><div class="w-10 h-10 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mb-1 text-base"><i class="fa-solid fa-border-all"></i></div><span class="text-[11px] font-bold text-slate-700">Semua</span></button>
+          <button type="button" onclick="selectCategory('Makanan')" id="cat-Makanan" class="category-btn bg-white rounded-2xl py-3.5 px-1 flex flex-col items-center justify-center shadow-xs border border-slate-200/80 transition-all active:scale-95"><div class="w-10 h-10 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mb-1 text-base"><i class="fa-solid fa-burger"></i></div><span class="text-[11px] font-bold text-slate-700">Makanan</span></button>
+          <button type="button" onclick="selectCategory('Minuman')" id="cat-Minuman" class="category-btn bg-white rounded-2xl py-3.5 px-1 flex flex-col items-center justify-center shadow-xs border border-slate-200/80 transition-all active:scale-95"><div class="w-10 h-10 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mb-1 text-base"><i class="fa-solid fa-glass-water"></i></div><span class="text-[11px] font-bold text-slate-700">Minuman</span></button>
+          <button type="button" onclick="selectCategory('Lainnya')" id="cat-Lainnya" class="category-btn bg-white rounded-2xl py-3.5 px-1 flex flex-col items-center justify-center shadow-xs border border-slate-200/80 transition-all active:scale-95"><div class="w-10 h-10 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mb-1 text-base"><i class="fa-solid fa-ellipsis"></i></div><span class="text-[11px] font-bold text-slate-700">Lainnya</span></button>
         </div>
       </div>
 
@@ -239,9 +239,9 @@
     <!-- NAVIGASI BAWAH -->
     <div class="fixed bottom-0 left-0 right-0 z-40 p-4 pointer-events-none">
       <div class="bg-white/95 backdrop-blur-xl rounded-full shadow-2xl py-3 px-8 flex justify-around items-center border border-slate-200/80 max-w-md mx-auto pointer-events-auto">
-        <button type="button" onclick="switchTab('toko')" id="nav-toko" class="flex flex-col items-center text-orange-500 font-bold transition-all active:scale-90 px-4"><i class="fa-solid fa-store text-lg mb-0.5"></i><span class="text-[10px]">Toko</span></button>
-        <button type="button" id="nav-keranjang-btn" onclick="toggleCartModal()" class="flex flex-col items-center text-slate-400 hover:text-orange-500 font-bold transition-all active:scale-90 relative px-4"><i class="fa-solid fa-basket-shopping text-lg mb-0.5"></i><span class="text-[10px]">Keranjang</span><span id="nav-cart-count" class="hidden absolute top-0 right-2 bg-red-500 text-white text-[9px] font-black px-1.5 py-0.2 rounded-full border-2 border-white">0</span></button>
-        <button type="button" onclick="switchTab('status')" id="nav-status" class="flex flex-col items-center text-slate-400 hover:text-orange-500 font-bold transition-all active:scale-90 relative px-4"><i class="fa-solid fa-clock-rotate-left text-lg mb-0.5"></i><span id="nav-status-label" class="text-[10px]">Status</span><span id="nav-status-dot" class="hidden absolute top-0 right-2 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white animate-ping"></span></button>
+        <button type="button" onclick="switchTab('toko')" id="nav-toko" class="flex flex-col items-center text-rose-600 font-bold transition-all active:scale-90 px-4"><i class="fa-solid fa-store text-lg mb-0.5"></i><span class="text-[10px]">Toko</span></button>
+        <button type="button" id="nav-keranjang-btn" onclick="toggleCartModal()" class="flex flex-col items-center text-slate-400 hover:text-rose-600 font-bold transition-all active:scale-90 relative px-4"><i class="fa-solid fa-basket-shopping text-lg mb-0.5"></i><span class="text-[10px]">Keranjang</span><span id="nav-cart-count" class="hidden absolute top-0 right-2 bg-red-500 text-white text-[9px] font-black px-1.5 py-0.2 rounded-full border-2 border-white">0</span></button>
+        <button type="button" onclick="switchTab('status')" id="nav-status" class="flex flex-col items-center text-slate-400 hover:text-rose-600 font-bold transition-all active:scale-90 relative px-4"><i class="fa-solid fa-clock-rotate-left text-lg mb-0.5"></i><span id="nav-status-label" class="text-[10px]">Status</span><span id="nav-status-dot" class="hidden absolute top-0 right-2 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white animate-ping"></span></button>
       </div>
     </div>
   </div>
@@ -250,14 +250,14 @@
   <div id="delivery-proof-modal" class="fixed inset-0 bg-slate-900/80 z-50 flex items-center justify-center hidden backdrop-blur-sm p-4">
     <div class="bg-white rounded-3xl w-full max-w-xs p-5 shadow-2xl space-y-4 max-w-md mx-auto animate-slide-up">
       <div class="flex justify-between items-center border-b border-slate-100 pb-2">
-        <h3 class="text-xs font-black text-slate-900 flex items-center gap-1.5"><i class="fa-solid fa-camera text-orange-500"></i> Bukti Foto Tiba di Lokasi</h3>
+        <h3 class="text-xs font-black text-slate-900 flex items-center gap-1.5"><i class="fa-solid fa-camera text-rose-600"></i> Bukti Foto Tiba di Lokasi</h3>
         <button type="button" onclick="closeDeliveryProofModal()" class="w-7 h-7 bg-slate-100 rounded-full text-slate-500 flex items-center justify-center text-xs font-bold"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div class="space-y-3">
         <p class="text-[11px] text-slate-600 font-medium">Ambil foto langsung paket atau lokasi rumah konsumen sebagai bukti pengiriman yang sah.</p>
         <div>
           <label class="text-[10px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Kamera / Foto Bukti *</label>
-          <input type="file" id="proof-file-input" accept="image/*" capture="environment" class="w-full bg-slate-50 rounded-xl p-2 text-xs border border-slate-200 file:mr-2 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-orange-500 file:text-white">
+          <input type="file" id="proof-file-input" accept="image/*" capture="environment" class="w-full bg-slate-50 rounded-xl p-2 text-xs border border-slate-200 file:mr-2 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-rose-600 file:text-white">
         </div>
         <div id="proof-preview-container" class="hidden text-center">
           <img id="proof-preview-img" src="" class="w-full h-36 object-cover rounded-2xl border border-slate-200 mt-2">
@@ -274,7 +274,7 @@
     <div class="bg-white rounded-t-[32px] w-full p-6 max-h-[85vh] overflow-y-auto relative animate-slide-up shadow-2xl space-y-4 max-w-md mx-auto">
       <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-2"></div>
       <div class="flex justify-between items-center pb-3 border-b border-slate-100">
-        <h3 class="text-sm font-black text-slate-900 flex items-center gap-2"><i class="fa-solid fa-user-shield text-orange-500"></i> Menu Kontrol Admin Utama</h3>
+        <h3 class="text-sm font-black text-slate-900 flex items-center gap-2"><i class="fa-solid fa-user-shield text-rose-600"></i> Menu Kontrol Admin Utama</h3>
         <button type="button" onclick="toggleAdminMenuModal()" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 font-bold active:scale-90"><i class="fa-solid fa-xmark text-xs"></i></button>
       </div>
       <div class="space-y-3 pt-1">
@@ -290,9 +290,9 @@
           <i class="fa-solid fa-users-gear text-sm"></i> Verifikasi Pendaftaran Kurir (<span id="pending-courier-count">0</span>)
         </button>
         <button type="button" onclick="openAllCouriersModal()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-black py-3.5 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-md active:scale-95 transition-all">
-          <i class="fa-solid fa-motorcycle text-orange-400 text-sm"></i> Pantau Kurir Aktif & Kontak WA
+          <i class="fa-solid fa-motorcycle text-rose-400 text-sm"></i> Pantau Kurir Aktif & Kontak WA
         </button>
-        <button type="button" onclick="toggleAdminMenuModal(); toggleAddProductModal();" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-black py-3.5 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-orange-500/20 active:scale-95 transition-all">
+        <button type="button" onclick="toggleAdminMenuModal(); toggleAddProductModal();" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-black py-3.5 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-rose-600/20 active:scale-95 transition-all">
           <i class="fa-solid fa-plus-circle text-sm"></i> Tambah Produk Baru
         </button>
       </div>
@@ -314,7 +314,7 @@
   <div id="all-couriers-modal" class="fixed inset-0 bg-slate-900/70 z-50 flex items-center justify-center hidden backdrop-blur-sm p-4">
     <div class="bg-white rounded-3xl w-full max-w-md p-6 shadow-2xl space-y-4 max-h-[85vh] overflow-y-auto animate-slide-up">
       <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-        <h3 class="text-sm font-black text-slate-900 flex items-center gap-2"><i class="fa-solid fa-users text-orange-500"></i> Pantau Kurir & Hubungi WA</h3>
+        <h3 class="text-sm font-black text-slate-900 flex items-center gap-2"><i class="fa-solid fa-users text-rose-600"></i> Pantau Kurir & Hubungi WA</h3>
         <button type="button" onclick="closeAllCouriersModal()" class="w-7 h-7 bg-slate-100 rounded-full text-slate-500 flex items-center justify-center text-xs font-bold"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div id="all-couriers-container" class="space-y-3"><p class="text-xs text-slate-400 text-center py-4">Memuat data kurir...</p></div>
@@ -325,7 +325,7 @@
   <div id="profile-modal" class="fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center hidden backdrop-blur-sm p-4">
     <div class="bg-white rounded-3xl w-full max-w-xs p-6 shadow-2xl space-y-4 relative animate-slide-up max-h-[85vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-        <h3 id="profile-modal-title" class="text-sm font-black text-slate-900 flex items-center gap-2"><i class="fa-solid fa-id-card text-orange-500"></i> Profil Akun Saya</h3>
+        <h3 id="profile-modal-title" class="text-sm font-black text-slate-900 flex items-center gap-2"><i class="fa-solid fa-id-card text-rose-600"></i> Profil Akun Saya</h3>
         <button type="button" onclick="closeProfileModal()" class="w-7 h-7 bg-slate-100 rounded-full text-slate-500 flex items-center justify-center text-xs font-bold active:scale-90"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div class="space-y-3 text-xs">
@@ -351,17 +351,17 @@
   <div id="cart-modal" class="fixed inset-0 bg-slate-900/60 z-50 flex items-end justify-center hidden backdrop-blur-sm transition-all">
     <div class="bg-white rounded-t-[32px] w-full p-6 max-h-[88vh] overflow-y-auto relative animate-slide-up shadow-2xl max-w-md mx-auto">
       <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-4"></div>
-      <div class="flex justify-between items-center pb-3 border-b border-slate-100"><h3 class="text-base font-black text-slate-900 flex items-center gap-2"><i class="fa-solid fa-receipt text-orange-500"></i> Checkout Pesanan</h3><button type="button" onclick="toggleCartModal()" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 font-bold active:scale-90"><i class="fa-solid fa-xmark text-xs"></i></button></div>
-      <div class="bg-orange-50 border border-orange-200 rounded-2xl p-3.5 my-3 flex justify-between items-center text-xs"><div><span class="text-slate-500 font-medium block text-[10px]">Nomor Invoice:</span><span id="invoice-id-display" class="font-black text-orange-600 text-xs">#INV-00000</span></div><span class="bg-orange-200 text-orange-800 text-[9px] font-black px-2.5 py-1 rounded-lg">OTOMATIS</span></div>
+      <div class="flex justify-between items-center pb-3 border-b border-slate-100"><h3 class="text-base font-black text-slate-900 flex items-center gap-2"><i class="fa-solid fa-receipt text-rose-600"></i> Checkout Pesanan</h3><button type="button" onclick="toggleCartModal()" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 font-bold active:scale-90"><i class="fa-solid fa-xmark text-xs"></i></button></div>
+      <div class="bg-rose-50 border border-rose-200 rounded-2xl p-3.5 my-3 flex justify-between items-center text-xs"><div><span class="text-slate-500 font-medium block text-[10px]">Nomor Invoice:</span><span id="invoice-id-display" class="font-black text-rose-600 text-xs">#INV-00000</span></div><span class="bg-rose-200 text-rose-800 text-[9px] font-black px-2.5 py-1 rounded-lg">OTOMATIS</span></div>
       <div id="cart-items" class="py-2 space-y-2"></div>
       <div class="border-t border-slate-100 pt-3 space-y-3.5">
         <div><label class="text-[11px] font-extrabold text-slate-700 block mb-1">Nama Pemesan *</label><input type="text" id="cust-name" readonly class="w-full bg-slate-100 rounded-2xl px-4 py-3.5 text-xs border border-slate-200 font-medium text-slate-500 cursor-not-allowed"></div>
-        <div><label class="text-[11px] font-extrabold text-slate-700 block mb-1">Alamat Lengkap *</label><textarea id="cust-address" rows="2" placeholder="Nama jalan, nomor rumah, RT/RW..." class="w-full bg-slate-50 rounded-2xl px-4 py-3 text-xs border border-slate-200 focus:outline-none focus:border-orange-500 font-medium"></textarea></div>
-        <div><label class="text-[11px] font-extrabold text-slate-700 block mb-1">Catatan Pesanan (Opsional)</label><input type="text" id="cust-notes" placeholder="Contoh: Pedas, es sedikit..." class="w-full bg-slate-50 rounded-2xl px-4 py-3 text-xs border border-slate-200 focus:outline-none focus:border-orange-500 font-medium"></div>
+        <div><label class="text-[11px] font-extrabold text-slate-700 block mb-1">Alamat Lengkap *</label><textarea id="cust-address" rows="2" placeholder="Nama jalan, nomor rumah, RT/RW..." class="w-full bg-slate-50 rounded-2xl px-4 py-3 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium"></textarea></div>
+        <div><label class="text-[11px] font-extrabold text-slate-700 block mb-1">Catatan Pesanan (Opsional)</label><input type="text" id="cust-notes" placeholder="Contoh: Pedas, es sedikit..." class="w-full bg-slate-50 rounded-2xl px-4 py-3 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium"></div>
         <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 space-y-2">
-          <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-800 flex items-center gap-1.5"><i class="fa-solid fa-location-crosshairs text-orange-500"></i> Hitung Ongkir GPS</span><button type="button" onclick="getGPSLocation()" class="text-[10px] bg-slate-900 text-white px-3.5 py-2 rounded-xl font-black active:scale-95 transition-all shadow-xs">DAPATKAN GPS</button></div>
+          <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-800 flex items-center gap-1.5"><i class="fa-solid fa-location-crosshairs text-rose-600"></i> Hitung Ongkir GPS</span><button type="button" onclick="getGPSLocation()" class="text-[10px] bg-slate-900 text-white px-3.5 py-2 rounded-xl font-black active:scale-95 transition-all shadow-xs">DAPATKAN GPS</button></div>
           <div class="flex justify-between items-center text-xs font-bold border-t pt-2 border-slate-200/60"><span class="text-slate-400 text-[10px]">Jarak Pengiriman:</span><span id="display-distance" class="text-slate-800">-- km</span></div>
-          <div class="flex justify-between items-center text-xs font-bold"><span class="text-slate-400 text-[10px]">Ongkir (GPS Presisi):</span><span id="display-ongkir" class="text-orange-600 font-black">Rp 6.000</span></div>
+          <div class="flex justify-between items-center text-xs font-bold"><span class="text-slate-400 text-[10px]">Ongkir (GPS Presisi):</span><span id="display-ongkir" class="text-rose-600 font-black">Rp 6.000</span></div>
           <p id="gps-status" class="text-[10px] text-slate-400 italic">Tekan tombol agar ongkir terhitung otomatis sesuai jarak.</p>
         </div>
         
@@ -369,7 +369,7 @@
         <div class="space-y-2 pt-1">
           <label class="text-[11px] font-extrabold text-slate-700 block">Pilih Metode Pembayaran *</label>
           <div class="grid grid-cols-2 gap-2">
-            <button type="button" id="pay-method-midtrans" onclick="setPaymentMethod('midtrans')" class="py-3 px-3 rounded-2xl border-2 border-orange-500 bg-orange-50 text-orange-600 font-black text-xs text-center transition-all">Gateway Midtrans</button>
+            <button type="button" id="pay-method-midtrans" onclick="setPaymentMethod('midtrans')" class="py-3 px-3 rounded-2xl border-2 border-rose-600 bg-rose-50 text-rose-600 font-black text-xs text-center transition-all">Gateway Midtrans</button>
             <button type="button" id="pay-method-qris" onclick="setPaymentMethod('qris')" class="py-3 px-3 rounded-2xl border-2 border-slate-200 bg-slate-50 text-slate-700 font-bold text-xs text-center transition-all">Scan QRIS Manual</button>
           </div>
         </div>
@@ -384,9 +384,9 @@
         <div class="space-y-1.5 pt-1 border-t border-slate-100">
           <div class="flex justify-between text-xs text-slate-500 font-medium"><span>Subtotal Produk:</span><span id="cart-subtotal-price">Rp 0</span></div>
           <div class="flex justify-between text-xs text-slate-500 font-medium"><span>Ongkir:</span><span id="cart-ongkir-price">Rp 6.000</span></div>
-          <div class="flex justify-between items-center pt-2 text-slate-900 font-black text-sm border-t border-slate-200"><span>Total Tagihan:</span><span id="cart-total-price" class="text-orange-600 text-lg">Rp 0</span></div>
+          <div class="flex justify-between items-center pt-2 text-slate-900 font-black text-sm border-t border-slate-200"><span>Total Tagihan:</span><span id="cart-total-price" class="text-rose-600 text-lg">Rp 0</span></div>
         </div>
-        <button id="btn-submit-order" type="button" onclick="sendToWhatsApp()" class="w-full bg-orange-500 hover:bg-orange-600 active:scale-95 text-white font-black py-4 rounded-2xl shadow-lg shadow-orange-500/25 flex items-center justify-center gap-2 text-xs transition-all"><i class="fa-brands fa-whatsapp text-lg"></i> BAYAR VIA MIDTRANS & KIRIM WA</button>
+        <button id="btn-submit-order" type="button" onclick="sendToWhatsApp()" class="w-full bg-rose-600 hover:bg-rose-700 active:scale-95 text-white font-black py-4 rounded-2xl shadow-lg shadow-rose-600/25 flex items-center justify-center gap-2 text-xs transition-all"><i class="fa-brands fa-whatsapp text-lg"></i> BAYAR VIA MIDTRANS & KIRIM WA</button>
       </div>
     </div>
   </div>
@@ -395,16 +395,16 @@
   <div id="add-product-modal" class="fixed inset-0 bg-slate-900/60 z-50 flex items-end justify-center hidden backdrop-blur-sm transition-all">
     <div class="bg-white rounded-t-[32px] w-full p-6 max-h-[85vh] overflow-y-auto relative animate-slide-up shadow-2xl max-w-md mx-auto">
       <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-4"></div>
-      <div class="flex justify-between items-center pb-3 border-b border-slate-100 mb-4"><h3 class="text-base font-black text-slate-900 flex items-center gap-2"><i class="fa-solid fa-box-open text-orange-500"></i> Tambah Produk Baru</h3><button type="button" onclick="toggleAddProductModal()" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 font-bold active:scale-90"><i class="fa-solid fa-xmark text-xs"></i></button></div>
+      <div class="flex justify-between items-center pb-3 border-b border-slate-100 mb-4"><h3 class="text-base font-black text-slate-900 flex items-center gap-2"><i class="fa-solid fa-box-open text-rose-600"></i> Tambah Produk Baru</h3><button type="button" onclick="toggleAddProductModal()" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 font-bold active:scale-90"><i class="fa-solid fa-xmark text-xs"></i></button></div>
       <div class="space-y-3.5">
-        <div><label class="text-[11px] font-extrabold text-slate-700 block mb-1">Nama Produk *</label><input type="text" id="new-prod-name" placeholder="Contoh: Es Jeruk Nipis" class="w-full bg-slate-50 rounded-2xl px-4 py-3.5 text-xs border border-slate-200 focus:outline-none focus:border-orange-500 font-medium"></div>
+        <div><label class="text-[11px] font-extrabold text-slate-700 block mb-1">Nama Produk *</label><input type="text" id="new-prod-name" placeholder="Contoh: Es Jeruk Nipis" class="w-full bg-slate-50 rounded-2xl px-4 py-3.5 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium"></div>
         <div class="grid grid-cols-2 gap-2.5">
-          <div><label class="text-[11px] font-extrabold text-slate-700 block mb-1">Harga (Rp) *</label><input type="number" id="new-prod-price" placeholder="10000" class="w-full bg-slate-50 rounded-2xl px-4 py-3.5 text-xs border border-slate-200 focus:outline-none focus:border-orange-500 font-medium"></div>
-          <div><label class="text-[11px] font-extrabold text-slate-700 block mb-1">Kategori *</label><select id="new-prod-category" class="w-full bg-slate-50 rounded-2xl px-3 py-3.5 text-xs border border-slate-200 font-bold text-slate-700 focus:outline-none focus:border-orange-500"><option value="Makanan">Makanan</option><option value="Minuman">Minuman</option><option value="Lainnya">Lainnya</option></select></div>
+          <div><label class="text-[11px] font-extrabold text-slate-700 block mb-1">Harga (Rp) *</label><input type="number" id="new-prod-price" placeholder="10000" class="w-full bg-slate-50 rounded-2xl px-4 py-3.5 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium"></div>
+          <div><label class="text-[11px] font-extrabold text-slate-700 block mb-1">Kategori *</label><select id="new-prod-category" class="w-full bg-slate-50 rounded-2xl px-3 py-3.5 text-xs border border-slate-200 font-bold text-slate-700 focus:outline-none focus:border-rose-600"><option value="Makanan">Makanan</option><option value="Minuman">Minuman</option><option value="Lainnya">Lainnya</option></select></div>
         </div>
-        <div><label class="text-[11px] font-extrabold text-slate-700 block mb-1">URL Foto Produk</label><input type="text" id="new-prod-image" placeholder="https://..." class="w-full bg-slate-50 rounded-2xl px-4 py-3.5 text-xs border border-slate-200 focus:outline-none focus:border-orange-500 font-medium"></div>
-        <div><label class="text-[11px] font-extrabold text-slate-700 block mb-1">Deskripsi Singkat</label><input type="text" id="new-prod-desc" placeholder="Rasa manis & segar..." class="w-full bg-slate-50 rounded-2xl px-4 py-3.5 text-xs border border-slate-200 focus:outline-none focus:border-orange-500 font-medium"></div>
-        <button type="button" onclick="saveNewProduct()" class="w-full bg-orange-500 hover:bg-orange-600 active:scale-95 text-white font-black py-4 rounded-2xl shadow-lg shadow-orange-500/25 transition-all text-xs tracking-wider mt-2">SIMPAN & SINKRON KE SHEETS</button>
+        <div><label class="text-[11px] font-extrabold text-slate-700 block mb-1">URL Foto Produk</label><input type="text" id="new-prod-image" placeholder="https://..." class="w-full bg-slate-50 rounded-2xl px-4 py-3.5 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium"></div>
+        <div><label class="text-[11px] font-extrabold text-slate-700 block mb-1">Deskripsi Singkat</label><input type="text" id="new-prod-desc" placeholder="Rasa manis & segar..." class="w-full bg-slate-50 rounded-2xl px-4 py-3.5 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium"></div>
+        <button type="button" onclick="saveNewProduct()" class="w-full bg-rose-600 hover:bg-rose-700 active:scale-95 text-white font-black py-4 rounded-2xl shadow-lg shadow-rose-600/25 transition-all text-xs tracking-wider mt-2">SIMPAN & SINKRON KE SHEETS</button>
       </div>
     </div>
   </div>
@@ -421,7 +421,7 @@
   <!-- MODAL STRUK -->
   <div id="receipt-modal" class="fixed inset-0 bg-slate-900/70 z-50 flex items-center justify-center hidden backdrop-blur-sm p-4">
     <div class="bg-white rounded-3xl w-full max-w-xs p-5 shadow-2xl space-y-4 max-w-md mx-auto">
-      <div class="flex justify-between items-center border-b border-slate-100 pb-2"><h3 class="text-xs font-black text-slate-900 flex items-center gap-1.5"><i class="fa-solid fa-print text-orange-500"></i> Pratinjau Struk Thermal</h3><button type="button" onclick="closeReceiptModal()" class="w-7 h-7 bg-slate-100 rounded-full text-slate-500 flex items-center justify-center text-xs font-bold"><i class="fa-solid fa-xmark"></i></button></div>
+      <div class="flex justify-between items-center border-b border-slate-100 pb-2"><h3 class="text-xs font-black text-slate-900 flex items-center gap-1.5"><i class="fa-solid fa-print text-rose-600"></i> Pratinjau Struk Thermal</h3><button type="button" onclick="closeReceiptModal()" class="w-7 h-7 bg-slate-100 rounded-full text-slate-500 flex items-center justify-center text-xs font-bold"><i class="fa-solid fa-xmark"></i></button></div>
       <div id="print-receipt-area" class="bg-amber-50/50 p-3.5 rounded-2xl border border-amber-200/60 font-mono text-[11px] text-slate-800 leading-tight space-y-2">
         <div class="text-center"><p class="font-black text-xs uppercase tracking-wider">TOKO BELI DISINI!</p><p class="text-[9px] text-slate-500">Layanan Pesan Antar Cepat</p><p class="text-[9px] text-slate-400">--------------------------------</p></div>
         <div><p><strong>Nota:</strong> <span id="rec-inv">#INV-0000</span></p><p><strong>Tgl:</strong> <span id="rec-date">--/--/----</span></p><p><strong>Nama:</strong> <span id="rec-name">--</span></p><p><strong>Telp:</strong> <span id="rec-phone">--</span></p><p class="truncate"><strong>Alamat:</strong> <span id="rec-address">--</span></p></div>
@@ -451,7 +451,7 @@
       <div id="map-container" class="w-full h-80 bg-slate-100 relative"></div>
       <div class="p-4 bg-white border-t border-slate-100 space-y-3">
         <div class="grid grid-cols-2 gap-2.5 text-center">
-          <div class="bg-orange-50 p-3 rounded-2xl border border-orange-100"><span class="text-[9px] text-slate-400 font-bold block uppercase tracking-wider">SISA JARAK GPS</span><span id="track-distance" class="text-xs font-black text-orange-600">Menghitung...</span></div>
+          <div class="bg-rose-50 p-3 rounded-2xl border border-rose-100"><span class="text-[9px] text-slate-400 font-bold block uppercase tracking-wider">SISA JARAK GPS</span><span id="track-distance" class="text-xs font-black text-rose-600">Menghitung...</span></div>
           <div class="bg-emerald-50 p-3 rounded-2xl border border-emerald-100"><span class="text-[9px] text-slate-400 font-bold block uppercase tracking-wider">ESTIMASI TIBA</span><span id="track-eta" class="text-xs font-black text-emerald-600">-- Menit</span></div>
         </div>
       </div>
@@ -526,12 +526,12 @@
       var submitBtn = document.getElementById('btn-submit-order');
 
       if (method === 'midtrans') {
-        btnMid.className = "py-3 px-3 rounded-2xl border-2 border-orange-500 bg-orange-50 text-orange-600 font-black text-xs text-center transition-all";
+        btnMid.className = "py-3 px-3 rounded-2xl border-2 border-rose-600 bg-rose-50 text-rose-600 font-black text-xs text-center transition-all";
         btnQris.className = "py-3 px-3 rounded-2xl border-2 border-slate-200 bg-slate-50 text-slate-700 font-bold text-xs text-center transition-all";
         qrisBox.classList.add('hidden');
         submitBtn.innerHTML = '<i class="fa-brands fa-whatsapp text-lg"></i> BAYAR VIA MIDTRANS & KIRIM WA';
       } else {
-        btnQris.className = "py-3 px-3 rounded-2xl border-2 border-orange-500 bg-orange-50 text-orange-600 font-black text-xs text-center transition-all";
+        btnQris.className = "py-3 px-3 rounded-2xl border-2 border-rose-600 bg-rose-50 text-rose-600 font-black text-xs text-center transition-all";
         btnMid.className = "py-3 px-3 rounded-2xl border-2 border-slate-200 bg-slate-50 text-slate-700 font-bold text-xs text-center transition-all";
         qrisBox.classList.remove('hidden');
         submitBtn.innerHTML = '<i class="fa-brands fa-whatsapp text-lg"></i> KONFIRMASI QRIS & KIRIM WA';
@@ -555,7 +555,7 @@
       if (typeof isSuccess === 'undefined') isSuccess = true;
       var toast = document.getElementById('toast-notification');
       document.getElementById('toast-message').innerText = msg;
-      document.getElementById('toast-icon').className = isSuccess ? "fa-solid fa-circle-check text-emerald-400 text-sm" : "fa-solid fa-bell text-orange-400 text-sm animate-bounce";
+      document.getElementById('toast-icon').className = isSuccess ? "fa-solid fa-circle-check text-emerald-400 text-sm" : "fa-solid fa-bell text-rose-400 text-sm animate-bounce";
       toast.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-6');
       toast.classList.add('opacity-100', 'translate-y-0');
       setTimeout(function() { toast.classList.remove('opacity-100', 'translate-y-0'); toast.classList.add('opacity-0', 'pointer-events-none', '-translate-y-6'); }, 2500);
@@ -568,7 +568,7 @@
 
     function switchAuthTab(tab) {
       if (tab === 'user') {
-        document.getElementById('tab-btn-user').className = "w-11 h-11 rounded-2xl bg-orange-500 text-white flex items-center justify-center shadow-md shadow-orange-500/20 active:scale-95 transition-all text-sm";
+        document.getElementById('tab-btn-user').className = "w-11 h-11 rounded-2xl bg-rose-600 text-white flex items-center justify-center shadow-md shadow-rose-600/20 active:scale-95 transition-all text-sm";
         document.getElementById('tab-btn-admin').className = "w-11 h-11 rounded-2xl bg-slate-100 text-slate-600 flex items-center justify-center shadow-sm active:scale-95 transition-all text-sm";
         document.getElementById('form-user').classList.remove('hidden');
         document.getElementById('form-admin').classList.add('hidden');
@@ -582,12 +582,12 @@
 
     function switchConsumerMode(mode) {
       if (mode === 'login') {
-        document.getElementById('subtab-login').className = "flex-1 py-3 rounded-xl bg-orange-500 text-white shadow-md shadow-orange-500/20 transition-all text-center";
+        document.getElementById('subtab-login').className = "flex-1 py-3 rounded-xl bg-rose-600 text-white shadow-md shadow-rose-600/20 transition-all text-center";
         document.getElementById('subtab-register').className = "flex-1 py-3 rounded-xl text-slate-600 transition-all text-center";
         document.getElementById('consumer-login-section').classList.remove('hidden');
         document.getElementById('consumer-register-section').classList.add('hidden');
       } else {
-        document.getElementById('subtab-register').className = "flex-1 py-3 rounded-xl bg-orange-500 text-white shadow-md shadow-orange-500/20 transition-all text-center";
+        document.getElementById('subtab-register').className = "flex-1 py-3 rounded-xl bg-rose-600 text-white shadow-md shadow-rose-600/20 transition-all text-center";
         document.getElementById('subtab-login').className = "flex-1 py-3 rounded-xl text-slate-600 transition-all text-center";
         document.getElementById('consumer-register-section').classList.remove('hidden');
         document.getElementById('consumer-login-section').classList.add('hidden');
@@ -736,7 +736,7 @@
         if (!list || list.length === 0) { container.innerHTML = '<div class="text-center py-6 text-slate-400 text-xs font-bold"><p>Belum ada kurir disetujui.</p></div>'; return; }
         var html = '';
         for (var i = 0; i < list.length; i++) {
-          var c = list[i], statusBadge = !c.isOnline ? '<span class="bg-red-100 text-red-700 text-[9px] font-black px-2.5 py-1 rounded-full flex items-center gap-1.5 w-max"><span class="w-2 h-2 rounded-full bg-red-500"></span> Offline</span>' : (c.status === "Sedang Mengantar" ? '<span class="bg-orange-100 text-orange-700 text-[9px] font-black px-2.5 py-1 rounded-full flex items-center gap-1.5 w-max animate-pulse"><span class="w-2 h-2 rounded-full bg-orange-500"></span> Mengantar</span>' : '<span class="bg-emerald-100 text-emerald-700 text-[9px] font-black px-2.5 py-1 rounded-full flex items-center gap-1.5 w-max"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span> Standby</span>');
+          var c = list[i], statusBadge = !c.isOnline ? '<span class="bg-red-100 text-red-700 text-[9px] font-black px-2.5 py-1 rounded-full flex items-center gap-1.5 w-max"><span class="w-2 h-2 rounded-full bg-red-500"></span> Offline</span>' : (c.status === "Sedang Mengantar" ? '<span class="bg-rose-100 text-rose-700 text-[9px] font-black px-2.5 py-1 rounded-full flex items-center gap-1.5 w-max animate-pulse"><span class="w-2 h-2 rounded-full bg-rose-600"></span> Mengantar</span>' : '<span class="bg-emerald-100 text-emerald-700 text-[9px] font-black px-2.5 py-1 rounded-full flex items-center gap-1.5 w-max"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span> Standby</span>');
           var cleanPhone = c.phone.startsWith('0') ? '62' + c.phone.substring(1) : c.phone;
           html += '<div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 flex justify-between items-center"><div><h4 class="font-black text-xs text-slate-900">' + c.name + '</h4><p class="text-[10px] text-slate-500 font-medium mt-0.5">Kendaraan: ' + c.vehicle + '</p><div class="mt-2">' + statusBadge + '</div></div><a href="https://wa.me/' + cleanPhone + '" target="_blank" class="bg-emerald-500 hover:bg-emerald-600 text-white font-black px-4 py-3 rounded-xl text-xs flex items-center gap-1.5 shadow-sm active:scale-95"><i class="fa-brands fa-whatsapp text-sm"></i> Chat WA</a></div>';
         }
@@ -750,7 +750,7 @@
       callApiPost('approveCourier', { phone: phone }).then(() => {
         showToast("Kurir " + name + " berhasil di-ACC!");
         openCourierApprovalModal(); checkPendingCouriersCount();
-        window.open("https://wa.me/" + (phone.startsWith('0') ? '62' + phone.substring(1) : phone) + "?text=" + encodeURIComponent("Halo " + name + ", selamat! Lamaran kurir Anda di Beli Disini! telah DISETUJUI."), '_blank');
+        window.open("https://wa.me/" + (phone.startsWith('0') ? '62' + phone.substring(1) : phone) + "?text=" + encodeURIComponent("Halo " + name + ", selamat! Lamaran kurir Anda di Beli Disini! telah DISETujui."), '_blank');
       });
     }
 
@@ -818,12 +818,12 @@
       var appHeader = document.getElementById('app-header');
 
       if (isStaff) {
-        bodyRoot.className = "bg-slate-950 min-h-screen text-slate-100 antialiased selection:bg-orange-500 selection:text-white relative";
+        bodyRoot.className = "bg-slate-950 min-h-screen text-slate-100 antialiased selection:bg-rose-600 selection:text-white relative";
         mainApp.className = "w-full min-h-screen relative pb-40 max-w-5xl mx-auto shadow-2xl transition-all bg-slate-900";
         appHeader.className = "flex justify-between items-center px-6 pt-6 pb-4 bg-slate-900/95 backdrop-blur-md sticky top-0 z-30 border-b border-slate-800";
         document.getElementById('app-title-main').className = "text-xl font-black text-white tracking-tight";
       } else {
-        bodyRoot.className = "bg-slate-100 min-h-screen text-slate-800 antialiased selection:bg-orange-500 selection:text-white relative";
+        bodyRoot.className = "bg-slate-100 min-h-screen text-slate-800 antialiased selection:bg-rose-600 selection:text-white relative";
         mainApp.className = "w-full min-h-screen relative pb-40 max-w-4xl mx-auto shadow-2xl transition-all bg-slate-50";
         appHeader.className = "flex justify-between items-center px-6 pt-6 pb-4 bg-white/90 backdrop-blur-md sticky top-0 z-30 border-b border-slate-200/80";
         document.getElementById('app-title-main').className = "text-xl font-black text-slate-900 tracking-tight";
@@ -883,7 +883,7 @@
       var docsBox = document.getElementById('profile-courier-docs'), addrLabel = document.getElementById('profile-address-label'), modalTitle = document.getElementById('profile-modal-title');
 
       if (currentUser.role === 'customer') {
-        modalTitle.innerHTML = '<i class="fa-solid fa-id-card text-orange-500"></i> Profil Konsumen';
+        modalTitle.innerHTML = '<i class="fa-solid fa-id-card text-rose-600"></i> Profil Konsumen';
         addrLabel.innerText = "Alamat Pengiriman";
         document.getElementById('profile-name').innerText = currentUser.name || '-';
         document.getElementById('profile-phone').innerText = currentUser.phone || '-';
@@ -891,7 +891,7 @@
         docsBox.classList.add('hidden');
         document.getElementById('profile-modal').classList.remove('hidden');
       } else if (currentUser.role === 'courier') {
-        modalTitle.innerHTML = '<i class="fa-solid fa-motorcycle text-orange-500"></i> Profil Kurir';
+        modalTitle.innerHTML = '<i class="fa-solid fa-motorcycle text-rose-600"></i> Profil Kurir';
         addrLabel.innerText = "Kendaraan Operasional";
         callApiGet('getCourierProfile', { phone: currentUser.phone }).then(profile => {
           if (profile) {
@@ -977,7 +977,7 @@
             calculatedOngkir = 6000;
             document.getElementById('display-ongkir').innerText = "Rp 6.000";
             updateCartUI();
-            statusText.innerHTML = '<span class="text-orange-500 font-bold">Ongkir standar diterapkan.</span>';
+            statusText.innerHTML = '<span class="text-rose-600 font-bold">Ongkir standar diterapkan.</span>';
           });
         }, function(err) { statusText.innerHTML = 'Gagal akses GPS.'; }, { enableHighAccuracy: true });
       }
@@ -1024,13 +1024,13 @@
           if (!inStock) {
             actionUI = '<div class="text-center"><span class="text-[10px] bg-red-100 text-red-600 font-black px-3 py-2 rounded-xl uppercase tracking-wider block">Stok Habis</span></div>';
           } else {
-            actionUI = '<div class="bg-slate-100 rounded-full p-1 flex items-center justify-between w-full border border-slate-200/60"><button type="button" onclick="updateQty(\'' + pIdStr + '\', -1)" class="w-8 h-8 rounded-full bg-white text-slate-800 flex items-center justify-center font-black text-xs shadow-xs active:scale-90">-</button><span class="text-xs font-black text-slate-900">' + qty + '</span><button type="button" onclick="updateQty(\'' + pIdStr + '\', 1)" class="w-8 h-8 rounded-full bg-orange-500 text-white flex items-center justify-center font-black text-xs shadow-md shadow-orange-500/20 active:scale-90">+</button></div>';
+            actionUI = '<div class="bg-slate-100 rounded-full p-1 flex items-center justify-between w-full border border-slate-200/60"><button type="button" onclick="updateQty(\'' + pIdStr + '\', -1)" class="w-8 h-8 rounded-full bg-white text-slate-800 flex items-center justify-center font-black text-xs shadow-xs active:scale-90">-</button><span class="text-xs font-black text-slate-900">' + qty + '</span><button type="button" onclick="updateQty(\'' + pIdStr + '\', 1)" class="w-8 h-8 rounded-full bg-rose-600 text-white flex items-center justify-center font-black text-xs shadow-md shadow-rose-600/20 active:scale-90">+</button></div>';
           }
         }
         
         html += '<div class="bg-white rounded-3xl p-3.5 shadow-xs hover:shadow-md border border-slate-200/60 flex flex-col justify-between transition-all duration-300 ' + (!inStock ? 'opacity-75 bg-slate-50' : '') + '">' +
                   '<div><div class="relative overflow-hidden rounded-2xl mb-2.5 bg-slate-100 aspect-square"><img src="' + p.image + '" onclick="openImageModal(\'' + p.image.replace(/'/g, "\\'") + '\', \'' + p.name.replace(/'/g, "\\'") + '\')" class="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"></div><h4 class="font-extrabold text-slate-900 text-xs mb-1 truncate">' + p.name + '</h4><p class="text-[10px] text-slate-400 line-clamp-2 mb-3 font-medium">' + p.desc + '</p></div>' +
-                  '<div><div class="text-xs font-black text-orange-600 mb-2.5">Rp ' + formatRupiah(p.price) + '</div>' + actionUI + '</div>' +
+                  '<div><div class="text-xs font-black text-rose-600 mb-2.5">Rp ' + formatRupiah(p.price) + '</div>' + actionUI + '</div>' +
                 '</div>';
       }
       container.innerHTML = html;
@@ -1092,7 +1092,7 @@
           var html = '';
           for (var i = 0; i < cartList.length; i++) {
             var item = cartList[i];
-            html += '<div class="flex justify-between items-center bg-slate-50 p-3.5 rounded-2xl border border-slate-100"><div><h5 class="font-extrabold text-xs text-slate-900">' + item.name + '</h5><p class="text-[10px] text-slate-400 mt-0.5">Rp ' + formatRupiah(item.price) + ' x ' + item.qty + '</p></div><span class="font-black text-xs text-orange-600">Rp ' + formatRupiah(item.price * item.qty) + '</span></div>';
+            html += '<div class="flex justify-between items-center bg-slate-50 p-3.5 rounded-2xl border border-slate-100"><div><h5 class="font-extrabold text-xs text-slate-900">' + item.name + '</h5><p class="text-[10px] text-slate-400 mt-0.5">Rp ' + formatRupiah(item.price) + ' x ' + item.qty + '</p></div><span class="font-black text-xs text-rose-600">Rp ' + formatRupiah(item.price * item.qty) + '</span></div>';
           }
           cartContainer.innerHTML = html;
         }
@@ -1103,8 +1103,8 @@
     function switchTab(t) {
       document.getElementById('view-toko').classList.toggle('hidden', t !== 'toko');
       document.getElementById('view-status').classList.toggle('hidden', t !== 'status');
-      document.getElementById('nav-toko').className = t === 'toko' ? "flex flex-col items-center text-orange-500 font-bold transition-all px-4" : "flex flex-col items-center text-slate-400 hover:text-orange-500 font-bold transition-all px-4";
-      document.getElementById('nav-status').className = t === 'status' ? "flex flex-col items-center text-orange-500 font-bold transition-all px-4 relative" : "flex flex-col items-center text-slate-400 hover:text-orange-500 font-bold transition-all px-4 relative";
+      document.getElementById('nav-toko').className = t === 'toko' ? "flex flex-col items-center text-rose-600 font-bold transition-all px-4" : "flex flex-col items-center text-slate-400 hover:text-rose-600 font-bold transition-all px-4";
+      document.getElementById('nav-status').className = t === 'status' ? "flex flex-col items-center text-rose-600 font-bold transition-all px-4 relative" : "flex flex-col items-center text-slate-400 hover:text-rose-600 font-bold transition-all px-4 relative";
       if (t === 'status') { document.getElementById('nav-status-dot').classList.add('hidden'); renderOrderStatus(); }
     }
 
@@ -1150,7 +1150,6 @@
         var orders = ordersFromSheet || []; rawOrdersList = orders;
         
         if (isCourier) {
-          // KURIR HANYA MELIHAT: Pesanan siap diantar (belum ada kurir) OR pesanan milik kurir ini sendiri (termasuk yang selesai dikerjakan dia)
           orders = orders.filter(function(o) {
             var isReadyForDelivery = (o.status === 'Di-ACC (Diproses)' && (!o.courierPhone || o.courierPhone === ''));
             var isAssignedToMe = (o.courierPhone && String(o.courierPhone).trim() === String(currentUser.phone).trim());
@@ -1165,9 +1164,7 @@
           });
         } else if (currentUser && currentUser.role === 'guest') { orders = []; }
         
-        // Membalik urutan agar pesanan terbaru berada di posisi paling atas (paling awal)
         orders.reverse();
-
         displayOrderCards(container, orders, isStaff);
       });
     }
@@ -1204,7 +1201,7 @@
         } else if (ordStatus === 'Di-ACC (Diproses)') {
           statusBadge = '<span class="bg-blue-500/20 text-blue-300 text-[9px] font-black px-2.5 py-1 rounded-full border border-blue-500/30">Diproses</span>';
         } else if (ordStatus === 'Sedang Diantar') {
-          statusBadge = '<span class="bg-orange-500/20 text-orange-300 text-[9px] font-black px-2.5 py-1 rounded-full animate-pulse border border-orange-500/30">Diantar (' + (ord.courierName || 'Kurir') + ')</span>';
+          statusBadge = '<span class="bg-rose-500/20 text-rose-300 text-[9px] font-black px-2.5 py-1 rounded-full animate-pulse border border-rose-500/30">Diantar (' + (ord.courierName || 'Kurir') + ')</span>';
         } else if (ordStatus === 'Selesai') {
           statusBadge = '<span class="bg-slate-700 text-slate-300 text-[9px] font-black px-2.5 py-1 rounded-full border border-slate-600">Selesai</span>';
         }
@@ -1222,7 +1219,7 @@
             
             var btnChatWa = cleanPhone ? '<a href="https://wa.me/' + cleanPhone + '" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white font-black py-2.5 px-3 rounded-xl text-[10px] flex items-center justify-center gap-1 shadow-xs"><i class="fa-brands fa-whatsapp"></i> Chat</a>' : '';
             var btnAcc = (ordStatus !== 'Selesai' && ordStatus !== 'Sedang Diantar' && ordStatus !== 'Di-ACC (Diproses)') ? '<button type="button" onclick="updateOrderStatus(\'' + ord.invoiceId + '\', \'Di-ACC (Diproses)\')" class="bg-blue-600 hover:bg-blue-700 text-white font-black py-2.5 px-3 rounded-xl text-[10px] shadow-xs">ACC / Lunas</button>' : '';
-            var btnKirim = (ordStatus !== 'Selesai' && ordStatus !== 'Sedang Diantar') ? '<button type="button" onclick="assignAndDeliver(\'' + ord.invoiceId + '\')" class="bg-orange-500 hover:bg-orange-600 text-white font-black py-2.5 px-3 rounded-xl text-[10px] shadow-xs">Ambil</button>' : '';
+            var btnKirim = (ordStatus !== 'Selesai' && ordStatus !== 'Sedang Diantar') ? '<button type="button" onclick="assignAndDeliver(\'' + ord.invoiceId + '\')" class="bg-rose-600 hover:bg-rose-700 text-white font-black py-2.5 px-3 rounded-xl text-[10px] shadow-xs">Ambil</button>' : '';
             var btnGps = (ordStatus === 'Sedang Diantar' && (currentUser.role === 'admin' || ord.courierPhone === currentUser.phone)) ? '<button type="button" onclick="startCourierGPSBroadcaster(\'' + ord.invoiceId + '\')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-black py-2.5 px-3 rounded-xl text-[10px] shadow-xs">GPS</button>' : '';
             var btnSelesai = (ordStatus === 'Sedang Diantar') ? '<button type="button" onclick="promptCompleteOrder(\'' + ord.invoiceId + '\')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-black py-2.5 px-3 rounded-xl text-[10px] shadow-xs">Selesai (+Foto)</button>' : '';
             var btnPeta = '<button type="button" onclick="openLiveTracking(\'' + ord.invoiceId + '\', ' + (ord.lat || 'null') + ', ' + (ord.lng || 'null') + ')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold py-2.5 px-3 rounded-xl text-[10px]">Peta</button>';
@@ -1233,18 +1230,18 @@
           }
         } else {
           var btnBuktiFotoCust = ord.deliveryProof ? '<button type="button" onclick="openImageModal(\'' + ord.deliveryProof.replace(/'/g, "\\'") + '\', \'Bukti Tiba: ' + ord.invoiceId + '\')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-black px-3 py-2 rounded-xl text-[10px] shadow-xs">Lihat Bukti Foto</button>' : '';
-          var btnLacak = (ordStatus === 'Sedang Diantar') ? '<button type="button" onclick="openLiveTracking(\'' + ord.invoiceId + '\', ' + (ord.lat || 'null') + ', ' + (ord.lng || 'null') + ')" class="bg-orange-500 hover:bg-orange-600 text-white font-black px-3 py-2 rounded-xl text-[10px] shadow-xs">Lacak Kurir</button>' : '<span class="text-[10px] font-bold text-slate-400 italic">Diproses</span>';
+          var btnLacak = (ordStatus === 'Sedang Diantar') ? '<button type="button" onclick="openLiveTracking(\'' + ord.invoiceId + '\', ' + (ord.lat || 'null') + ', ' + (ord.lng || 'null') + ')" class="bg-rose-600 hover:bg-rose-700 text-white font-black px-3 py-2 rounded-xl text-[10px] shadow-xs">Lacak Kurir</button>' : '<span class="text-[10px] font-bold text-slate-400 italic">Diproses</span>';
           actionButtons = '<div class="pt-3 border-t border-slate-100 flex justify-between items-center"><span class="text-xs font-black text-slate-900">Total: Rp ' + formatRupiah(ord.total) + '</span><div class="flex gap-1.5">' + btnBuktiFotoCust + btnLacak + '</div></div>';
         }
 
-        var courierInfoBadge = ord.courierName ? '<p class="text-[10px] text-orange-300 font-bold bg-orange-500/10 px-3 py-1.5 rounded-xl flex items-center gap-1.5 border border-orange-500/20"><i class="fa-solid fa-motorcycle text-orange-400"></i> Kurir: <strong>' + ord.courierName + '</strong></p>' : '';
+        var courierInfoBadge = ord.courierName ? '<p class="text-[10px] text-rose-300 font-bold bg-rose-500/10 px-3 py-1.5 rounded-xl flex items-center gap-1.5 border border-rose-500/20"><i class="fa-solid fa-motorcycle text-rose-400"></i> Kurir: <strong>' + ord.courierName + '</strong></p>' : '';
         
         var cardBg = isStaff ? "bg-slate-900 border border-slate-800 text-slate-100 shadow-xl rounded-3xl p-5 space-y-3" : "bg-white border border-slate-200/80 text-slate-800 shadow-xs rounded-3xl p-5 space-y-3";
         var textMuted = isStaff ? "text-slate-400" : "text-slate-500";
         var textBold = isStaff ? "text-white" : "text-slate-900";
 
         html += '<div class="' + cardBg + '">' +
-                  '<div class="flex justify-between items-center border-b ' + (isStaff ? 'border-slate-800' : 'border-slate-100') + ' pb-3"><span class="font-black text-xs text-orange-400">' + ord.invoiceId + '</span>' + statusBadge + '</div>' +
+                  '<div class="flex justify-between items-center border-b ' + (isStaff ? 'border-slate-800' : 'border-slate-100') + ' pb-3"><span class="font-black text-xs text-rose-400">' + ord.invoiceId + '</span>' + statusBadge + '</div>' +
                   '<div class="text-xs font-semibold space-y-1.5">' +
                     '<p><span class="font-bold ' + textBold + '">Pemesan:</span> <span class="' + textMuted + '">' + ord.name + '</span></p>' +
                     '<p class="truncate"><span class="font-bold ' + textBold + '">Items:</span> <span class="' + textMuted + '">' + ord.itemsSummary + '</span></p>' +
@@ -1319,7 +1316,6 @@
           canvas.height = height;
           ctx.drawImage(img, 0, 0, width, height);
 
-          // Kompres ke JPEG dengan kualitas 60% agar ukurannya kecil & aman di Google Sheets
           var compressedBase64 = canvas.toDataURL('image/jpeg', 0.6);
 
           callApiPost('updateOrderStatusWithProof', { 
