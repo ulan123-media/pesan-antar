@@ -456,7 +456,7 @@
     var currentUser = null, currentLocation = null, currentCoords = null, currentInvoiceId = "", allProducts = [], currentCategory = "Semua", cart = {}, storeStatus = "BUKA", recruitmentStatus = "TUTUP", currentDistance = 0, calculatedOngkir = 6000, rawOrdersList = [];
     var liveMap = null, courierMarker = null, customerMarker = null, routePolyline = null, courierWatchId = null, adminNotifierInterval = null;
     var courierHeartbeatInterval = null, lastKnownCustomerOrderStatus = "", customerNotifierInterval = null;
-    var lastSentTime = 0; // Variabel pembatas waktu (throttle) agar GPS tidak membuat server Sheets lag
+    var lastSentTime = 0;
 
     document.addEventListener("DOMContentLoaded", function() {
       checkActiveSession(); 
@@ -1049,7 +1049,6 @@
       
       courierWatchId = navigator.geolocation.watchPosition(function(pos) {
         var now = Date.now();
-        // Mengirim data koordinat ke server setiap 10 detik sekali agar tidak terjadi lag/antrean server
         if (now - lastSentTime >= 10000) {
           lastSentTime = now;
           callApiPost('updateCourierLocation', { 
@@ -1267,10 +1266,28 @@
       });
     }
 
+    // FUNGSI FINALIZE ORDER & FORMAT PESAN DETAIL KE WHATSAPP ADMIN
     function finalizeOrderUI(newOrder) {
-      cart = {}; updateCartUI(); generateNewInvoiceId(); toggleCartModal();
+      var formattedItems = "- " + newOrder.itemsSummary.replace(/, /g, "\n- ");
+
+      var message = "Halo Admin, saya sudah melakukan pemesanan & pembayaran:\n\n" +
+                    "📋 *No Invoice:* " + newOrder.invoiceId + "\n" +
+                    "👤 *Nama Pemesan:* " + newOrder.name + "\n" +
+                    "📍 *Alamat Pengiriman:* " + newOrder.address + "\n" +
+                    "📝 *Catatan:* " + (newOrder.notes || "-") + "\n\n" +
+                    "🛒 *Daftar Belanjaan:*\n" + formattedItems + "\n\n" +
+                    "🚴‍♂️ *Ongkir (GPS):* Rp " + formatRupiah(newOrder.ongkir) + "\n" +
+                    "💰 *Total Tagihan:* Rp " + formatRupiah(newOrder.total) + "\n\n" +
+                    "✅ *Status Pembayaran:* LUNAS (Midtrans/QRIS)\n\n" +
+                    "Mohon segera diproses ya kak. Terima kasih!";
+
+      cart = {}; 
+      updateCartUI(); 
+      generateNewInvoiceId(); 
+      toggleCartModal();
       switchTab('status');
-      window.open("https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent("Pesanan " + newOrder.invoiceId), '_blank');
+      
+      window.open("https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(message), '_blank');
     }
 
     function openLiveTracking(invId, targetLat, targetLng) {
