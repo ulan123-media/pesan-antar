@@ -1048,7 +1048,6 @@
         allStores = (storesData && storesData.length > 0) ? storesData : mockStoresDefault;
         allProducts = (productsData && productsData.length > 0) ? productsData : mockProductsDefault;
         
-        // Jika login sebagai merchant, kunci tampilan khusus warung mereka
         if (currentUser && currentUser.role === 'merchant') {
           currentStoreId = currentUser.storeId;
         }
@@ -1076,7 +1075,6 @@
       var html = '';
       var isMerchant = currentUser && currentUser.role === 'merchant';
       
-      // Jika merchant, sembunyikan horizontal store selector umum dan tampilkan info warung sendiri
       if (isMerchant) {
         container.innerHTML = '<div class="bg-amber-500/10 border border-amber-500/30 text-amber-300 px-5 py-3 rounded-2xl text-xs font-bold w-full"><i class="fa-solid fa-store mr-1"></i> Anda sedang mengelola toko: <strong>' + currentUser.name + '</strong></div>';
         return;
@@ -1344,6 +1342,7 @@
         }
 
         var actionButtons = '';
+        var isAdmin = currentUser && currentUser.role === 'admin';
         var isCourier = currentUser && currentUser.role === 'courier';
         var isMerchant = currentUser && currentUser.role === 'merchant';
         var isAssignedToOther = isCourier && ord.courierPhone && String(ord.courierPhone).trim() !== String(currentUser.phone).trim();
@@ -1356,15 +1355,28 @@
             if (cleanPhone.startsWith('0')) cleanPhone = '62' + cleanPhone.substring(1);
             
             var btnChatWa = cleanPhone ? '<a href="https://wa.me/' + cleanPhone + '" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white font-black py-2.5 px-3 rounded-xl text-[10px] flex items-center justify-center gap-1 shadow-xs"><i class="fa-brands fa-whatsapp"></i> Chat</a>' : '';
-            var btnAcc = (ordStatus !== 'Selesai' && ordStatus !== 'Sedang Diantar' && ordStatus !== 'Di-ACC (Diproses)') ? '<button type="button" onclick="updateOrderStatus(\'' + ord.invoiceId + '\', \'Di-ACC (Diproses)\')" class="bg-blue-600 hover:bg-blue-700 text-white font-black py-2.5 px-3 rounded-xl text-[10px] shadow-xs">ACC / Lunas</button>' : '';
+            
+            // 1. Tombol ACC HANYA muncul untuk Admin Utama
+            var btnAcc = (isAdmin && ordStatus !== 'Selesai' && ordStatus !== 'Sedang Diantar' && ordStatus !== 'Di-ACC (Diproses)') ? '<button type="button" onclick="updateOrderStatus(\'' + ord.invoiceId + '\', \'Di-ACC (Diproses)\')" class="bg-blue-600 hover:bg-blue-700 text-white font-black py-2.5 px-3 rounded-xl text-[10px] shadow-xs">ACC / Lunas</button>' : '';
+            
+            // 2. Logika khusus Pemilik Toko (Mitra)
+            var btnSiapkanBarang = '';
+            if (isMerchant) {
+              if (ordStatus === 'Menunggu ACC' || ordStatus.includes('Menunggu Verifikasi QRIS') || ordStatus.includes('Menunggu Pembayaran')) {
+                btnSiapkanBarang = '<div class="col-span-full text-center py-2 bg-amber-500/10 border border-amber-500/30 rounded-xl"><span class="text-[10px] text-amber-400 font-bold">⏳ Menunggu ACC Admin Utama</span></div>';
+              } else if (ordStatus === 'Di-ACC (Diproses)' || ordStatus === 'Sedang Diantar' || ordStatus === 'Selesai') {
+                btnSiapkanBarang = '<button type="button" onclick="showToast(\'Silakan siapkan barang/pesanan ' + ord.invoiceId + ' untuk kurir!\')" class="bg-amber-600 hover:bg-amber-700 text-white font-black py-2.5 px-3 rounded-xl text-[10px] shadow-xs flex items-center justify-center gap-1"><i class="fa-solid fa-box-open"></i> Siapkan Barang</button>';
+              }
+            }
+
             var btnKirim = (!isMerchant && ordStatus !== 'Selesai' && ordStatus !== 'Sedang Diantar') ? '<button type="button" onclick="assignAndDeliver(\'' + ord.invoiceId + '\')" class="bg-rose-600 hover:bg-rose-700 text-white font-black py-2.5 px-3 rounded-xl text-[10px] shadow-xs">Ambil</button>' : '';
-            var btnGps = (ordStatus === 'Sedang Diantar' && (currentUser.role === 'admin' || ord.courierPhone === currentUser.phone)) ? '<button type="button" onclick="startCourierGPSBroadcaster(\'' + ord.invoiceId + '\')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-black py-2.5 px-3 rounded-xl text-[10px] shadow-xs">GPS</button>' : '';
+            var btnGps = (ordStatus === 'Sedang Diantar' && (isAdmin || ord.courierPhone === currentUser.phone)) ? '<button type="button" onclick="startCourierGPSBroadcaster(\'' + ord.invoiceId + '\')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-black py-2.5 px-3 rounded-xl text-[10px] shadow-xs">GPS</button>' : '';
             var btnSelesai = (!isMerchant && ordStatus === 'Sedang Diantar') ? '<button type="button" onclick="promptCompleteOrder(\'' + ord.invoiceId + '\')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-black py-2.5 px-3 rounded-xl text-[10px] shadow-xs">Selesai (+Foto)</button>' : '';
             var btnPeta = '<button type="button" onclick="openLiveTracking(\'' + ord.invoiceId + '\', ' + (ord.lat || 'null') + ', ' + (ord.lng || 'null') + ')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold py-2.5 px-3 rounded-xl text-[10px]">Peta</button>';
             var btnCetak = '<button type="button" onclick="openReceiptModal(\'' + ord.invoiceId + '\')" class="bg-amber-600 hover:bg-amber-700 text-white font-black py-2.5 px-3 rounded-xl text-[10px] shadow-xs">Struk</button>';
             var btnBuktiFoto = ord.deliveryProof ? '<button type="button" onclick="openImageModal(\'' + ord.deliveryProof.replace(/'/g, "\\'") + '\', \'Bukti Tiba: ' + ord.invoiceId + '\')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-black py-2.5 px-3 rounded-xl text-[10px] shadow-xs">Foto Bukti</button>' : '';
             
-            actionButtons = '<div class="pt-3 border-t border-slate-800 grid grid-cols-3 sm:grid-cols-4 gap-2">' + btnChatWa + btnAcc + btnKirim + btnGps + btnSelesai + btnCetak + btnPeta + btnBuktiFoto + '</div>';
+            actionButtons = '<div class="pt-3 border-t border-slate-800 grid grid-cols-3 sm:grid-cols-4 gap-2">' + btnChatWa + btnAcc + btnSiapkanBarang + btnKirim + btnGps + btnSelesai + btnCetak + btnPeta + btnBuktiFoto + '</div>';
           }
         } else {
           var btnBuktiFotoCust = ord.deliveryProof ? '<button type="button" onclick="openImageModal(\'' + ord.deliveryProof.replace(/'/g, "\\'") + '\', \'Bukti Tiba: ' + ord.invoiceId + '\')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-black px-3 py-2 rounded-xl text-[10px] shadow-xs">Lihat Bukti Foto</button>' : '';
