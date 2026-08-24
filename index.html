@@ -411,15 +411,16 @@
     </div>
   </div>
 
-  <!-- MODAL PROFIL -->
+  <!-- MODAL PROFIL (KONSUMEN / MITRA TOKO) -->
   <div id="profile-modal" class="fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center hidden backdrop-blur-sm p-4">
-    <div class="bg-white rounded-3xl w-full max-w-xs p-6 shadow-2xl space-y-4 relative animate-slide-up max-h-[85vh] overflow-y-auto">
+    <div class="bg-white rounded-3xl w-full max-w-xs p-6 shadow-2xl space-y-4 relative animate-slide-up max-h-[85vh] overflow-y-auto text-slate-800">
       <div class="flex justify-between items-center border-b border-slate-100 pb-3">
         <h3 id="profile-modal-title" class="text-sm font-black text-slate-900 flex items-center gap-2"><i class="fa-solid fa-id-card text-rose-600"></i> Profil Akun Saya</h3>
         <button type="button" onclick="closeProfileModal()" class="w-7 h-7 bg-slate-100 rounded-full text-slate-500 flex items-center justify-center text-xs font-bold active:scale-90"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div class="space-y-3 text-xs">
-        <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100"><span class="text-[10px] text-slate-400 font-bold uppercase block mb-0.5">Nama Lengkap</span><span id="profile-name" class="font-extrabold text-slate-900 text-sm">--</span></div>
+        <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100"><span id="profile-name-label" class="text-[10px] text-slate-400 font-bold uppercase block mb-0.5">Nama Lengkap</span><span id="profile-name" class="font-extrabold text-slate-900 text-sm">--</span></div>
+        <div id="profile-id-box" class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100 hidden"><span class="text-[10px] text-slate-400 font-bold uppercase block mb-0.5">ID Toko / Mitra</span><span id="profile-store-id" class="font-extrabold text-slate-900 text-sm">--</span></div>
         <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100"><span class="text-[10px] text-slate-400 font-bold uppercase block mb-0.5">Nomor WhatsApp</span><span id="profile-phone" class="font-extrabold text-slate-900 text-sm">--</span></div>
         <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100"><span id="profile-address-label" class="text-[10px] text-slate-400 font-bold uppercase block mb-0.5">Alamat Pengiriman</span><span id="profile-address" class="font-extrabold text-slate-900">--</span></div>
       </div>
@@ -695,7 +696,7 @@
 
       callApiPost('loginMerchant', { phone: phone, password: password }).then(res => {
         if (res && res.status === "Success") {
-          currentUser = { name: res.name, phone: res.phone, storeId: res.id, role: 'merchant' };
+          currentUser = { name: res.name, phone: res.phone, storeId: res.id, address: res.address, role: 'merchant' };
           safeStorage.setItem('app_active_session', JSON.stringify(currentUser));
           showToast("Login Mitra Berhasil!");
           openMainApp("Mitra: " + currentUser.name);
@@ -981,16 +982,32 @@
     }
 
     function openProfileModal() {
-      if (!currentUser || currentUser.role === 'guest' || currentUser.role === 'admin' || currentUser.role === 'merchant') { showToast("Fitur profil khusus konsumen & kurir.", false); return; }
-      var docsBox = document.getElementById('profile-courier-docs'), addrLabel = document.getElementById('profile-address-label'), modalTitle = document.getElementById('profile-modal-title');
+      if (!currentUser || currentUser.role === 'guest' || currentUser.role === 'admin') { 
+        showToast("Fitur profil khusus konsumen & mitra toko.", false); 
+        return; 
+      }
+      var addrLabel = document.getElementById('profile-address-label'), modalTitle = document.getElementById('profile-modal-title');
+      var nameLabel = document.getElementById('profile-name-label');
+      var idBox = document.getElementById('profile-id-box');
 
       if (currentUser.role === 'customer') {
         modalTitle.innerHTML = '<i class="fa-solid fa-id-card text-rose-600"></i> Profil Konsumen';
+        nameLabel.innerText = "Nama Lengkap";
         addrLabel.innerText = "Alamat Pengiriman";
+        idBox.classList.add('hidden');
         document.getElementById('profile-name').innerText = currentUser.name || '-';
         document.getElementById('profile-phone').innerText = currentUser.phone || '-';
         document.getElementById('profile-address').innerText = currentUser.address || '-';
-        docsBox.classList.add('hidden');
+        document.getElementById('profile-modal').classList.remove('hidden');
+      } else if (currentUser.role === 'merchant') {
+        modalTitle.innerHTML = '<i class="fa-solid fa-store text-amber-600"></i> Profil Toko / Mitra';
+        nameLabel.innerText = "Nama Toko";
+        addrLabel.innerText = "Alamat Toko";
+        idBox.classList.remove('hidden');
+        document.getElementById('profile-store-id').innerText = currentUser.storeId || '-';
+        document.getElementById('profile-name').innerText = currentUser.name || '-';
+        document.getElementById('profile-phone').innerText = currentUser.phone || '-';
+        document.getElementById('profile-address').innerText = currentUser.address || '-';
         document.getElementById('profile-modal').classList.remove('hidden');
       }
     }
