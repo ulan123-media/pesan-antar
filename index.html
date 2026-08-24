@@ -199,8 +199,8 @@
             <span id="dash-total-orders" class="text-base font-black text-white">0 Pesanan</span>
           </div>
         </div>
-        <!-- DOMPET SALDO AKTIF & TARIK SALDO -->
-        <div id="wallet-card-box" class="relative overflow-hidden bg-gradient-to-r from-emerald-900 to-teal-900 p-5 rounded-3xl shadow-lg border border-emerald-700 flex justify-between items-center">
+        <!-- DOMPET SALDO AKTIF & TOMBOL TARIK/RIWAYAT -->
+        <div id="wallet-card-box" class="relative overflow-hidden bg-gradient-to-r from-emerald-900 to-teal-900 p-5 rounded-3xl shadow-lg border border-emerald-700 flex flex-col justify-between gap-3">
           <div class="flex items-center gap-3">
             <div class="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 flex items-center justify-center text-xl font-black shadow-inner"><i class="fa-solid fa-wallet"></i></div>
             <div>
@@ -208,7 +208,10 @@
               <span id="dash-active-balance" class="text-base font-black text-white">Rp 0</span>
             </div>
           </div>
-          <button type="button" onclick="openWithdrawModal()" class="bg-emerald-500 hover:bg-emerald-600 text-white font-black px-4 py-3 rounded-2xl text-xs active:scale-95 shadow-md transition-all">Tarik Saldo</button>
+          <div class="grid grid-cols-2 gap-2 pt-1">
+            <button type="button" onclick="openWithdrawModal()" class="bg-emerald-500 hover:bg-emerald-600 text-white font-black py-2.5 px-2 rounded-xl text-[11px] active:scale-95 shadow-md transition-all text-center">Tarik Saldo</button>
+            <button type="button" onclick="openWithdrawalHistoryModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold py-2.5 px-2 rounded-xl text-[11px] active:scale-95 shadow-md transition-all text-center">Riwayat WD</button>
+          </div>
         </div>
       </div>
     </div>
@@ -311,6 +314,17 @@
     </div>
   </div>
 
+  <!-- MODAL RIWAYAT PENARIKAN SALDO -->
+  <div id="withdrawal-history-modal" class="fixed inset-0 bg-slate-900/70 z-50 flex items-center justify-center hidden backdrop-blur-sm p-4">
+    <div class="bg-white rounded-3xl w-full max-w-md p-6 shadow-2xl space-y-4 max-h-[85vh] overflow-y-auto animate-slide-up text-slate-800">
+      <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+        <h3 class="text-sm font-black text-slate-900 flex items-center gap-2"><i class="fa-solid fa-clock-rotate-left text-emerald-600"></i> Riwayat Penarikan Saldo</h3>
+        <button type="button" onclick="closeWithdrawalHistoryModal()" class="w-7 h-7 bg-slate-100 rounded-full text-slate-500 flex items-center justify-center text-xs font-bold"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div id="withdrawal-history-container" class="space-y-3"><p class="text-xs text-slate-400 text-center py-4">Memuat riwayat...</p></div>
+    </div>
+  </div>
+
   <!-- MODAL PERSETUJUAN PENCAIRAN ADMIN -->
   <div id="admin-withdrawals-modal" class="fixed inset-0 bg-slate-900/70 z-50 flex items-center justify-center hidden backdrop-blur-sm p-4">
     <div class="bg-white rounded-3xl w-full max-w-md p-6 shadow-2xl space-y-4 max-h-[85vh] overflow-y-auto animate-slide-up text-slate-800">
@@ -353,9 +367,7 @@
         <h3 id="admin-modal-main-title" class="text-sm font-black text-slate-900 flex items-center gap-2"><i class="fa-solid fa-user-shield text-rose-600"></i> Menu Kontrol</h3>
         <button type="button" onclick="toggleAdminMenuModal()" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 font-bold active:scale-90"><i class="fa-solid fa-xmark text-xs"></i></button>
       </div>
-      <div id="admin-modal-actions" class="space-y-3 pt-1">
-        <!-- Diisi dinamis via JS -->
-      </div>
+      <div id="admin-modal-actions" class="space-y-3 pt-1"></div>
     </div>
   </div>
 
@@ -915,7 +927,7 @@
 
       document.getElementById('admin-control-bar').classList.toggle('hidden', !isStaff);
       document.getElementById('admin-omset-grid').classList.toggle('hidden', !isStaff);
-      document.getElementById('wallet-card-box').classList.toggle('hidden', isAdmin); // Admin tidak perlu tombol tarik saldo, cukup Mitra & Kurir
+      document.getElementById('wallet-card-box').classList.toggle('hidden', isAdmin);
       document.getElementById('nav-keranjang-btn').classList.toggle('hidden', isStaff);
       document.getElementById('header-cart-btn').classList.toggle('hidden', isStaff);
       document.getElementById('admin-exclusive-buttons').classList.toggle('hidden', !isAdmin && !isMerchant);
@@ -1048,7 +1060,6 @@
                                     '<i class="fa-solid fa-plus-circle text-sm"></i> Tambah Produk Baru' +
                                   '</button>';
         } else {
-          // Menu Khusus Mitra Warung
           titleElem.innerHTML = '<i class="fa-solid fa-store text-amber-600"></i> Portal Mitra: ' + currentUser.name;
           actionsElem.innerHTML = '<button type="button" onclick="toggleAdminMenuModal(); toggleAddProductModal();" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-black py-4 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-rose-600/20 active:scale-95 transition-all">' +
                                     '<i class="fa-solid fa-plus-circle text-base"></i> Tambah Produk Baru ke Warung Saya' +
@@ -1436,6 +1447,39 @@
 
     function closeWithdrawModal() {
       document.getElementById('withdraw-modal').classList.add('hidden');
+    }
+
+    function openWithdrawalHistoryModal() {
+      var container = document.getElementById('withdrawal-history-container');
+      container.innerHTML = '<p class="text-xs text-slate-400 text-center py-4">Memuat riwayat...</p>';
+      document.getElementById('withdrawal-history-modal').classList.remove('hidden');
+
+      callApiGet('getWithdrawalHistory', { phone: currentUser.phone }).then(list => {
+        if (!list || list.length === 0) {
+          container.innerHTML = '<div class="text-center py-6 text-slate-400 text-xs font-bold"><p>Belum ada riwayat penarikan saldo.</p></div>';
+          return;
+        }
+        var html = '';
+        for (var i = 0; i < list.length; i++) {
+          var w = list[i];
+          var statusBadge = w.status === "Selesai / Ditransfer" 
+            ? '<span class="bg-emerald-100 text-emerald-700 text-[9px] font-black px-2.5 py-1 rounded-full">Selesai / Ditransfer</span>' 
+            : '<span class="bg-amber-100 text-amber-800 text-[9px] font-black px-2.5 py-1 rounded-full animate-pulse">Menunggu Transfer Admin</span>';
+
+          html += '<div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 space-y-1.5">' +
+                    '<div class="flex justify-between items-center"><span class="font-bold text-[10px] text-slate-400">' + w.date + '</span>' + statusBadge + '</div>' +
+                    '<div class="flex justify-between items-center"><span class="font-black text-xs text-emerald-600">Rp ' + formatRupiah(w.amount) + '</span><span class="text-[10px] font-bold text-slate-600 uppercase">' + w.method + '</span></div>' +
+                    '<p class="text-[10px] text-slate-500 truncate">Tujuan: ' + w.accountInfo + '</p>' +
+                  '</div>';
+        }
+        container.innerHTML = html;
+      }).catch(() => {
+        container.innerHTML = '<div class="text-center py-6 text-slate-400 text-xs font-bold"><p>Gagal memuat riwayat.</p></div>';
+      });
+    }
+
+    function closeWithdrawalHistoryModal() {
+      document.getElementById('withdrawal-history-modal').classList.add('hidden');
     }
 
     function submitWithdrawRequest() {
