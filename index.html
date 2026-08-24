@@ -221,11 +221,11 @@
         </div>
       </div>
 
-      <!-- DAFTAR WARUNG / TOKO MITRA (PENGGANTI KATEGORI) -->
-      <div class="px-6 mb-6">
-        <h3 class="text-[11px] font-black uppercase text-slate-400 tracking-wider mb-3">DAFTAR WARUNG / TOKO MITRA</h3>
-        <div id="stores-container" class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <!-- Diisi otomatis via JS dari Google Sheets -->
+      <!-- DAFTAR WARUNG / TOKO MITRA (BISA DIGESER HORIZONTAL, FOTO KOTAK PERSEGI PANJANG) -->
+      <div class="mb-6">
+        <h3 class="text-[11px] font-black uppercase text-slate-400 tracking-wider mb-3 px-6">DAFTAR WARUNG / TOKO MITRA</h3>
+        <div id="stores-container" class="flex overflow-x-auto gap-3 px-6 pb-2 scroll-smooth">
+          <!-- Diisi otomatis via JS dengan bentuk persegi panjang & bisa digeser -->
         </div>
       </div>
 
@@ -1035,12 +1035,15 @@
 
     function formatRupiah(n) { return new Intl.NumberFormat("id-ID").format(n); }
 
+    // RENDER WARUNG: BENTUK KOTAK PERSEGI PANJANG & BISA DIGESER (HORIZONTAL)
     function renderStores() {
       var container = document.getElementById('stores-container');
       var html = '';
       var isAllActive = currentStoreId === "Semua";
-      html += '<button type="button" onclick="selectStore(\'Semua\')" class="store-btn ' + (isAllActive ? 'active-store' : 'bg-white') + ' rounded-2xl p-2.5 flex flex-col items-center text-center shadow-xs border border-slate-200/80 transition-all active:scale-95">' +
-                '<div class="w-12 h-12 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mb-1.5 text-lg shadow-inner"><i class="fa-solid fa-store"></i></div>' +
+
+      // Tombol Semua Warung
+      html += '<button type="button" onclick="selectStore(\'Semua\')" class="store-btn shrink-0 w-32 ' + (isAllActive ? 'active-store' : 'bg-white') + ' rounded-2xl p-2.5 flex flex-col items-center text-center shadow-xs border border-slate-200/80 transition-all active:scale-95">' +
+                '<div class="w-full h-16 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center mb-2 text-xl shadow-inner"><i class="fa-solid fa-store"></i></div>' +
                 '<span class="text-[11px] font-black text-slate-800 truncate w-full">Semua Warung</span>' +
                 '<span class="text-[9px] text-slate-400">Pusat</span>' +
               '</button>';
@@ -1049,8 +1052,10 @@
         var s = allStores[i];
         if (s.id === "Semua") continue;
         var isActive = currentStoreId === s.id;
-        html += '<button type="button" onclick="selectStore(\'' + s.id + '\')" class="store-btn ' + (isActive ? 'active-store' : 'bg-white') + ' rounded-2xl p-2.5 flex flex-col items-center text-center shadow-xs border border-slate-200/80 transition-all active:scale-95">' +
-                  '<div class="w-12 h-12 rounded-full overflow-hidden bg-slate-100 mb-1.5 shadow-inner border border-slate-200"><img src="' + s.image + '" class="w-full h-full object-cover"></div>' +
+        
+        // Kotak Persegi Panjang untuk Foto Toko/Warung agar Jelas
+        html += '<button type="button" onclick="selectStore(\'' + s.id + '\')" class="store-btn shrink-0 w-32 ' + (isActive ? 'active-store' : 'bg-white') + ' rounded-2xl p-2.5 flex flex-col items-center text-center shadow-xs border border-slate-200/80 transition-all active:scale-95">' +
+                  '<div class="w-full h-16 rounded-xl overflow-hidden bg-slate-100 mb-2 shadow-inner border border-slate-200"><img src="' + s.image + '" class="w-full h-full object-cover"></div>' +
                   '<span class="text-[11px] font-black text-slate-800 truncate w-full">' + s.name + '</span>' +
                   '<span class="text-[9px] text-slate-400 truncate w-full">' + (s.address || 'Mitra') + '</span>' +
                 '</button>';
