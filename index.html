@@ -1101,6 +1101,9 @@
           });
         } else if (currentUser && currentUser.role === 'guest') { orders = []; }
         
+        // Membalik urutan agar pesanan terbaru berada di posisi paling atas (paling awal)
+        orders.reverse();
+
         displayOrderCards(container, orders, isStaff);
       });
     }
@@ -1275,7 +1278,6 @@
       });
     }
 
-    // FUNGSI FINALIZE ORDER DENGAN STATUS PEMBAYARAN DINAMIS KE WHATSAPP ADMIN
     function finalizeOrderUI(newOrder, paymentStatus) {
       var formattedItems = "- " + newOrder.itemsSummary.replace(/, /g, "\n- ");
       var statusBayar = paymentStatus || "BELUM LUNAS";
