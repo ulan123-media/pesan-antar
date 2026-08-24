@@ -183,12 +183,12 @@
         </div>
       </div>
       
-      <!-- STATISTIK OMSET / PENDAPATAN (DINAMIS UNTUK ADMIN, MITRA, & KURIR) -->
-      <div id="admin-omset-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <!-- STATISTIK OMSET & DOMPET DIGITAL -->
+      <div id="admin-omset-grid" class="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div class="relative overflow-hidden bg-slate-800 p-5 rounded-3xl shadow-lg border border-slate-700 flex items-center gap-4">
           <div class="w-12 h-12 rounded-2xl bg-rose-500/20 border border-rose-500/30 text-rose-400 flex items-center justify-center text-xl font-black relative z-10 shadow-inner"><i class="fa-solid fa-rupiah-sign"></i></div>
           <div class="relative z-10">
-            <span id="dash-label-1" class="text-[10px] text-slate-400 font-extrabold block uppercase tracking-wider mb-0.5">Omset Selesai (Hari Ini)</span>
+            <span id="dash-label-1" class="text-[10px] text-slate-400 font-extrabold block uppercase tracking-wider mb-0.5">Omset Selesai</span>
             <span id="dash-total-omset" class="text-base font-black text-white">Rp 0</span>
           </div>
         </div>
@@ -198,6 +198,17 @@
             <span id="dash-label-2" class="text-[10px] text-slate-400 font-extrabold block uppercase tracking-wider mb-0.5">Pesanan Selesai</span>
             <span id="dash-total-orders" class="text-base font-black text-white">0 Pesanan</span>
           </div>
+        </div>
+        <!-- DOMPET SALDO AKTIF & TARIK SALDO -->
+        <div id="wallet-card-box" class="relative overflow-hidden bg-gradient-to-r from-emerald-900 to-teal-900 p-5 rounded-3xl shadow-lg border border-emerald-700 flex justify-between items-center">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 flex items-center justify-center text-xl font-black shadow-inner"><i class="fa-solid fa-wallet"></i></div>
+            <div>
+              <span class="text-[10px] text-emerald-300 font-extrabold block uppercase tracking-wider mb-0.5">Saldo Dompet Anda</span>
+              <span id="dash-active-balance" class="text-base font-black text-white">Rp 0</span>
+            </div>
+          </div>
+          <button type="button" onclick="openWithdrawModal()" class="bg-emerald-500 hover:bg-emerald-600 text-white font-black px-4 py-3 rounded-2xl text-xs active:scale-95 shadow-md transition-all">Tarik Saldo</button>
         </div>
       </div>
     </div>
@@ -230,12 +241,10 @@
         </div>
       </div>
 
-      <!-- DAFTAR WARUNG / TOKO MITRA (BISA DIGESER HORIZONTAL) -->
+      <!-- DAFTAR WARUNG / TOKO MITRA -->
       <div class="mb-6">
         <h3 class="text-[11px] font-black uppercase text-slate-400 tracking-wider mb-3 px-6">DAFTAR WARUNG / TOKO MITRA</h3>
-        <div id="stores-container" class="flex overflow-x-auto gap-3 px-6 pb-2 scroll-smooth">
-          <!-- Diisi otomatis via JS -->
-        </div>
+        <div id="stores-container" class="flex overflow-x-auto gap-3 px-6 pb-2 scroll-smooth"></div>
       </div>
 
       <div class="px-6 mb-8">
@@ -265,6 +274,51 @@
         <button type="button" id="nav-keranjang-btn" onclick="toggleCartModal()" class="flex flex-col items-center text-slate-400 hover:text-rose-600 font-bold transition-all active:scale-90 relative px-4"><i class="fa-solid fa-basket-shopping text-lg mb-0.5"></i><span class="text-[10px]">Keranjang</span><span id="nav-cart-count" class="hidden absolute top-0 right-2 bg-red-500 text-white text-[9px] font-black px-1.5 py-0.2 rounded-full border-2 border-white">0</span></button>
         <button type="button" onclick="switchTab('status')" id="nav-status" class="flex flex-col items-center text-slate-400 hover:text-rose-600 font-bold transition-all active:scale-90 relative px-4"><i class="fa-solid fa-clock-rotate-left text-lg mb-0.5"></i><span id="nav-status-label" class="text-[10px]">Status</span><span id="nav-status-dot" class="hidden absolute top-0 right-2 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white animate-ping"></span></button>
       </div>
+    </div>
+  </div>
+
+  <!-- MODAL PENARIKAN SALDO (WITHDRAWAL) -->
+  <div id="withdraw-modal" class="fixed inset-0 bg-slate-900/70 z-50 flex items-center justify-center hidden backdrop-blur-sm p-4">
+    <div class="bg-white rounded-3xl w-full max-w-xs p-6 shadow-2xl space-y-4 max-w-md mx-auto animate-slide-up text-slate-800">
+      <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+        <h3 class="text-sm font-black text-slate-900 flex items-center gap-2"><i class="fa-solid fa-wallet text-emerald-600"></i> Tarik Saldo Dompet</h3>
+        <button type="button" onclick="closeWithdrawModal()" class="w-7 h-7 bg-slate-100 rounded-full text-slate-500 flex items-center justify-center text-xs font-bold"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="space-y-3.5 text-xs">
+        <div class="bg-emerald-50 p-3.5 rounded-2xl border border-emerald-100 text-center">
+          <span class="text-[10px] text-emerald-700 font-bold block uppercase">Saldo Tersedia</span>
+          <span id="withdraw-max-balance" class="text-base font-black text-emerald-800">Rp 0</span>
+        </div>
+        <div>
+          <label class="font-extrabold text-slate-700 block mb-1">Nominal Penarikan (Min. Rp 50.000) *</label>
+          <input type="number" id="withdraw-amount" placeholder="50000" class="w-full bg-slate-50 rounded-2xl px-4 py-3 border border-slate-200 focus:outline-none focus:border-emerald-600 font-bold">
+        </div>
+        <div>
+          <label class="font-extrabold text-slate-700 block mb-1">Metode & Tujuan Pencairan *</label>
+          <select id="withdraw-method" class="w-full bg-slate-50 rounded-2xl px-3 py-3 border border-slate-200 font-bold text-slate-700 focus:outline-none focus:border-emerald-600">
+            <option value="DANA">E-Wallet DANA</option>
+            <option value="OVO">E-Wallet OVO</option>
+            <option value="GOPAY">E-Wallet GoPay</option>
+            <option value="BANK">Transfer Rekening Bank</option>
+          </select>
+        </div>
+        <div>
+          <label class="font-extrabold text-slate-700 block mb-1">Nomor Rekening / No. HP E-Wallet & Atas Nama *</label>
+          <input type="text" id="withdraw-account-info" placeholder="Contoh: 081234567890 (a.n Ulan)" class="w-full bg-slate-50 rounded-2xl px-4 py-3 border border-slate-200 focus:outline-none focus:border-emerald-600 font-medium">
+        </div>
+        <button type="button" onclick="submitWithdrawRequest()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-3.5 rounded-2xl shadow-lg active:scale-95 transition-all text-xs tracking-wider">KIRIM PERMINTAAN TARIK SALDO</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL PERSETUJUAN PENCAIRAN ADMIN -->
+  <div id="admin-withdrawals-modal" class="fixed inset-0 bg-slate-900/70 z-50 flex items-center justify-center hidden backdrop-blur-sm p-4">
+    <div class="bg-white rounded-3xl w-full max-w-md p-6 shadow-2xl space-y-4 max-h-[85vh] overflow-y-auto animate-slide-up text-slate-800">
+      <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+        <h3 class="text-sm font-black text-slate-900 flex items-center gap-2"><i class="fa-solid fa-money-check-dollar text-emerald-600"></i> Verifikasi Permintaan Tarik Saldo</h3>
+        <button type="button" onclick="closeAdminWithdrawalsModal()" class="w-7 h-7 bg-slate-100 rounded-full text-slate-500 flex items-center justify-center text-xs font-bold"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div id="admin-withdrawals-container" class="space-y-3"><p class="text-xs text-slate-400 text-center py-4">Memuat data permintaan...</p></div>
     </div>
   </div>
 
@@ -300,7 +354,7 @@
         <button type="button" onclick="toggleAdminMenuModal()" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 font-bold active:scale-90"><i class="fa-solid fa-xmark text-xs"></i></button>
       </div>
       <div id="admin-modal-actions" class="space-y-3 pt-1">
-        <!-- Diisi dinamis via JS berdasarkan role (Admin / Mitra) -->
+        <!-- Diisi dinamis via JS -->
       </div>
     </div>
   </div>
@@ -502,6 +556,7 @@
     var selectedPaymentMethod = 'midtrans';
     var lastSentTime = 0;
     var activeCompletionInvoiceId = null;
+    var userActiveBalance = 0;
 
     document.addEventListener("DOMContentLoaded", function() {
       checkActiveSession(); 
@@ -860,6 +915,7 @@
 
       document.getElementById('admin-control-bar').classList.toggle('hidden', !isStaff);
       document.getElementById('admin-omset-grid').classList.toggle('hidden', !isStaff);
+      document.getElementById('wallet-card-box').classList.toggle('hidden', isAdmin); // Admin tidak perlu tombol tarik saldo, cukup Mitra & Kurir
       document.getElementById('nav-keranjang-btn').classList.toggle('hidden', isStaff);
       document.getElementById('header-cart-btn').classList.toggle('hidden', isStaff);
       document.getElementById('admin-exclusive-buttons').classList.toggle('hidden', !isAdmin && !isMerchant);
@@ -876,7 +932,7 @@
         document.getElementById('panel-subtitle-text').innerText = "Kelola Menu & Pendapatan Toko Anda";
       } else if (isAdmin) {
         document.getElementById('panel-title-text').innerText = "PANEL ADMIN UTAMA";
-        document.getElementById('panel-subtitle-text').innerText = "Kelola Toko & Pesanan Masuk";
+        document.getElementById('panel-subtitle-text').innerText = "Kelola Toko & Verifikasi Pencairan";
       }
 
       var courierContactBox = document.getElementById('courier-admin-contact-box');
@@ -981,6 +1037,9 @@
                                   '</button>' +
                                   '<button type="button" onclick="openAllCouriersModal()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-black py-3.5 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-md active:scale-95 transition-all">' +
                                     '<i class="fa-solid fa-motorcycle text-rose-400 text-sm"></i> Pantau Kurir Aktif & Kontak WA' +
+                                  '</button>' +
+                                  '<button type="button" onclick="openAdminWithdrawalsModal()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-3.5 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20 active:scale-95 transition-all">' +
+                                    '<i class="fa-solid fa-money-check-dollar text-sm"></i> Verifikasi Permintaan Tarik Saldo' +
                                   '</button>' +
                                   '<button type="button" onclick="toggleAdminMenuModal(); toggleAddStoreModal();" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-black py-3.5 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-amber-600/20 active:scale-95 transition-all">' +
                                     '<i class="fa-solid fa-store text-sm"></i> Tambah Warung / Toko Baru' +
@@ -1282,7 +1341,6 @@
       callApiGet('getOrders').then(ordersFromSheet => {
         var orders = ordersFromSheet || []; rawOrdersList = orders;
         
-        // Perbarui Statistik Dashboard (Omset / Pendapatan berdasarkan Role)
         if (isStaff) {
           updateDashboardStats(orders);
         }
@@ -1299,7 +1357,7 @@
             return isReadyForDelivery || isAssignedToMe || isCompletedByMe;
           });
         } else if (isAdmin) {
-          // Admin melihat semua pesanan
+          // Admin
         } else if (currentUser && currentUser.role !== 'guest') {
           orders = orders.filter(function(o) {
             return currentUser.phone && o.phone ? String(o.phone).trim() === String(currentUser.phone).trim() : String(o.name).trim().toLowerCase() === String(currentUser.name).trim().toLowerCase();
@@ -1312,11 +1370,11 @@
     }
 
     function updateDashboardStats(orders) {
-      var todayStr = new Date().toLocaleDateString('id-ID');
       var label1 = document.getElementById('dash-label-1');
       var label2 = document.getElementById('dash-label-2');
       var val1 = document.getElementById('dash-total-omset');
       var val2 = document.getElementById('dash-total-orders');
+      var balanceVal = document.getElementById('dash-active-balance');
 
       if (!currentUser) return;
 
@@ -1343,10 +1401,12 @@
             storeCount++;
           }
         }
+        userActiveBalance = storeOmset;
         label1.innerText = "Omset Warung Saya (Selesai)";
         val1.innerText = "Rp " + formatRupiah(storeOmset);
         label2.innerText = "Pesanan Selesai";
         val2.innerText = storeCount + " Pesanan";
+        balanceVal.innerText = "Rp " + formatRupiah(userActiveBalance);
       }
       else if (currentUser.role === 'courier') {
         var courierPhone = String(currentUser.phone || "").trim();
@@ -1358,11 +1418,88 @@
             courierCount++;
           }
         }
+        userActiveBalance = courierEarnings;
         label1.innerText = "Pendapatan Kurir (Total Ongkir)";
         val1.innerText = "Rp " + formatRupiah(courierEarnings);
         label2.innerText = "Antaran Selesai";
         val2.innerText = courierCount + " Pengantaran";
+        balanceVal.innerText = "Rp " + formatRupiah(userActiveBalance);
       }
+    }
+
+    function openWithdrawModal() {
+      document.getElementById('withdraw-max-balance').innerText = "Rp " + formatRupiah(userActiveBalance);
+      document.getElementById('withdraw-amount').value = '';
+      document.getElementById('withdraw-account-info').value = '';
+      document.getElementById('withdraw-modal').classList.remove('hidden');
+    }
+
+    function closeWithdrawModal() {
+      document.getElementById('withdraw-modal').classList.add('hidden');
+    }
+
+    function submitWithdrawRequest() {
+      var amount = parseInt(document.getElementById('withdraw-amount').value);
+      var method = document.getElementById('withdraw-method').value;
+      var accountInfo = document.getElementById('withdraw-account-info').value.trim();
+
+      if (isNaN(amount) || amount < 50000) { alert("Minimal penarikan saldo adalah Rp 50.000!"); return; }
+      if (amount > userActiveBalance) { alert("Nominal penarikan melebihi saldo aktif Anda!"); return; }
+      if (!accountInfo) { alert("Masukkan nomor rekening atau nomor e-wallet tujuan."); return; }
+
+      var reqData = {
+        name: currentUser.name,
+        role: currentUser.role,
+        phone: currentUser.phone || WA_NUMBER,
+        amount: amount,
+        method: method,
+        accountInfo: accountInfo,
+        status: "Menunggu Transfer Admin",
+        date: new Date().toLocaleDateString('id-ID')
+      };
+
+      callApiPost('requestWithdrawal', { request: reqData }).then(res => {
+        showToast("Permintaan tarik saldo berhasil dikirim ke Admin!");
+        closeWithdrawModal();
+        window.open("https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent("Halo Admin Utama, saya " + currentUser.name + " (" + currentUser.role + ") mengajukan Penarikan Saldo sebesar Rp " + formatRupiah(amount) + " via " + method + " (" + accountInfo + "). Mohon diproses."), '_blank');
+      });
+    }
+
+    function openAdminWithdrawalsModal() {
+      toggleAdminMenuModal();
+      var container = document.getElementById('admin-withdrawals-container');
+      container.innerHTML = '<p class="text-xs text-slate-400 text-center py-4">Memuat data permintaan...</p>';
+      document.getElementById('admin-withdrawals-modal').classList.remove('hidden');
+
+      callApiGet('getWithdrawalRequests').then(list => {
+        if (!list || list.length === 0) { container.innerHTML = '<div class="text-center py-6 text-slate-400 text-xs font-bold"><p>Belum ada permintaan tarik saldo.</p></div>'; return; }
+        var html = '';
+        for (var i = 0; i < list.length; i++) {
+          var w = list[i];
+          html += '<div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 space-y-2">' +
+                    '<div class="flex justify-between items-center"><span class="font-black text-xs text-slate-900">' + w.name + ' (' + w.role.toUpperCase() + ')</span><span class="bg-amber-100 text-amber-800 text-[9px] font-black px-2 py-0.5 rounded-full">' + w.status + '</span></div>' +
+                    '<p class="text-xs font-black text-emerald-600">Nominal: Rp ' + formatRupiah(w.amount) + '</p>' +
+                    '<p class="text-[11px] text-slate-600"><strong>Metode:</strong> ' + w.method + ' - ' + w.accountInfo + '</p>' +
+                    '<div class="pt-2 flex gap-2">' +
+                      '<button type="button" onclick="approveWithdrawal(\'' + w.phone + '\', ' + w.amount + ')" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-black py-2.5 rounded-xl text-xs active:scale-95 shadow-xs"><i class="fa-solid fa-check mr-1"></i> Tandai Selesai / Ditransfer</button>' +
+                    '</div>' +
+                  '</div>';
+        }
+        container.innerHTML = html;
+      }).catch(() => {
+        container.innerHTML = '<div class="text-center py-6 text-slate-400 text-xs font-bold"><p>Belum ada data permintaan.</p></div>';
+      });
+    }
+
+    function closeAdminWithdrawalsModal() {
+      document.getElementById('admin-withdrawals-modal').classList.add('hidden');
+    }
+
+    function approveWithdrawal(phone, amount) {
+      callApiPost('approveWithdrawal', { phone: phone, amount: amount }).then(() => {
+        showToast("Pencairan dana ditandai selesai!");
+        openAdminWithdrawalsModal();
+      });
     }
 
     function displayOrderCards(container, orders, isStaff) {
@@ -1406,11 +1543,8 @@
             if (cleanPhone.startsWith('0')) cleanPhone = '62' + cleanPhone.substring(1);
             
             var btnChatWa = cleanPhone ? '<a href="https://wa.me/' + cleanPhone + '" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white font-black py-2.5 px-3 rounded-xl text-[10px] flex items-center justify-center gap-1 shadow-xs"><i class="fa-brands fa-whatsapp"></i> Chat</a>' : '';
-            
-            // Tombol ACC HANYA muncul untuk Admin Utama
             var btnAcc = (isAdmin && ordStatus !== 'Selesai' && ordStatus !== 'Sedang Diantar' && ordStatus !== 'Di-ACC (Diproses)') ? '<button type="button" onclick="updateOrderStatus(\'' + ord.invoiceId + '\', \'Di-ACC (Diproses)\')" class="bg-blue-600 hover:bg-blue-700 text-white font-black py-2.5 px-3 rounded-xl text-[10px] shadow-xs">ACC / Lunas</button>' : '';
             
-            // Logika khusus Pemilik Toko (Mitra)
             var btnSiapkanBarang = '';
             if (isMerchant) {
               if (ordStatus === 'Menunggu ACC' || ordStatus.includes('Menunggu Verifikasi QRIS') || ordStatus.includes('Menunggu Pembayaran')) {
