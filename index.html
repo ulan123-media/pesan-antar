@@ -1258,19 +1258,29 @@
       callApiPost('getMidtransSnapToken', { orderData: newOrder }).then(token => {
         if (token && !token.startsWith("Error")) {
           window.snap.pay(token, {
-            onSuccess: function() { showToast("Pembayaran Berhasil!"); finalizeOrderUI(newOrder); },
-            onPending: function() { showToast("Menunggu Pembayaran."); finalizeOrderUI(newOrder); },
-            onClose: function() { showToast("Transaksi dicatat."); finalizeOrderUI(newOrder); }
+            onSuccess: function() { 
+              showToast("Pembayaran Berhasil!"); 
+              finalizeOrderUI(newOrder, "LUNAS (Midtrans/QRIS)"); 
+            },
+            onPending: function() { 
+              showToast("Menunggu Pembayaran."); 
+              finalizeOrderUI(newOrder, "MENUNGGU PEMBAYARAN (Pending)"); 
+            },
+            onClose: function() { 
+              showToast("Transaksi dicatat."); 
+              finalizeOrderUI(newOrder, "BELUM LUNAS (Popup ditutup / Bayar nanti atau COD)"); 
+            }
           });
         }
       });
     }
 
-    // FUNGSI FINALIZE ORDER & FORMAT PESAN DETAIL KE WHATSAPP ADMIN
-    function finalizeOrderUI(newOrder) {
+    // FUNGSI FINALIZE ORDER DENGAN STATUS PEMBAYARAN DINAMIS KE WHATSAPP ADMIN
+    function finalizeOrderUI(newOrder, paymentStatus) {
       var formattedItems = "- " + newOrder.itemsSummary.replace(/, /g, "\n- ");
+      var statusBayar = paymentStatus || "BELUM LUNAS";
 
-      var message = "Halo Admin, saya sudah melakukan pemesanan & pembayaran:\n\n" +
+      var message = "Halo Admin, saya sudah membuat pesanan:\n\n" +
                     "📋 *No Invoice:* " + newOrder.invoiceId + "\n" +
                     "👤 *Nama Pemesan:* " + newOrder.name + "\n" +
                     "📍 *Alamat Pengiriman:* " + newOrder.address + "\n" +
@@ -1278,7 +1288,7 @@
                     "🛒 *Daftar Belanjaan:*\n" + formattedItems + "\n\n" +
                     "🚴‍♂️ *Ongkir (GPS):* Rp " + formatRupiah(newOrder.ongkir) + "\n" +
                     "💰 *Total Tagihan:* Rp " + formatRupiah(newOrder.total) + "\n\n" +
-                    "✅ *Status Pembayaran:* LUNAS (Midtrans/QRIS)\n\n" +
+                    "ℹ️ *Status Pembayaran:* " + statusBayar + "\n\n" +
                     "Mohon segera diproses ya kak. Terima kasih!";
 
       cart = {}; 
