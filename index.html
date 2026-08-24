@@ -456,6 +456,7 @@
     var currentUser = null, currentLocation = null, currentCoords = null, currentInvoiceId = "", allProducts = [], currentCategory = "Semua", cart = {}, storeStatus = "BUKA", recruitmentStatus = "TUTUP", currentDistance = 0, calculatedOngkir = 6000, rawOrdersList = [];
     var liveMap = null, courierMarker = null, customerMarker = null, routePolyline = null, courierWatchId = null, adminNotifierInterval = null;
     var courierHeartbeatInterval = null, lastKnownCustomerOrderStatus = "", customerNotifierInterval = null;
+    var lastSentTime = 0; // Variabel pembatas waktu (throttle) agar GPS tidak membuat server Sheets lag
 
     document.addEventListener("DOMContentLoaded", function() {
       checkActiveSession(); 
@@ -1036,7 +1037,7 @@
       if (t === 'status') { document.getElementById('nav-status-dot').classList.add('hidden'); renderOrderStatus(); }
     }
 
-    // FUNGSI GPS KURIR YANG SUDAH DIPERBAIKI (DENGAN NOTIFIKASI TOAST)
+    // FUNGSI GPS KURIR DENGAN OPTIMALASI THROTTLE (DIKIRIM TIAP 10 DETIK)
     function startCourierGPSBroadcaster(invId) {
       if (!navigator.geolocation) {
         showToast("GPS tidak didukung di perangkat ini.", false);
@@ -1047,12 +1048,17 @@
       if (courierWatchId) navigator.geolocation.clearWatch(courierWatchId);
       
       courierWatchId = navigator.geolocation.watchPosition(function(pos) {
-        callApiPost('updateCourierLocation', { 
-          invoiceId: invId, 
-          lat: pos.coords.latitude, 
-          lng: pos.coords.longitude, 
-          courierName: currentUser ? currentUser.name : "Kurir" 
-        });
+        var now = Date.now();
+        // Mengirim data koordinat ke server setiap 10 detik sekali agar tidak terjadi lag/antrean server
+        if (now - lastSentTime >= 10000) {
+          lastSentTime = now;
+          callApiPost('updateCourierLocation', { 
+            invoiceId: invId, 
+            lat: pos.coords.latitude, 
+            lng: pos.coords.longitude, 
+            courierName: currentUser ? currentUser.name : "Kurir" 
+          });
+        }
       }, function(err) {
         showToast("Gagal mengakses GPS: Periksa izin lokasi browser.", false);
       }, { 
@@ -1238,94 +1244,33 @@
       }, 4000);
     }
 
-    // FUNGSI CHECKOUT DENGAN FORMAT PESAN WHATSAPP OTOMATIS BERDASARKAN STATUS PEMBAYARAN
     function sendToWhatsApp() {
-      if (storeStatus === "TUTUP" && (!currentUser || currentUser.role !== 'admin')) { 
-        alert("Toko sedang tutup."); 
-        return; 
-      }
+      if (storeStatus === "TUTUP" && (!currentUser || currentUser.role !== 'admin')) { alert("Toko sedang tutup."); return; }
       var cartList = Object.values(cart);
-      if (cartList.length === 0) { 
-        alert("Keranjang kosong."); 
-        return; 
-      }
-      var name = document.getElementById('cust-name').value.trim();
-      var address = document.getElementById('cust-address').value.trim();
-      var notes = document.getElementById('cust-notes').value.trim();
-      
-      if (!name || !address) { 
-        alert("Lengkapi Nama & Alamat."); 
-        return; 
-      }
+      if (cartList.length === 0) { alert("Keranjang kosong."); return; }
+      var name = document.getElementById('cust-name').value.trim(), address = document.getElementById('cust-address').value.trim(), notes = document.getElementById('cust-notes').value.trim();
+      if (!name || !address) { alert("Lengkapi Nama & Alamat."); return; }
 
       var subtotal = 0, itemsArr = [];
-      for (var i = 0; i < cartList.length; i++) { 
-        subtotal += cartList[i].price * cartList[i].qty; 
-        itemsArr.push(cartList[i].name + " (" + cartList[i].qty + "x)"); 
-      }
-      
-      var phoneNum = currentUser ? currentUser.phone : "-";
-      var newOrder = { 
-        invoiceId: currentInvoiceId, 
-        name: name, 
-        phone: phoneNum, 
-        address: address, 
-        total: subtotal + calculatedOngkir, 
-        itemsSummary: itemsArr.join(", "), 
-        status: "Menunggu Pembayaran", 
-        location: currentLocation || "-", 
-        lat: currentCoords ? currentCoords.lat : "", 
-        lng: currentCoords ? currentCoords.lng : "", 
-        date: new Date().toLocaleDateString('id-ID'), 
-        ongkir: calculatedOngkir, 
-        notes: notes 
-      };
+      for (var i = 0; i < cartList.length; i++) { subtotal += cartList[i].price * cartList[i].qty; itemsArr.push(cartList[i].name + " (" + cartList[i].qty + "x)"); }
+      var newOrder = { invoiceId: currentInvoiceId, name: name, phone: currentUser ? currentUser.phone : "", address: address, total: subtotal + calculatedOngkir, itemsSummary: itemsArr.join(", "), status: "Menunggu Pembayaran", location: currentLocation || "-", lat: currentCoords ? currentCoords.lat : "", lng: currentCoords ? currentCoords.lng : "", date: new Date().toLocaleDateString('id-ID'), ongkir: calculatedOngkir, notes: notes };
 
       callApiPost('processOrder', { order: newOrder });
-      
       callApiPost('getMidtransSnapToken', { orderData: newOrder }).then(token => {
         if (token && !token.startsWith("Error")) {
           window.snap.pay(token, {
-            onSuccess: function() { 
-              showToast("Pembayaran Berhasil!"); 
-              finalizeOrderUI(newOrder, "LUNAS (Sudah Dibayar via Midtrans)"); 
-            },
-            onPending: function() { 
-              showToast("Menunggu Pembayaran."); 
-              finalizeOrderUI(newOrder, "Menunggu Pembayaran"); 
-            },
-            onClose: function() { 
-              showToast("Transaksi dicatat."); 
-              finalizeOrderUI(newOrder, "Belum Bayar / Menunggu Konfirmasi"); 
-            }
+            onSuccess: function() { showToast("Pembayaran Berhasil!"); finalizeOrderUI(newOrder); },
+            onPending: function() { showToast("Menunggu Pembayaran."); finalizeOrderUI(newOrder); },
+            onClose: function() { showToast("Transaksi dicatat."); finalizeOrderUI(newOrder); }
           });
-        } else {
-          finalizeOrderUI(newOrder, "Belum Bayar / Manual");
         }
       });
     }
 
-    function finalizeOrderUI(newOrder, paymentStatusText) {
-      cart = {}; 
-      updateCartUI(); 
-      generateNewInvoiceId(); 
-      toggleCartModal();
+    function finalizeOrderUI(newOrder) {
+      cart = {}; updateCartUI(); generateNewInvoiceId(); toggleCartModal();
       switchTab('status');
-      
-      var message = "Halo Admin Utama, saya *" + newOrder.name + "* ingin mengirimkan pesanan baru.\n\n" +
-                    "🧾 *DETAIL PESANAN:*\n" +
-                    "• No. Invoice: *" + newOrder.invoiceId + "*\n" +
-                    "• Nama Pemesan: " + newOrder.name + "\n" +
-                    "• No. WhatsApp: " + newOrder.phone + "\n" +
-                    "• Alamat Kirim: " + newOrder.address + "\n" +
-                    (newOrder.notes ? "• Catatan: " + newOrder.notes + "\n" : "") + "\n" +
-                    "🛍️ *RINGKASAN BELANJA:*\n" + newOrder.itemsSummary + "\n\n" +
-                    "💰 *RINCIAN PEMBAYARAN:*\n" +
-                    "• Status Pembayaran: *" + paymentStatusText + "*\n" +
-                    "• Total Tagihan (+ Ongkir Rp " + formatRupiah(newOrder.ongkir) + "): *Rp " + formatRupiah(newOrder.total) + "*\n\n" +
-                    "Mohon bantuannya untuk segera diproses ya Kak. Terima kasih! 🙏";
-
-      window.open("https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(message), '_blank');
+      window.open("https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent("Pesanan " + newOrder.invoiceId), '_blank');
     }
 
     function openLiveTracking(invId, targetLat, targetLng) {
