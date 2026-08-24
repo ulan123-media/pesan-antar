@@ -42,7 +42,7 @@
     <div class="flex justify-between items-center w-full pt-2">
       <button id="tab-btn-user" type="button" onclick="switchAuthTab('user')" class="w-11 h-11 rounded-2xl bg-rose-600 text-white flex items-center justify-center shadow-md shadow-rose-600/20 active:scale-95 transition-all text-sm" title="Mode Konsumen"><i class="fa-solid fa-user"></i></button>
       <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest bg-slate-100 px-3 py-1 rounded-full">Portal Akses Aman</span>
-      <button id="tab-btn-admin" type="button" onclick="switchAuthTab('admin')" class="w-11 h-11 rounded-2xl bg-slate-100 text-slate-600 flex items-center justify-center shadow-sm active:scale-95 transition-all text-sm" title="Mode Admin / Kurir"><i class="fa-solid fa-user-shield"></i></button>
+      <button id="tab-btn-admin" type="button" onclick="switchAuthTab('admin')" class="w-11 h-11 rounded-2xl bg-slate-100 text-slate-600 flex items-center justify-center shadow-sm active:scale-95 transition-all text-sm" title="Mode Staff / Mitra"><i class="fa-solid fa-user-shield"></i></button>
     </div>
 
     <div class="w-full my-auto py-6">
@@ -79,12 +79,13 @@
         <button type="button" onclick="loginAsGuest()" class="w-full bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 font-extrabold py-4 rounded-2xl text-xs transition-all border border-slate-200 flex items-center justify-center gap-2 mt-3"><i class="fa-solid fa-eye text-rose-600"></i> LIHAT PRODUK DULU (PENGUNJUNG)</button>
       </div>
 
-      <!-- FORM ADMIN / KURIR -->
+      <!-- FORM ADMIN / KURIR / MITRA -->
       <div id="form-admin" class="hidden space-y-4">
-        <div class="flex bg-slate-100 p-1 rounded-2xl text-[10px] font-bold mb-4 border border-slate-200/60">
-          <button type="button" id="adminsub-pin" onclick="switchAdminSubTab('pin')" class="flex-1 py-2.5 rounded-xl bg-slate-900 text-white shadow-md transition-all text-center">PIN Utama</button>
-          <button type="button" id="adminsub-login" onclick="switchAdminSubTab('login')" class="flex-1 py-2.5 rounded-xl text-slate-600 transition-all text-center">Login Kurir</button>
-          <button type="button" id="adminsub-register" onclick="switchAdminSubTab('register')" class="flex-1 py-2.5 rounded-xl text-slate-600 transition-all text-center">Daftar Kurir</button>
+        <div class="grid grid-cols-4 bg-slate-100 p-1 rounded-2xl text-[9px] font-bold mb-4 border border-slate-200/60 gap-0.5">
+          <button type="button" id="adminsub-pin" onclick="switchAdminSubTab('pin')" class="py-2.5 rounded-xl bg-slate-900 text-white shadow-md transition-all text-center">PIN Utama</button>
+          <button type="button" id="adminsub-merchant" onclick="switchAdminSubTab('merchant')" class="py-2.5 rounded-xl text-slate-600 transition-all text-center">Login Mitra</button>
+          <button type="button" id="adminsub-login" onclick="switchAdminSubTab('login')" class="py-2.5 rounded-xl text-slate-600 transition-all text-center">Login Kurir</button>
+          <button type="button" id="adminsub-register" onclick="switchAdminSubTab('register')" class="py-2.5 rounded-xl text-slate-600 transition-all text-center">Daftar Kurir</button>
         </div>
 
         <div id="admin-subsect-pin" class="space-y-4 text-center">
@@ -92,6 +93,13 @@
           <div><input type="password" id="admin-pin-input" maxlength="6" placeholder="••••" onkeypress="handleAdminKeyPress(event)" class="w-full bg-slate-50 text-center text-4xl font-black tracking-[16px] py-5 rounded-2xl border-2 border-slate-200 focus:border-slate-900 focus:bg-white focus:outline-none transition-all text-slate-800"></div>
           <button type="button" onclick="checkAdminLogin()" class="w-full bg-slate-900 hover:bg-slate-800 active:scale-95 text-white font-black py-4 rounded-2xl shadow-lg shadow-slate-900/20 transition-all text-xs tracking-wider">MASUK SEBAGAI ADMIN UTAMA</button>
           <p id="admin-error-msg" class="text-red-500 text-xs font-bold hidden animate-bounce"><i class="fa-solid fa-circle-exclamation mr-1"></i> PIN Salah!</p>
+        </div>
+
+        <!-- FORM LOGIN MITRA / WARUNG -->
+        <div id="admin-subsect-merchant" class="hidden space-y-4">
+          <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1.5">WhatsApp Warung / Mitra *</label><div class="relative flex items-center"><i class="fa-brands fa-whatsapp absolute left-4 text-slate-400 text-base"></i><input type="tel" id="merchant-login-phone" placeholder="Contoh: 081234567891" class="w-full bg-slate-50 rounded-2xl pl-11 pr-4 py-4 text-xs border border-slate-200 focus:outline-none focus:border-slate-900 focus:bg-white font-medium transition-all"></div></div>
+          <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1.5">Password Warung *</label><div class="relative flex items-center"><i class="fa-solid fa-lock absolute left-4 text-slate-400 text-sm"></i><input type="password" id="merchant-login-password" placeholder="••••••••" class="w-full bg-slate-50 rounded-2xl pl-11 pr-4 py-4 text-xs border border-slate-200 focus:outline-none focus:border-slate-900 focus:bg-white font-medium transition-all"></div></div>
+          <button type="button" onclick="loginMerchant()" class="w-full bg-amber-600 hover:bg-amber-700 active:scale-95 text-white font-black py-4 rounded-2xl shadow-lg shadow-amber-600/20 transition-all text-xs tracking-wider flex items-center justify-center gap-2 pt-4"><i class="fa-solid fa-store text-base"></i> MASUK SEBAGAI MITRA WARUNG</button>
         </div>
 
         <div id="admin-subsect-login" class="hidden space-y-4">
@@ -152,7 +160,7 @@
       </div>
     </div>
 
-    <!-- PANEL ADMIN & KURIR -->
+    <!-- PANEL ADMIN & KURIR & MITRA -->
     <div id="admin-control-bar" class="hidden px-6 pt-5 mb-6">
       <div id="panel-card-box" class="relative overflow-hidden bg-gradient-to-br from-red-950 via-rose-900 to-red-900 text-white p-6 rounded-3xl flex flex-col sm:flex-row justify-between items-start sm:items-center shadow-2xl shadow-red-900/40 border border-red-800/50 gap-5 mb-5 group">
         <div class="absolute bottom-0 left-0 w-full opacity-20 pointer-events-none">
@@ -161,11 +169,11 @@
           </svg>
         </div>
         <div class="relative z-10 flex items-center gap-4">
-          <div class="w-14 h-14 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-amber-400 flex items-center justify-center text-2xl shadow-inner"><i class="fa-solid fa-motorcycle"></i></div>
+          <div class="w-14 h-14 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-amber-400 flex items-center justify-center text-2xl shadow-inner"><i class="fa-solid fa-store"></i></div>
           <div>
-            <span class="bg-amber-400/20 text-amber-300 text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider inline-block mb-1.5 border border-amber-400/30 shadow-xs"><i class="fa-solid fa-hand-holding-heart mr-1"></i> FILOSOFI MOENDE</span>
+            <span class="bg-amber-400/20 text-amber-300 text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider inline-block mb-1.5 border border-amber-400/30 shadow-xs"><i class="fa-solid fa-shield-halved mr-1"></i> PORTAL MITRA</span>
             <p id="panel-title-text" class="text-sm font-black tracking-wide text-white uppercase">PANEL KONTROL</p>
-            <p id="panel-subtitle-text" class="text-xs text-rose-200 font-medium mt-0.5">Semangat Gotong Royong Kurir Bombana</p>
+            <p id="panel-subtitle-text" class="text-xs text-rose-200 font-medium mt-0.5">Kelola Warung & Menu Anda Sendiri</p>
           </div>
         </div>
         <div id="admin-exclusive-buttons" class="relative z-10 w-full sm:w-auto">
@@ -282,35 +290,16 @@
     </div>
   </div>
 
-  <!-- MODAL MENU ADMIN -->
+  <!-- MODAL MENU ADMIN / MITRA -->
   <div id="admin-menu-modal" class="fixed inset-0 bg-slate-900/60 z-50 flex items-end justify-center hidden backdrop-blur-sm transition-all">
     <div class="bg-white rounded-t-[32px] w-full p-6 max-h-[85vh] overflow-y-auto relative animate-slide-up shadow-2xl space-y-4 max-w-md mx-auto">
       <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-2"></div>
       <div class="flex justify-between items-center pb-3 border-b border-slate-100">
-        <h3 class="text-sm font-black text-slate-900 flex items-center gap-2"><i class="fa-solid fa-user-shield text-rose-600"></i> Menu Kontrol Admin Utama</h3>
+        <h3 id="admin-modal-main-title" class="text-sm font-black text-slate-900 flex items-center gap-2"><i class="fa-solid fa-user-shield text-rose-600"></i> Menu Kontrol</h3>
         <button type="button" onclick="toggleAdminMenuModal()" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 font-bold active:scale-90"><i class="fa-solid fa-xmark text-xs"></i></button>
       </div>
-      <div class="space-y-3 pt-1">
-        <div class="bg-slate-50 p-4 rounded-2xl flex justify-between items-center border border-slate-100">
-          <div><p class="text-xs font-black text-slate-900">Status Toko</p><p class="text-[10px] text-slate-400">Atur buka/tutup toko online.</p></div>
-          <button type="button" id="modal-btn-toggle-store" onclick="toggleStoreStatus(); updateAdminMenuModalUI();" class="px-4 py-2.5 rounded-xl text-xs font-black text-white shadow-xs active:scale-95 transition-all">Buka / Tutup</button>
-        </div>
-        <div class="bg-slate-50 p-4 rounded-2xl flex justify-between items-center border border-slate-100">
-          <div><p class="text-xs font-black text-slate-900">Lowongan Kurir</p><p class="text-[10px] text-slate-400">Terima pendaftaran kurir baru.</p></div>
-          <button type="button" id="modal-btn-toggle-recruitment" onclick="toggleRecruitmentStatus(); updateAdminMenuModalUI();" class="px-4 py-2.5 rounded-xl text-xs font-black text-white shadow-xs active:scale-95 transition-all">Buka / Tutup</button>
-        </div>
-        <button type="button" onclick="openCourierApprovalModal()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-black py-3.5 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-md active:scale-95 transition-all">
-          <i class="fa-solid fa-users-gear text-sm"></i> Verifikasi Pendaftaran Kurir (<span id="pending-courier-count">0</span>)
-        </button>
-        <button type="button" onclick="openAllCouriersModal()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-black py-3.5 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-md active:scale-95 transition-all">
-          <i class="fa-solid fa-motorcycle text-rose-400 text-sm"></i> Pantau Kurir Aktif & Kontak WA
-        </button>
-        <button type="button" onclick="toggleAdminMenuModal(); toggleAddStoreModal();" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-black py-3.5 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-amber-600/20 active:scale-95 transition-all">
-          <i class="fa-solid fa-store text-sm"></i> Tambah Warung / Toko Baru
-        </button>
-        <button type="button" onclick="toggleAdminMenuModal(); toggleAddProductModal();" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-black py-3.5 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-rose-600/20 active:scale-95 transition-all">
-          <i class="fa-solid fa-plus-circle text-sm"></i> Tambah Produk Baru
-        </button>
+      <div id="admin-modal-actions" class="space-y-3 pt-1">
+        <!-- Diisi dinamis via JS berdasarkan role (Admin / Mitra) -->
       </div>
     </div>
   </div>
@@ -324,6 +313,8 @@
         <div><label class="text-[11px] font-extrabold text-slate-700 block mb-1">Nama Warung / Toko *</label><input type="text" id="new-store-name" placeholder="Contoh: Warung Makan Moronene" class="w-full bg-slate-50 rounded-2xl px-4 py-3.5 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium"></div>
         <div><label class="text-[11px] font-extrabold text-slate-700 block mb-1">URL Foto / Logo Warung *</label><input type="text" id="new-store-image" placeholder="https://..." class="w-full bg-slate-50 rounded-2xl px-4 py-3.5 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium"></div>
         <div><label class="text-[11px] font-extrabold text-slate-700 block mb-1">Alamat Warung *</label><input type="text" id="new-store-address" placeholder="Contoh: Jl. Poros Bombana" class="w-full bg-slate-50 rounded-2xl px-4 py-3.5 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium"></div>
+        <div><label class="text-[11px] font-extrabold text-slate-700 block mb-1">WhatsApp Mitra (Login) *</label><input type="tel" id="new-store-phone" placeholder="081234567891" class="w-full bg-slate-50 rounded-2xl px-4 py-3.5 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium"></div>
+        <div><label class="text-[11px] font-extrabold text-slate-700 block mb-1">Password Warung *</label><input type="password" id="new-store-password" placeholder="Password rahasia login" class="w-full bg-slate-50 rounded-2xl px-4 py-3.5 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium"></div>
         <button type="button" onclick="saveNewStore()" class="w-full bg-amber-600 hover:bg-amber-700 active:scale-95 text-white font-black py-4 rounded-2xl shadow-lg transition-all text-xs tracking-wider mt-2">SIMPAN WARUNG BARU KE SHEETS</button>
       </div>
     </div>
@@ -362,16 +353,6 @@
         <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100"><span class="text-[10px] text-slate-400 font-bold uppercase block mb-0.5">Nama Lengkap</span><span id="profile-name" class="font-extrabold text-slate-900 text-sm">--</span></div>
         <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100"><span class="text-[10px] text-slate-400 font-bold uppercase block mb-0.5">Nomor WhatsApp</span><span id="profile-phone" class="font-extrabold text-slate-900 text-sm">--</span></div>
         <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100"><span id="profile-address-label" class="text-[10px] text-slate-400 font-bold uppercase block mb-0.5">Alamat Pengiriman</span><span id="profile-address" class="font-extrabold text-slate-900">--</span></div>
-        
-        <div id="profile-courier-docs" class="hidden space-y-2 pt-1 border-t border-slate-100">
-          <span class="text-[10px] text-slate-500 font-extrabold uppercase block">Dokumen Kurir</span>
-          <div class="grid grid-cols-4 gap-1.5">
-            <div class="text-center"><img id="p-veh" src="" onclick="openImageModal(this.src, 'Foto Kendaraan')" class="w-full h-14 object-cover rounded-xl cursor-pointer border border-slate-200 bg-slate-100 mb-1"><span class="text-[8px] text-slate-500 font-bold">Kendaraan</span></div>
-            <div class="text-center"><img id="p-ktp" src="" onclick="openImageModal(this.src, 'Foto KTP')" class="w-full h-14 object-cover rounded-xl cursor-pointer border border-slate-200 bg-slate-100 mb-1"><span class="text-[8px] text-slate-500 font-bold">KTP</span></div>
-            <div class="text-center"><img id="p-stnk" src="" onclick="openImageModal(this.src, 'Foto STNK')" class="w-full h-14 object-cover rounded-xl cursor-pointer border border-slate-200 bg-slate-100 mb-1"><span class="text-[8px] text-slate-500 font-bold">STNK</span></div>
-            <div class="text-center"><img id="p-sim" src="" onclick="openImageModal(this.src, 'Foto SIM')" class="w-full h-14 object-cover rounded-xl cursor-pointer border border-slate-200 bg-slate-100 mb-1"><span class="text-[8px] text-slate-500 font-bold">SIM</span></div>
-          </div>
-        </div>
       </div>
       <button type="button" onclick="logout()" class="w-full bg-red-50 hover:bg-red-100 text-red-600 font-black py-3 rounded-2xl text-xs transition-all flex items-center justify-center gap-2 active:scale-95"><i class="fa-solid fa-right-from-bracket"></i> KELUAR AKUN</button>
     </div>
@@ -571,7 +552,7 @@
         try {
           currentUser = JSON.parse(activeSession);
           if (currentUser && currentUser.role) {
-            openMainApp(currentUser.role === 'admin' ? "Admin Utama" : (currentUser.role === 'courier' ? "Kurir: " + currentUser.name : currentUser.name));
+            openMainApp(currentUser.role === 'admin' ? "Admin Utama" : (currentUser.role === 'courier' ? "Kurir: " + currentUser.name : (currentUser.role === 'merchant' ? "Mitra: " + currentUser.name : currentUser.name)));
             return;
           }
         } catch(e) {}
@@ -622,17 +603,34 @@
     }
 
     function switchAdminSubTab(sub) {
-      var btnPin = document.getElementById('adminsub-pin'), btnLogin = document.getElementById('adminsub-login'), btnReg = document.getElementById('adminsub-register');
-      var secPin = document.getElementById('admin-subsect-pin'), secLogin = document.getElementById('admin-subsect-login'), secReg = document.getElementById('admin-subsect-register');
+      var btnPin = document.getElementById('adminsub-pin'), btnMerch = document.getElementById('adminsub-merchant'), btnLogin = document.getElementById('adminsub-login'), btnReg = document.getElementById('adminsub-register');
+      var secPin = document.getElementById('admin-subsect-pin'), secMerch = document.getElementById('admin-subsect-merchant'), secLogin = document.getElementById('admin-subsect-login'), secReg = document.getElementById('admin-subsect-register');
 
-      btnPin.className = "flex-1 py-2.5 rounded-xl text-slate-600 transition-all text-center";
-      btnLogin.className = "flex-1 py-2.5 rounded-xl text-slate-600 transition-all text-center";
-      btnReg.className = "flex-1 py-2.5 rounded-xl text-slate-600 transition-all text-center";
-      secPin.classList.add('hidden'); secLogin.classList.add('hidden'); secReg.classList.add('hidden');
+      btnPin.className = "py-2.5 rounded-xl text-slate-600 transition-all text-center";
+      btnMerch.className = "py-2.5 rounded-xl text-slate-600 transition-all text-center";
+      btnLogin.className = "py-2.5 rounded-xl text-slate-600 transition-all text-center";
+      btnReg.className = "py-2.5 rounded-xl text-slate-600 transition-all text-center";
+      secPin.classList.add('hidden'); secMerch.classList.add('hidden'); secLogin.classList.add('hidden'); secReg.classList.add('hidden');
 
-      if (sub === 'pin') { btnPin.className = "flex-1 py-2.5 rounded-xl bg-slate-900 text-white shadow-md transition-all text-center"; secPin.classList.remove('hidden'); }
-      else if (sub === 'login') { btnLogin.className = "flex-1 py-2.5 rounded-xl bg-slate-900 text-white shadow-md transition-all text-center"; secLogin.classList.remove('hidden'); }
-      else if (sub === 'register') { btnReg.className = "flex-1 py-2.5 rounded-xl bg-emerald-600 text-white shadow-md transition-all text-center"; secReg.classList.remove('hidden'); checkRecruitmentStatus(); }
+      if (sub === 'pin') { btnPin.className = "py-2.5 rounded-xl bg-slate-900 text-white shadow-md transition-all text-center"; secPin.classList.remove('hidden'); }
+      else if (sub === 'merchant') { btnMerch.className = "py-2.5 rounded-xl bg-amber-600 text-white shadow-md transition-all text-center"; secMerch.classList.remove('hidden'); }
+      else if (sub === 'login') { btnLogin.className = "py-2.5 rounded-xl bg-slate-900 text-white shadow-md transition-all text-center"; secLogin.classList.remove('hidden'); }
+      else if (sub === 'register') { btnReg.className = "py-2.5 rounded-xl bg-emerald-600 text-white shadow-md transition-all text-center"; secReg.classList.remove('hidden'); checkRecruitmentStatus(); }
+    }
+
+    function loginMerchant() {
+      var phone = document.getElementById('merchant-login-phone').value.trim();
+      var password = document.getElementById('merchant-login-password').value.trim();
+      if (!phone || !password) { alert("Masukkan WhatsApp dan Password Warung."); return; }
+
+      callApiPost('loginMerchant', { phone: phone, password: password }).then(res => {
+        if (res && res.status === "Success") {
+          currentUser = { name: res.name, phone: res.phone, storeId: res.id, role: 'merchant' };
+          safeStorage.setItem('app_active_session', JSON.stringify(currentUser));
+          showToast("Login Mitra Berhasil!");
+          openMainApp("Mitra: " + currentUser.name);
+        } else { alert("❌ " + (res.message || "WhatsApp atau Password warung salah!")); }
+      });
     }
 
     function checkRecruitmentStatus() {
@@ -641,8 +639,10 @@
 
     function applyRecruitmentStatus(status) {
       recruitmentStatus = status;
-      document.getElementById('courier-recruitment-open-box').classList.toggle('hidden', status !== "BUKA");
-      document.getElementById('courier-recruitment-closed-box').classList.toggle('hidden', status === "BUKA");
+      var openBox = document.getElementById('courier-recruitment-open-box');
+      var closedBox = document.getElementById('courier-recruitment-closed-box');
+      if (openBox) openBox.classList.toggle('hidden', status !== "BUKA");
+      if (closedBox) closedBox.classList.toggle('hidden', status === "BUKA");
       updateAdminMenuModalUI();
     }
 
@@ -838,7 +838,8 @@
 
       var isAdmin = currentUser && currentUser.role === 'admin';
       var isCourier = currentUser && currentUser.role === 'courier';
-      var isStaff = isAdmin || isCourier;
+      var isMerchant = currentUser && currentUser.role === 'merchant';
+      var isStaff = isAdmin || isCourier || isMerchant;
 
       var bodyRoot = document.getElementById('body-root');
       var mainApp = document.getElementById('main-app');
@@ -859,7 +860,7 @@
       document.getElementById('admin-control-bar').classList.toggle('hidden', !isStaff);
       document.getElementById('nav-keranjang-btn').classList.toggle('hidden', isStaff);
       document.getElementById('header-cart-btn').classList.toggle('hidden', isStaff);
-      document.getElementById('admin-exclusive-buttons').classList.toggle('hidden', !isAdmin);
+      document.getElementById('admin-exclusive-buttons').classList.toggle('hidden', !isAdmin && !isMerchant);
       document.getElementById('admin-omset-grid').classList.toggle('hidden', !isAdmin);
       
       if (isCourier) {
@@ -869,6 +870,9 @@
         if (courierHeartbeatInterval) clearInterval(courierHeartbeatInterval);
         courierHeartbeatInterval = setInterval(function() { callApiPost('courierHeartbeat', { phone: currentUser.phone }); }, 30000);
         callApiPost('courierHeartbeat', { phone: currentUser.phone });
+      } else if (isMerchant) {
+        document.getElementById('panel-title-text').innerText = "MITRA: " + currentUser.name;
+        document.getElementById('panel-subtitle-text').innerText = "Kelola Menu & Pesanan Toko Anda";
       } else if (isAdmin) {
         document.getElementById('panel-title-text').innerText = "PANEL ADMIN UTAMA";
         document.getElementById('panel-subtitle-text').innerText = "Kelola Toko & Pesanan Masuk";
@@ -906,7 +910,7 @@
     }
 
     function openProfileModal() {
-      if (!currentUser || currentUser.role === 'guest' || currentUser.role === 'admin') { showToast("Fitur profil khusus konsumen & kurir.", false); return; }
+      if (!currentUser || currentUser.role === 'guest' || currentUser.role === 'admin' || currentUser.role === 'merchant') { showToast("Fitur profil khusus konsumen & kurir.", false); return; }
       var docsBox = document.getElementById('profile-courier-docs'), addrLabel = document.getElementById('profile-address-label'), modalTitle = document.getElementById('profile-modal-title');
 
       if (currentUser.role === 'customer') {
@@ -917,22 +921,6 @@
         document.getElementById('profile-address').innerText = currentUser.address || '-';
         docsBox.classList.add('hidden');
         document.getElementById('profile-modal').classList.remove('hidden');
-      } else if (currentUser.role === 'courier') {
-        modalTitle.innerHTML = '<i class="fa-solid fa-motorcycle text-rose-600"></i> Profil Kurir';
-        addrLabel.innerText = "Kendaraan Operasional";
-        callApiGet('getCourierProfile', { phone: currentUser.phone }).then(profile => {
-          if (profile) {
-            document.getElementById('profile-name').innerText = profile.name || '-';
-            document.getElementById('profile-phone').innerText = profile.phone || '-';
-            document.getElementById('profile-address').innerText = profile.vehicle || '-';
-            document.getElementById('p-veh').src = profile.vehiclePhoto || '';
-            document.getElementById('p-ktp').src = profile.ktpPhoto || '';
-            document.getElementById('p-stnk').src = profile.stnkPhoto || '';
-            document.getElementById('p-sim').src = profile.simPhoto || '';
-            docsBox.classList.remove('hidden');
-          }
-          document.getElementById('profile-modal').classList.remove('hidden');
-        });
       }
     }
 
@@ -955,7 +943,8 @@
 
     function applyStoreStatus(status) {
       storeStatus = status;
-      document.getElementById('store-closed-banner').classList.toggle('hidden', status === "BUKA");
+      var closedBanner = document.getElementById('store-closed-banner');
+      if (closedBanner) closedBanner.classList.toggle('hidden', status === "BUKA");
       updateAdminMenuModalUI();
     }
 
@@ -968,18 +957,59 @@
 
     function toggleAdminMenuModal() {
       var modal = document.getElementById('admin-menu-modal');
-      if (modal.classList.contains('hidden')) { updateAdminMenuModalUI(); checkPendingCouriersCount(); modal.classList.remove('hidden'); }
-      else { modal.classList.add('hidden'); }
+      if (modal.classList.contains('hidden')) {
+        updateAdminMenuModalUI();
+        checkPendingCouriersCount();
+        
+        var titleElem = document.getElementById('admin-modal-main-title');
+        var actionsElem = document.getElementById('admin-modal-actions');
+        var isAdmin = currentUser && currentUser.role === 'admin';
+
+        if (isAdmin) {
+          titleElem.innerHTML = '<i class="fa-solid fa-user-shield text-rose-600"></i> Menu Kontrol Admin Utama';
+          actionsElem.innerHTML = '<div class="bg-slate-50 p-4 rounded-2xl flex justify-between items-center border border-slate-100">' +
+                                    '<div><p class="text-xs font-black text-slate-900">Status Toko</p><p class="text-[10px] text-slate-400">Atur buka/tutup toko online.</p></div>' +
+                                    '<button type="button" id="modal-btn-toggle-store" onclick="toggleStoreStatus(); updateAdminMenuModalUI();" class="px-4 py-2.5 rounded-xl text-xs font-black text-white shadow-xs active:scale-95 transition-all">Buka / Tutup</button>' +
+                                  '</div>' +
+                                  '<div class="bg-slate-50 p-4 rounded-2xl flex justify-between items-center border border-slate-100">' +
+                                    '<div><p class="text-xs font-black text-slate-900">Lowongan Kurir</p><p class="text-[10px] text-slate-400">Terima pendaftaran kurir baru.</p></div>' +
+                                    '<button type="button" id="modal-btn-toggle-recruitment" onclick="toggleRecruitmentStatus(); updateAdminMenuModalUI();" class="px-4 py-2.5 rounded-xl text-xs font-black text-white shadow-xs active:scale-95 transition-all">Buka / Tutup</button>' +
+                                  '</div>' +
+                                  '<button type="button" onclick="openCourierApprovalModal()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-black py-3.5 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-md active:scale-95 transition-all">' +
+                                    '<i class="fa-solid fa-users-gear text-sm"></i> Verifikasi Pendaftaran Kurir (<span id="pending-courier-count">0</span>)' +
+                                  '</button>' +
+                                  '<button type="button" onclick="openAllCouriersModal()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-black py-3.5 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-md active:scale-95 transition-all">' +
+                                    '<i class="fa-solid fa-motorcycle text-rose-400 text-sm"></i> Pantau Kurir Aktif & Kontak WA' +
+                                  '</button>' +
+                                  '<button type="button" onclick="toggleAdminMenuModal(); toggleAddStoreModal();" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-black py-3.5 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-amber-600/20 active:scale-95 transition-all">' +
+                                    '<i class="fa-solid fa-store text-sm"></i> Tambah Warung / Toko Baru' +
+                                  '</button>' +
+                                  '<button type="button" onclick="toggleAdminMenuModal(); toggleAddProductModal();" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-black py-3.5 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-rose-600/20 active:scale-95 transition-all">' +
+                                    '<i class="fa-solid fa-plus-circle text-sm"></i> Tambah Produk Baru' +
+                                  '</button>';
+        } else {
+          // Menu Khusus Mitra Warung
+          titleElem.innerHTML = '<i class="fa-solid fa-store text-amber-600"></i> Portal Mitra: ' + currentUser.name;
+          actionsElem.innerHTML = '<button type="button" onclick="toggleAdminMenuModal(); toggleAddProductModal();" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-black py-4 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-rose-600/20 active:scale-95 transition-all">' +
+                                    '<i class="fa-solid fa-plus-circle text-base"></i> Tambah Produk Baru ke Warung Saya' +
+                                  '</button>';
+        }
+        modal.classList.remove('hidden');
+      } else { modal.classList.add('hidden'); }
     }
 
     function updateAdminMenuModalUI() {
       var storeBtn = document.getElementById('modal-btn-toggle-store');
-      storeBtn.className = storeStatus === "BUKA" ? "px-4 py-2.5 rounded-xl text-xs font-black text-white bg-emerald-500 shadow-xs" : "px-4 py-2.5 rounded-xl text-xs font-black text-white bg-red-500 shadow-xs";
-      storeBtn.innerHTML = storeStatus === "BUKA" ? 'Toko Buka' : 'Toko Tutup';
+      if (storeBtn) {
+        storeBtn.className = storeStatus === "BUKA" ? "px-4 py-2.5 rounded-xl text-xs font-black text-white bg-emerald-500 shadow-xs" : "px-4 py-2.5 rounded-xl text-xs font-black text-white bg-red-500 shadow-xs";
+        storeBtn.innerHTML = storeStatus === "BUKA" ? 'Toko Buka' : 'Toko Tutup';
+      }
 
       var recBtn = document.getElementById('modal-btn-toggle-recruitment');
-      recBtn.className = recruitmentStatus === "BUKA" ? "px-4 py-2.5 rounded-xl text-xs font-black text-white bg-emerald-500 shadow-xs" : "px-4 py-2.5 rounded-xl text-xs font-black text-white bg-red-500 shadow-xs";
-      recBtn.innerHTML = recruitmentStatus === "BUKA" ? 'Lowongan Buka' : 'Lowongan Tutup';
+      if (recBtn) {
+        recBtn.className = recruitmentStatus === "BUKA" ? "px-4 py-2.5 rounded-xl text-xs font-black text-white bg-emerald-500 shadow-xs" : "px-4 py-2.5 rounded-xl text-xs font-black text-white bg-red-500 shadow-xs";
+        recBtn.innerHTML = recruitmentStatus === "BUKA" ? 'Lowongan Buka' : 'Lowongan Tutup';
+      }
     }
 
     function getGPSLocation() {
@@ -1017,6 +1047,12 @@
       ]).then(([storesData, productsData]) => {
         allStores = (storesData && storesData.length > 0) ? storesData : mockStoresDefault;
         allProducts = (productsData && productsData.length > 0) ? productsData : mockProductsDefault;
+        
+        // Jika login sebagai merchant, kunci tampilan khusus warung mereka
+        if (currentUser && currentUser.role === 'merchant') {
+          currentStoreId = currentUser.storeId;
+        }
+
         renderStores();
         renderProducts();
         updateAdminStoreDropdown();
@@ -1024,8 +1060,8 @@
     }
 
     var mockStoresDefault = [
-      { id: "store_1", name: "Warung Moronene", image: "https://images.unsplash.com/photo-1552566626-52f8b828add9?w=300", address: "Jl. Poros Bombana" },
-      { id: "store_2", name: "Depot Berkah Rumbia", image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=300", address: "Jl. Kasipute" }
+      { id: "store_1", name: "Warung Moronene", image: "https://images.unsplash.com/photo-1552566626-52f8b828add9?w=300", address: "Jl. Poros Bombana", phone: "081234567891", password: "123" },
+      { id: "store_2", name: "Depot Berkah Rumbia", image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=300", address: "Jl. Kasipute", phone: "081234567892", password: "123" }
     ];
 
     var mockProductsDefault = [
@@ -1038,6 +1074,14 @@
     function renderStores() {
       var container = document.getElementById('stores-container');
       var html = '';
+      var isMerchant = currentUser && currentUser.role === 'merchant';
+      
+      // Jika merchant, sembunyikan horizontal store selector umum dan tampilkan info warung sendiri
+      if (isMerchant) {
+        container.innerHTML = '<div class="bg-amber-500/10 border border-amber-500/30 text-amber-300 px-5 py-3 rounded-2xl text-xs font-bold w-full"><i class="fa-solid fa-store mr-1"></i> Anda sedang mengelola toko: <strong>' + currentUser.name + '</strong></div>';
+        return;
+      }
+
       var isAllActive = currentStoreId === "Semua";
 
       html += '<button type="button" onclick="selectStore(\'Semua\')" class="store-btn shrink-0 w-32 ' + (isAllActive ? 'active-store' : 'bg-white') + ' rounded-2xl p-2.5 flex flex-col items-center text-center shadow-xs border border-slate-200/80 transition-all active:scale-95">' +
@@ -1076,9 +1120,12 @@
     function renderProducts() {
       var container = document.getElementById('product-container');
       var searchVal = document.getElementById('search-input').value.toLowerCase();
+      var isMerchant = currentUser && currentUser.role === 'merchant';
       
       var filtered = allProducts.filter(function(p) {
-        if (currentStoreId === "Semua") {
+        if (isMerchant) {
+          return String(p.storeId) === String(currentUser.storeId) && p.name.toLowerCase().indexOf(searchVal) !== -1;
+        } else if (currentStoreId === "Semua") {
           return (p.terlaris === true) && (p.name.toLowerCase().indexOf(searchVal) !== -1);
         } else {
           var matchesStore = (String(p.storeId) === String(currentStoreId));
@@ -1086,7 +1133,7 @@
         }
       });
 
-      if (currentStoreId === "Semua" && filtered.length === 0 && !searchVal) {
+      if (!isMerchant && currentStoreId === "Semua" && filtered.length === 0 && !searchVal) {
         filtered = allProducts.filter(function(p) {
           return p.name.toLowerCase().indexOf(searchVal) !== -1;
         });
@@ -1101,7 +1148,7 @@
       for (var i = 0; i < filtered.length; i++) {
         var p = filtered[i], pIdStr = String(p.id), qty = cart[pIdStr] ? cart[pIdStr].qty : 0;
         var isAdmin = currentUser && currentUser.role === 'admin';
-        var isStaff = currentUser && (currentUser.role === 'admin' || currentUser.role === 'courier');
+        var isStaff = currentUser && (currentUser.role === 'admin' || currentUser.role === 'courier' || currentUser.role === 'merchant');
         var inStock = (p.inStock !== false);
 
         var storeName = "Mitra";
@@ -1116,7 +1163,7 @@
 
         var actionUI = "";
         if (isStaff) {
-          if (isAdmin) {
+          if (isAdmin || isMerchant) {
             actionUI = '<button type="button" onclick="toggleProductStock(\'' + pIdStr + '\', ' + inStock + ')" class="w-full text-[10px] py-2.5 rounded-xl font-black transition-all shadow-xs ' + (inStock ? "bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30" : "bg-red-500/20 text-red-300 hover:bg-red-500/30") + '">' + (inStock ? "Stok: Tersedia" : "Stok: Habis") + '</button>';
           } else {
             actionUI = '<div class="text-center"><span class="text-[10px] bg-slate-800 text-slate-400 font-bold px-3 py-2 rounded-xl block">Akses Kurir</span></div>';
@@ -1153,7 +1200,9 @@
     function closeImageModal() { document.getElementById('image-modal').classList.add('hidden'); }
 
     function toggleProductStock(productId, currentStatus) {
-      if (!currentUser || currentUser.role !== 'admin') return;
+      var isAdmin = currentUser && currentUser.role === 'admin';
+      var isMerchant = currentUser && currentUser.role === 'merchant';
+      if (!isAdmin && !isMerchant) return;
       for (var i = 0; i < allProducts.length; i++) { if (String(allProducts[i].id) === String(productId)) { allProducts[i].inStock = !currentStatus; break; } }
       renderProducts();
       callApiPost('updateProductStock', { productId: productId, stockStatus: !currentStatus ? "Tersedia" : "Habis" });
@@ -1226,14 +1275,19 @@
       var container = document.getElementById('order-history-container');
       var isAdmin = currentUser && currentUser.role === 'admin';
       var isCourier = currentUser && currentUser.role === 'courier';
-      var isStaff = isAdmin || isCourier;
+      var isMerchant = currentUser && currentUser.role === 'merchant';
+      var isStaff = isAdmin || isCourier || isMerchant;
       
-      document.getElementById('status-tab-title').innerText = isStaff ? (isAdmin ? "PANEL ADMIN UTAMA: SEMUA PESANAN" : "PANEL TUGAS KURIR (AKTIF)") : "RIWAYAT & STATUS PESANAN SAYA";
+      document.getElementById('status-tab-title').innerText = isStaff ? (isAdmin ? "PANEL ADMIN UTAMA: SEMUA PESANAN" : (isMerchant ? "PESANAN MASUK WARUNG SAYA" : "PANEL TUGAS KURIR (AKTIF)")) : "RIWAYAT & STATUS PESANAN SAYA";
 
       callApiGet('getOrders').then(ordersFromSheet => {
         var orders = ordersFromSheet || []; rawOrdersList = orders;
         
-        if (isCourier) {
+        if (isMerchant) {
+          orders = orders.filter(function(o) {
+            return String(o.storeName || "").trim().toLowerCase() === String(currentUser.name || "").trim().toLowerCase();
+          });
+        } else if (isCourier) {
           orders = orders.filter(function(o) {
             var isReadyForDelivery = (o.status === 'Di-ACC (Diproses)' && (!o.courierPhone || o.courierPhone === ''));
             var isAssignedToMe = (o.courierPhone && String(o.courierPhone).trim() === String(currentUser.phone).trim());
@@ -1291,6 +1345,7 @@
 
         var actionButtons = '';
         var isCourier = currentUser && currentUser.role === 'courier';
+        var isMerchant = currentUser && currentUser.role === 'merchant';
         var isAssignedToOther = isCourier && ord.courierPhone && String(ord.courierPhone).trim() !== String(currentUser.phone).trim();
 
         if (isStaff) {
@@ -1302,9 +1357,9 @@
             
             var btnChatWa = cleanPhone ? '<a href="https://wa.me/' + cleanPhone + '" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white font-black py-2.5 px-3 rounded-xl text-[10px] flex items-center justify-center gap-1 shadow-xs"><i class="fa-brands fa-whatsapp"></i> Chat</a>' : '';
             var btnAcc = (ordStatus !== 'Selesai' && ordStatus !== 'Sedang Diantar' && ordStatus !== 'Di-ACC (Diproses)') ? '<button type="button" onclick="updateOrderStatus(\'' + ord.invoiceId + '\', \'Di-ACC (Diproses)\')" class="bg-blue-600 hover:bg-blue-700 text-white font-black py-2.5 px-3 rounded-xl text-[10px] shadow-xs">ACC / Lunas</button>' : '';
-            var btnKirim = (ordStatus !== 'Selesai' && ordStatus !== 'Sedang Diantar') ? '<button type="button" onclick="assignAndDeliver(\'' + ord.invoiceId + '\')" class="bg-rose-600 hover:bg-rose-700 text-white font-black py-2.5 px-3 rounded-xl text-[10px] shadow-xs">Ambil</button>' : '';
+            var btnKirim = (!isMerchant && ordStatus !== 'Selesai' && ordStatus !== 'Sedang Diantar') ? '<button type="button" onclick="assignAndDeliver(\'' + ord.invoiceId + '\')" class="bg-rose-600 hover:bg-rose-700 text-white font-black py-2.5 px-3 rounded-xl text-[10px] shadow-xs">Ambil</button>' : '';
             var btnGps = (ordStatus === 'Sedang Diantar' && (currentUser.role === 'admin' || ord.courierPhone === currentUser.phone)) ? '<button type="button" onclick="startCourierGPSBroadcaster(\'' + ord.invoiceId + '\')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-black py-2.5 px-3 rounded-xl text-[10px] shadow-xs">GPS</button>' : '';
-            var btnSelesai = (ordStatus === 'Sedang Diantar') ? '<button type="button" onclick="promptCompleteOrder(\'' + ord.invoiceId + '\')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-black py-2.5 px-3 rounded-xl text-[10px] shadow-xs">Selesai (+Foto)</button>' : '';
+            var btnSelesai = (!isMerchant && ordStatus === 'Sedang Diantar') ? '<button type="button" onclick="promptCompleteOrder(\'' + ord.invoiceId + '\')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-black py-2.5 px-3 rounded-xl text-[10px] shadow-xs">Selesai (+Foto)</button>' : '';
             var btnPeta = '<button type="button" onclick="openLiveTracking(\'' + ord.invoiceId + '\', ' + (ord.lat || 'null') + ', ' + (ord.lng || 'null') + ')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold py-2.5 px-3 rounded-xl text-[10px]">Peta</button>';
             var btnCetak = '<button type="button" onclick="openReceiptModal(\'' + ord.invoiceId + '\')" class="bg-amber-600 hover:bg-amber-700 text-white font-black py-2.5 px-3 rounded-xl text-[10px] shadow-xs">Struk</button>';
             var btnBuktiFoto = ord.deliveryProof ? '<button type="button" onclick="openImageModal(\'' + ord.deliveryProof.replace(/'/g, "\\'") + '\', \'Bukti Tiba: ' + ord.invoiceId + '\')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-black py-2.5 px-3 rounded-xl text-[10px] shadow-xs">Foto Bukti</button>' : '';
@@ -1319,7 +1374,6 @@
 
         var courierInfoBadge = ord.courierName ? '<p class="text-[10px] text-rose-300 font-bold bg-rose-500/10 px-3 py-1.5 rounded-xl flex items-center gap-1.5 border border-rose-500/20"><i class="fa-solid fa-motorcycle text-rose-400"></i> Kurir: <strong>' + ord.courierName + '</strong></p>' : '';
         
-        // Kotak Penjemputan Toko yang jelas untuk kurir/staff
         var storePickupBox = isStaff ? '<div class="bg-amber-500/10 border border-amber-500/30 p-3 rounded-2xl space-y-1">' +
                                          '<p class="text-[10px] text-amber-400 font-black uppercase"><i class="fa-solid fa-store mr-1"></i> Titik Penjemputan (Warung):</p>' +
                                          '<p class="text-xs font-extrabold text-white">' + (ord.storeName || 'Warung Mitra') + '</p>' +
@@ -1420,10 +1474,15 @@
     function startBackgroundNotifier() {
       if (adminNotifierInterval) clearInterval(adminNotifierInterval);
       adminNotifierInterval = setInterval(function() {
-        var isStaff = currentUser && (currentUser.role === 'admin' || currentUser.role === 'courier');
+        var isStaff = currentUser && (currentUser.role === 'admin' || currentUser.role === 'courier' || currentUser.role === 'merchant');
         if (isStaff) {
           callApiGet('getOrders').then(orders => {
-            var pending = (orders || []).filter(o => o.status === 'Menunggu ACC' || String(o.status).includes('Menunggu Verifikasi QRIS'));
+            var pending = (orders || []).filter(o => {
+              if (currentUser.role === 'merchant') {
+                return String(o.storeName || "").trim().toLowerCase() === String(currentUser.name || "").trim().toLowerCase() && o.status === 'Menunggu ACC';
+              }
+              return o.status === 'Menunggu ACC' || String(o.status).includes('Menunggu Verifikasi QRIS');
+            });
             var badge = document.getElementById('admin-badge-count');
             if (badge) { badge.innerText = pending.length + " PESANAN BARU"; badge.classList.toggle('hidden', pending.length === 0); }
             var dot = document.getElementById('nav-status-dot');
@@ -1459,7 +1518,6 @@
       var subtotal = 0, itemsArr = [];
       for (var i = 0; i < cartList.length; i++) { subtotal += cartList[i].price * cartList[i].qty; itemsArr.push(cartList[i].name + " (" + cartList[i].qty + "x)"); }
       
-      // Ambil nama warung dari item pertama di keranjang
       var targetStoreId = cartList[0] ? cartList[0].storeId : "";
       var targetStoreName = "Warung Mitra";
       for (var s = 0; s < allStores.length; s++) {
@@ -1530,28 +1588,37 @@
       var select = document.getElementById('new-prod-store');
       if (!select) return;
       var html = '';
+      var isMerchant = currentUser && currentUser.role === 'merchant';
+      
       for (var i = 0; i < allStores.length; i++) {
         var s = allStores[i];
         if (s.id !== "Semua") {
+          if (isMerchant && s.id !== currentUser.storeId) continue;
           html += '<option value="' + s.id + '">' + s.name + '</option>';
         }
       }
       select.innerHTML = html;
+      if (isMerchant) {
+        select.value = currentUser.storeId;
+        select.disabled = true;
+      }
     }
 
     function saveNewStore() {
       var name = document.getElementById('new-store-name').value.trim();
       var image = document.getElementById('new-store-image').value.trim();
       var address = document.getElementById('new-store-address').value.trim();
-      if (!name || !image || !address) { alert("Lengkapi semua data warung!"); return; }
+      var phone = document.getElementById('new-store-phone').value.trim();
+      var password = document.getElementById('new-store-password').value.trim();
+      if (!name || !image || !address || !phone || !password) { alert("Lengkapi semua data warung termasuk WhatsApp & Password login!"); return; }
 
-      var newStore = { id: "store_" + Date.now(), name: name, image: image, address: address };
+      var newStore = { id: "store_" + Date.now(), name: name, image: image, address: address, phone: phone, password: password };
       allStores.push(newStore);
       callApiPost('saveStore', { store: newStore });
       toggleAddStoreModal();
       renderStores();
       updateAdminStoreDropdown();
-      showToast("Warung mitra berhasil ditambahkan!");
+      showToast("Warung mitra & akun login berhasil ditambahkan!");
     }
 
     function saveNewProduct() {
