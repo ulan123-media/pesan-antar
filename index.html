@@ -221,16 +221,16 @@
         </div>
       </div>
 
-      <!-- DAFTAR WARUNG / TOKO MITRA (BISA DIGESER HORIZONTAL, FOTO KOTAK PERSEGI PANJANG) -->
+      <!-- DAFTAR WARUNG / TOKO MITRA (BISA DIGESER HORIZONTAL) -->
       <div class="mb-6">
         <h3 class="text-[11px] font-black uppercase text-slate-400 tracking-wider mb-3 px-6">DAFTAR WARUNG / TOKO MITRA</h3>
         <div id="stores-container" class="flex overflow-x-auto gap-3 px-6 pb-2 scroll-smooth">
-          <!-- Diisi otomatis via JS dengan bentuk persegi panjang & bisa digeser -->
+          <!-- Diisi otomatis via JS -->
         </div>
       </div>
 
       <div class="px-6 mb-8">
-        <h3 id="current-store-title" class="text-[11px] font-black uppercase text-slate-400 tracking-wider mb-3.5">DAFTAR PRODUK (SEMUA WARUNG)</h3>
+        <h3 id="current-store-title" class="text-[11px] font-black uppercase text-slate-400 tracking-wider mb-3.5">PRODUK TERLARIS (SEMUA WARUNG)</h3>
         <div id="product-container" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"></div>
       </div>
     </div>
@@ -315,7 +315,7 @@
     </div>
   </div>
 
-  <!-- MODAL TAMBAH WARUNG / TOKO BARU (KHUSUS ADMIN UTAMA) -->
+  <!-- MODAL TAMBAH WARUNG / TOKO BARU -->
   <div id="add-store-modal" class="fixed inset-0 bg-slate-900/60 z-50 flex items-end justify-center hidden backdrop-blur-sm transition-all">
     <div class="bg-white rounded-t-[32px] w-full p-6 max-h-[85vh] overflow-y-auto relative animate-slide-up shadow-2xl max-w-md mx-auto">
       <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-4"></div>
@@ -1029,23 +1029,21 @@
     ];
 
     var mockProductsDefault = [
-      { id: "1", name: "Jus Jeruk Segar", price: 10000, storeId: "store_1", image: "https://images.unsplash.com/photo-1613478223719-2ab802602423?w=300", desc: "Perasan murni segar", inStock: true },
-      { id: "2", name: "Burger Sapi Spesial", price: 25000, storeId: "store_2", image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=300", desc: "Daging tebal & keju", inStock: true }
+      { id: "1", name: "Jus Jeruk Segar", price: 10000, storeId: "store_1", image: "https://images.unsplash.com/photo-1613478223719-2ab802602423?w=300", desc: "Perasan murni segar", inStock: true, terlaris: true },
+      { id: "2", name: "Burger Sapi Spesial", price: 25000, storeId: "store_2", image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=300", desc: "Daging tebal & keju", inStock: true, terlaris: true }
     ];
 
     function formatRupiah(n) { return new Intl.NumberFormat("id-ID").format(n); }
 
-    // RENDER WARUNG: BENTUK KOTAK PERSEGI PANJANG & BISA DIGESER (HORIZONTAL)
     function renderStores() {
       var container = document.getElementById('stores-container');
       var html = '';
       var isAllActive = currentStoreId === "Semua";
 
-      // Tombol Semua Warung
       html += '<button type="button" onclick="selectStore(\'Semua\')" class="store-btn shrink-0 w-32 ' + (isAllActive ? 'active-store' : 'bg-white') + ' rounded-2xl p-2.5 flex flex-col items-center text-center shadow-xs border border-slate-200/80 transition-all active:scale-95">' +
                 '<div class="w-full h-16 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center mb-2 text-xl shadow-inner"><i class="fa-solid fa-store"></i></div>' +
                 '<span class="text-[11px] font-black text-slate-800 truncate w-full">Semua Warung</span>' +
-                '<span class="text-[9px] text-slate-400">Pusat</span>' +
+                '<span class="text-[9px] text-slate-400">Terlaris</span>' +
               '</button>';
 
       for (var i = 0; i < allStores.length; i++) {
@@ -1053,7 +1051,6 @@
         if (s.id === "Semua") continue;
         var isActive = currentStoreId === s.id;
         
-        // Kotak Persegi Panjang untuk Foto Toko/Warung agar Jelas
         html += '<button type="button" onclick="selectStore(\'' + s.id + '\')" class="store-btn shrink-0 w-32 ' + (isActive ? 'active-store' : 'bg-white') + ' rounded-2xl p-2.5 flex flex-col items-center text-center shadow-xs border border-slate-200/80 transition-all active:scale-95">' +
                   '<div class="w-full h-16 rounded-xl overflow-hidden bg-slate-100 mb-2 shadow-inner border border-slate-200"><img src="' + s.image + '" class="w-full h-full object-cover"></div>' +
                   '<span class="text-[11px] font-black text-slate-800 truncate w-full">' + s.name + '</span>' +
@@ -1065,26 +1062,42 @@
 
     function selectStore(storeId) {
       currentStoreId = storeId;
-      var storeTitle = "Semua Warung";
+      var storeTitle = "Produk Terlaris";
       if (storeId !== "Semua") {
         for (var i = 0; i < allStores.length; i++) {
           if (allStores[i].id === storeId) { storeTitle = allStores[i].name; break; }
         }
       }
-      document.getElementById('current-store-title').innerText = "DAFTAR PRODUK (" + storeTitle.toUpperCase() + ")";
+      document.getElementById('current-store-title').innerText = (storeId === "Semua" ? "PRODUK TERLARIS (SEMUA WARUNG)" : "DAFTAR PRODUK (" + storeTitle.toUpperCase() + ")");
       renderStores();
       renderProducts();
     }
 
+    // LOGIKA RENDER PRODUK DENGAN FITUR OTOMATIS TERLARIS DI MENU "SEMUA WARUNG"
     function renderProducts() {
       var container = document.getElementById('product-container');
       var searchVal = document.getElementById('search-input').value.toLowerCase();
+      
       var filtered = allProducts.filter(function(p) {
-        var matchesStore = (currentStoreId === "Semua") || (String(p.storeId) === String(currentStoreId));
-        return matchesStore && p.name.toLowerCase().indexOf(searchVal) !== -1;
+        if (currentStoreId === "Semua") {
+          return (p.terlaris === true) && (p.name.toLowerCase().indexOf(searchVal) !== -1);
+        } else {
+          var matchesStore = (String(p.storeId) === String(currentStoreId));
+          return matchesStore && p.name.toLowerCase().indexOf(searchVal) !== -1;
+        }
       });
 
-      if (filtered.length === 0) { container.innerHTML = '<div class="bg-white/5 rounded-3xl p-6 text-center text-slate-400 font-bold text-xs shadow-xs border border-slate-800 col-span-full">Tidak ada produk di warung ini.</div>'; return; }
+      // Fallback cerdas: Jika belum ada produk yang dicentang terlaris di sheets, tampilkan semua produk
+      if (currentStoreId === "Semua" && filtered.length === 0 && !searchVal) {
+        filtered = allProducts.filter(function(p) {
+          return p.name.toLowerCase().indexOf(searchVal) !== -1;
+        });
+      }
+
+      if (filtered.length === 0) { 
+        container.innerHTML = '<div class="bg-white/5 rounded-3xl p-6 text-center text-slate-400 font-bold text-xs shadow-xs border border-slate-800 col-span-full">Tidak ada produk ditemukan.</div>'; 
+        return; 
+      }
 
       var html = '';
       for (var i = 0; i < filtered.length; i++) {
@@ -1092,6 +1105,16 @@
         var isAdmin = currentUser && currentUser.role === 'admin';
         var isStaff = currentUser && (currentUser.role === 'admin' || currentUser.role === 'courier');
         var inStock = (p.inStock !== false);
+
+        var storeName = "Mitra";
+        for (var s = 0; s < allStores.length; s++) {
+          if (String(allStores[s].id) === String(p.storeId)) {
+            storeName = allStores[s].name;
+            break;
+          }
+        }
+
+        var storeBadgeTag = (currentStoreId === "Semua") ? '<span class="absolute top-2 left-2 bg-slate-900/80 backdrop-blur-md text-amber-300 text-[9px] font-black px-2 py-1 rounded-lg z-10 shadow-md border border-white/10"><i class="fa-solid fa-store mr-1"></i> ' + storeName + '</span>' : '';
 
         var actionUI = "";
         if (isStaff) {
@@ -1109,7 +1132,14 @@
         }
         
         html += '<div class="bg-white rounded-3xl p-3.5 shadow-xs hover:shadow-md border border-slate-200/60 flex flex-col justify-between transition-all duration-300 ' + (!inStock ? 'opacity-75 bg-slate-50' : '') + '">' +
-                  '<div><div class="relative overflow-hidden rounded-2xl mb-2.5 bg-slate-100 aspect-square"><img src="' + p.image + '" onclick="openImageModal(\'' + p.image.replace(/'/g, "\\'") + '\', \'' + p.name.replace(/'/g, "\\'") + '\')" class="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300"></div><h4 class="font-extrabold text-slate-900 text-xs mb-1 truncate">' + p.name + '</h4><p class="text-[10px] text-slate-400 line-clamp-2 mb-3 font-medium">' + p.desc + '</p></div>' +
+                  '<div>' +
+                    '<div class="relative overflow-hidden rounded-2xl mb-2.5 bg-slate-100 aspect-square">' +
+                      storeBadgeTag +
+                      '<img src="' + p.image + '" onclick="openImageModal(\'' + p.image.replace(/'/g, "\\'") + '\', \'' + p.name.replace(/'/g, "\\'") + '\')" class="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300">' +
+                    '</div>' +
+                    '<h4 class="font-extrabold text-slate-900 text-xs mb-1 truncate">' + p.name + '</h4>' +
+                    '<p class="text-[10px] text-slate-400 line-clamp-2 mb-3 font-medium">' + p.desc + '</p>' +
+                  '</div>' +
                   '<div><div class="text-xs font-black text-rose-600 mb-2.5">Rp ' + formatRupiah(p.price) + '</div>' + actionUI + '</div>' +
                 '</div>';
       }
@@ -1516,7 +1546,7 @@
       var desc = document.getElementById('new-prod-desc').value.trim();
       if (!name || isNaN(price) || !storeId) { alert("Lengkapi data produk dengan benar!"); return; }
 
-      var newProd = { id: String(Date.now()), name: name, price: price, storeId: storeId, image: image || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300", desc: desc || "", inStock: true };
+      var newProd = { id: String(Date.now()), name: name, price: price, storeId: storeId, image: image || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300", desc: desc || "", inStock: true, terlaris: true };
       allProducts.unshift(newProd);
       callApiPost('saveProduct', { product: newProd });
       toggleAddProductModal(); renderProducts(); showToast("Produk baru tersimpan!");
