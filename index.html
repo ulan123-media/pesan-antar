@@ -617,7 +617,7 @@
     var lastSentTime = 0;
     var activeCompletionInvoiceId = null;
     var userActiveBalance = 0;
-    var lastPendingCount = -1; // Variabel pelacak jumlah pesanan sebelumnya untuk notifikasi suara
+    var lastPendingCount = -1;
 
     document.addEventListener("DOMContentLoaded", function() {
       var activeSession = safeStorage.getItem('app_active_session');
@@ -1553,26 +1553,27 @@
       if (!currentUser) return;
 
       if (currentUser.role === 'admin') {
-        var totalOmset = 0, todayCount = 0;
+        var totalOmset = 0, totalOrdersCount = orders.length;
         for (var i = 0; i < orders.length; i++) {
-          if (orders[i].status === 'Selesai') {
+          if (orders[i].status === 'Selesai' || String(orders[i].status).includes('LUNAS')) {
             totalOmset += (orders[i].total || 0);
-            todayCount++;
           }
         }
         label1.innerText = "Omset";
         val1.innerText = "Rp " + formatRupiah(totalOmset);
-        label2.innerText = "Pesanan";
-        val2.innerText = todayCount;
+        label2.innerText = "Total Pesanan";
+        val2.innerText = totalOrdersCount;
       } 
       else if (currentUser.role === 'merchant') {
         var merchantName = String(currentUser.name || "").trim().toLowerCase();
         var storeOmset = 0, storeCount = 0;
         for (var i = 0; i < orders.length; i++) {
           var sName = String(orders[i].storeName || "").trim().toLowerCase();
-          if (sName === merchantName && orders[i].status === 'Selesai') {
-            storeOmset += (orders[i].total || 0);
+          if (sName === merchantName) {
             storeCount++;
+            if (orders[i].status === 'Selesai') {
+              storeOmset += (orders[i].total || 0);
+            }
           }
         }
         userActiveBalance = storeOmset;
@@ -1906,7 +1907,6 @@
       callApiPost('updateOrderStatus', { invoiceId: invoiceId, newStatus: newStatus }).then(() => { showToast("Status diperbarui!"); renderOrderStatus(); });
     }
 
-    // Fungsi untuk menghasilkan suara beep/alarm notifikasi pesanan baru
     function playNotificationSound() {
       try {
         var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -1915,7 +1915,7 @@
         var osc1 = audioCtx.createOscillator();
         var gain1 = audioCtx.createGain();
         osc1.type = 'sine';
-        osc1.frequency.setValueAtTime(587.33, now); // Nada D5
+        osc1.frequency.setValueAtTime(587.33, now);
         gain1.gain.setValueAtTime(0.2, now);
         osc1.connect(gain1);
         gain1.connect(audioCtx.destination);
@@ -1925,40 +1925,65 @@
         var osc2 = audioCtx.createOscillator();
         var gain2 = audioCtx.createGain();
         osc2.type = 'sine';
-        osc2.frequency.setValueAtTime(880, now + 0.2); // Nada A5
+        osc2.frequency.setValueAtTime(880, now + 0.2);
         gain2.gain.setValueAtTime(0.2, now + 0.2);
         osc2.connect(gain2);
         gain2.connect(audioCtx.destination);
         osc2.start(now + 0.2);
         osc2.stop(now + 0.35);
       } catch (e) {
-        console.log("Audio dibatasi oleh kebijakan browser:", e);
+        console.log("Audio dibatasi:", e);
       }
     }
 
     function startBackgroundNotifier() {
       if (adminNotifierInterval) clearInterval(adminNotifierInterval);
       adminNotifierInterval = setInterval(function() {
-        var isStaff = currentUser && (currentUser.role === 'admin' || currentUser.role === 'courier' || currentUser.role === 'merchant');
-        if (isStaff) {
+        if (!currentUser) return;
+        var role = currentUser.role;
+        if (role === 'admin' || role === 'merchant' || role === 'courier') {
           callApiGet('getOrders').then(orders => {
-            var pending = (orders || []).filter(o => {
-              if (currentUser.role === 'merchant') {
-                return String(o.storeName || "").trim().toLowerCase() === String(currentUser.name || "").trim().toLowerCase() && o.status === 'Menunggu ACC';
-              }
-              return o.status === 'Menunggu ACC' || String(o.status).includes('Menunggu Verifikasi QRIS');
-            });
-            var badge = document.getElementById('admin-badge-count');
-            if (badge) { badge.innerText = pending.length + " PESANAN BARU"; badge.classList.toggle('hidden', pending.length === 0); }
-            var dot = document.getElementById('nav-status-dot');
-            if (dot) dot.classList.toggle('hidden', pending.length === 0);
+            orders = orders || [];
+            if (role === 'admin') {
+              var pending = orders.filter(o => o.status === 'Menunggu ACC' || String(o.status).includes('Menunggu Verifikasi QRIS') || String(o.status).includes('Menunggu Pembayaran'));
+              var badge = document.getElementById('admin-badge-count');
+              if (badge) { badge.innerText = pending.length + " PESANAN BARU"; badge.classList.toggle('hidden', pending.length === 0); }
+              var dot = document.getElementById('nav-status-dot');
+              if (dot) dot.classList.toggle('hidden', pending.length === 0);
 
-            // Jika jumlah pesanan pending bertambah (ada pesanan baru masuk), bunyikan suara dan tampilkan toast!
-            if (lastPendingCount !== -1 && pending.length > lastPendingCount) {
-              playNotificationSound();
-              showToast("🔔 Pesanan Baru Masuk!", false);
+              if (lastPendingCount !== -1 && pending.length > lastPendingCount) {
+                playNotificationSound();
+                showToast("🔔 Pesanan Baru Masuk!", false);
+              }
+              lastPendingCount = pending.length;
+            } 
+            else if (role === 'merchant') {
+              var merchantName = String(currentUser.name || "").trim().toLowerCase();
+              var pending = orders.filter(o => String(o.storeName || "").trim().toLowerCase() === merchantName && (o.status === 'Menunggu ACC' || String(o.status).includes('Menunggu Verifikasi QRIS') || String(o.status).includes('Menunggu Pembayaran')));
+              var badge = document.getElementById('admin-badge-count');
+              if (badge) { badge.innerText = pending.length + " PESANAN BARU"; badge.classList.toggle('hidden', pending.length === 0); }
+              var dot = document.getElementById('nav-status-dot');
+              if (dot) dot.classList.toggle('hidden', pending.length === 0);
+
+              if (lastPendingCount !== -1 && pending.length > lastPendingCount) {
+                playNotificationSound();
+                showToast("🔔 Pesanan Baru Masuk untuk Warung!", false);
+              }
+              lastPendingCount = pending.length;
             }
-            lastPendingCount = pending.length;
+            else if (role === 'courier') {
+              var availableForDelivery = orders.filter(o => o.status === 'Di-ACC (Diproses)' && (!o.courierPhone || o.courierPhone === ''));
+              var badge = document.getElementById('admin-badge-count');
+              if (badge) { badge.innerText = availableForDelivery.length + " ANTARAN BARU"; badge.classList.toggle('hidden', availableForDelivery.length === 0); }
+              var dot = document.getElementById('nav-status-dot');
+              if (dot) dot.classList.toggle('hidden', availableForDelivery.length === 0);
+
+              if (lastPendingCount !== -1 && availableForDelivery.length > lastPendingCount) {
+                playNotificationSound();
+                showToast("🔔 Ada Antaran Pesanan Baru Siap Diantar!", false);
+              }
+              lastPendingCount = availableForDelivery.length;
+            }
           }).catch(e => {});
         }
       }, 3000);
