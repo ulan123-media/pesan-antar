@@ -619,6 +619,13 @@
     var userActiveBalance = 0;
     var lastPendingCount = -1;
 
+    function normalizePhone(phone) {
+      var cleaned = String(phone || '').replace(/\D/g, '');
+      if (cleaned.startsWith('62')) cleaned = cleaned.substring(2);
+      if (cleaned.startsWith('0')) cleaned = cleaned.substring(1);
+      return cleaned;
+    }
+
     document.addEventListener("DOMContentLoaded", function() {
       var activeSession = safeStorage.getItem('app_active_session');
       if (activeSession) {
@@ -1534,7 +1541,7 @@
           // Admin
         } else if (currentUser && currentUser.role !== 'guest') {
           orders = orders.filter(function(o) {
-            return currentUser.phone && o.phone ? String(o.phone).trim() === String(currentUser.phone).trim() : String(o.name).trim().toLowerCase() === String(currentUser.name).trim().toLowerCase();
+            return currentUser.phone && o.phone ? normalizePhone(o.phone) === normalizePhone(currentUser.phone) : String(o.name).trim().toLowerCase() === String(currentUser.name).trim().toLowerCase();
           });
         } else if (currentUser && currentUser.role === 'guest') { orders = []; }
         
@@ -1994,7 +2001,7 @@
       customerNotifierInterval = setInterval(function() {
         if (currentUser && currentUser.role === 'customer') {
           callApiGet('getOrders').then(orders => {
-            var my = orders.filter(o => String(o.phone).trim() === String(currentUser.phone).trim());
+            var my = orders.filter(o => normalizePhone(o.phone) === normalizePhone(currentUser.phone));
             if (my.length > 0 && lastKnownCustomerOrderStatus && lastKnownCustomerOrderStatus !== my[0].status) {
               showToast("🔔 Status pesanan berubah: " + my[0].status, false);
               renderOrderStatus();
