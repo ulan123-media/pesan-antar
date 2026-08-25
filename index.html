@@ -565,7 +565,7 @@
       try {
         if (action === 'getStores') {
           let { data: stores } = await supabase.from('stores').select('*');
-          let { data: setting } = await supabase.from('settings').select('*').eq('key', 'store_order').single();
+          let { data: setting } = await supabase.from('settings').select('*').eq('key', 'store_order').maybeSingle();
           
           let formattedStores = (stores || []).map(s => ({
             id: s.id, name: s.name, image: s.image, address: s.address, phone: s.phone, password: s.password
@@ -595,11 +595,11 @@
           }));
         }
         else if (action === 'getStoreStatus') {
-          let { data } = await supabase.from('settings').select('value').eq('key', 'store_status').single();
+          let { data } = await supabase.from('settings').select('value').eq('key', 'store_status').maybeSingle();
           return data ? data.value : 'BUKA';
         }
         else if (action === 'getRecruitmentStatus') {
-          let { data } = await supabase.from('settings').select('value').eq('key', 'recruitment_status').single();
+          let { data } = await supabase.from('settings').select('value').eq('key', 'recruitment_status').maybeSingle();
           return data ? data.value : 'TUTUP';
         }
         else if (action === 'getPendingCouriers') {
@@ -693,7 +693,6 @@
         else if (action === 'registerCustomer') {
           let c = data.customer;
           let phoneClean = normalizePhone(c.phone);
-          // Ganti .single() menjadi .maybeSingle()
           let { data: existing } = await supabase.from('customers').select('*').eq('phone', phoneClean).maybeSingle();
           if (existing) return { status: "Exists" };
           await supabase.from('customers').insert({ phone: phoneClean, time: new Date().toISOString(), name: c.name, address: c.address, password: c.password });
@@ -701,7 +700,6 @@
         }
         else if (action === 'loginCustomer') {
           let phoneClean = normalizePhone(data.phone);
-          // Ganti .single() menjadi .maybeSingle()
           let { data: user } = await supabase.from('customers').select('*').eq('phone', phoneClean).maybeSingle();
           if (!user) return { status: "Error", message: "Nomor tidak terdaftar!" };
           if (String(user.password) === String(data.password)) return { status: "Success", name: user.name, phone: user.phone, address: user.address };
