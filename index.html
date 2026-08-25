@@ -324,14 +324,21 @@
     </div>
   </div>
 
-  <!-- MODAL PERSETUJUAN PENCAIRAN ADMIN -->
+  <!-- MODAL PERSETUJUAN PENCAIRAN ADMIN (DENGAN TAB RIWAYAT) -->
   <div id="admin-withdrawals-modal" class="fixed inset-0 bg-slate-900/70 z-50 flex items-center justify-center hidden backdrop-blur-sm p-4">
-    <div class="bg-white rounded-3xl w-full max-w-md p-6 shadow-2xl space-y-4 max-h-[85vh] overflow-y-auto animate-slide-up text-slate-800">
+    <div class="bg-white rounded-3xl w-full max-w-lg p-6 shadow-2xl space-y-4 max-h-[85vh] overflow-y-auto animate-slide-up text-slate-800">
       <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-        <h3 class="text-sm font-black text-slate-900 flex items-center gap-2"><i class="fa-solid fa-money-check-dollar text-emerald-600"></i> Verifikasi Permintaan Tarik Saldo</h3>
+        <h3 class="text-sm font-black text-slate-900 flex items-center gap-2"><i class="fa-solid fa-money-check-dollar text-emerald-600"></i> Kelola Permintaan Tarik Saldo</h3>
         <button type="button" onclick="closeAdminWithdrawalsModal()" class="w-7 h-7 bg-slate-100 rounded-full text-slate-500 flex items-center justify-center text-xs font-bold"><i class="fa-solid fa-xmark"></i></button>
       </div>
-      <div id="admin-withdrawals-container" class="space-y-3"><p class="text-xs text-slate-400 text-center py-4">Memuat data permintaan...</p></div>
+      
+      <!-- SUBTAB ADMIN WITHDRAWAL -->
+      <div class="flex bg-slate-100 p-1 rounded-2xl text-xs font-bold">
+        <button type="button" id="admin-w-tab-pending" onclick="switchAdminWithdrawalTab('pending')" class="flex-1 py-2.5 rounded-xl bg-emerald-600 text-white shadow-sm transition-all text-center">Menunggu Transfer</button>
+        <button type="button" id="admin-w-tab-history" onclick="switchAdminWithdrawalTab('history')" class="flex-1 py-2.5 rounded-xl text-slate-600 transition-all text-center">Semua Riwayat Transaksi</button>
+      </div>
+
+      <div id="admin-withdrawals-container" class="space-y-3"><p class="text-xs text-slate-400 text-center py-4">Memuat data...</p></div>
     </div>
   </div>
 
@@ -370,7 +377,7 @@
     </div>
   </div>
 
-  <!-- MODAL TAMBAH WARUNG / TOKO BARU (DENGAN UPLOAD FOTO HP) -->
+  <!-- MODAL TAMBAH WARUNG / TOKO BARU -->
   <div id="add-store-modal" class="fixed inset-0 bg-slate-900/60 z-50 flex items-end justify-center hidden backdrop-blur-sm transition-all">
     <div class="bg-white rounded-t-[32px] w-full p-6 max-h-[85vh] overflow-y-auto relative animate-slide-up shadow-2xl max-w-md mx-auto">
       <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-4"></div>
@@ -470,7 +477,7 @@
     </div>
   </div>
 
-  <!-- MODAL TAMBAH PRODUK (DENGAN UPLOAD FOTO HP) -->
+  <!-- MODAL TAMBAH PRODUK -->
   <div id="add-product-modal" class="fixed inset-0 bg-slate-900/60 z-50 flex items-end justify-center hidden backdrop-blur-sm transition-all">
     <div class="bg-white rounded-t-[32px] w-full p-6 max-h-[85vh] overflow-y-auto relative animate-slide-up shadow-2xl max-w-md mx-auto">
       <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-4"></div>
@@ -1073,7 +1080,7 @@
                                     '<i class="fa-solid fa-motorcycle text-rose-400 text-sm"></i> Pantau Kurir Aktif & Kontak WA' +
                                   '</button>' +
                                   '<button type="button" onclick="openAdminWithdrawalsModal()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-3.5 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20 active:scale-95 transition-all">' +
-                                    '<i class="fa-solid fa-money-check-dollar text-sm"></i> Verifikasi Permintaan Tarik Saldo' +
+                                    '<i class="fa-solid fa-money-check-dollar text-sm"></i> Verifikasi & Riwayat Tarik Saldo' +
                                   '</button>' +
                                   '<button type="button" onclick="toggleAdminMenuModal(); toggleAddStoreModal();" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-black py-3.5 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-amber-600/20 active:scale-95 transition-all">' +
                                     '<i class="fa-solid fa-store text-sm"></i> Tambah Warung / Toko Baru' +
@@ -1533,38 +1540,69 @@
 
     function openAdminWithdrawalsModal() {
       toggleAdminMenuModal();
-      var container = document.getElementById('admin-withdrawals-container');
-      container.innerHTML = '<p class="text-xs text-slate-400 text-center py-4">Memuat data permintaan...</p>';
       document.getElementById('admin-withdrawals-modal').classList.remove('hidden');
-
-      callApiGet('getWithdrawalRequests').then(list => {
-        if (!list || list.length === 0) { container.innerHTML = '<div class="text-center py-6 text-slate-400 text-xs font-bold"><p>Belum ada permintaan tarik saldo.</p></div>'; return; }
-        var html = '';
-        for (var i = 0; i < list.length; i++) {
-          var w = list[i];
-          html += '<div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 space-y-2">' +
-                    '<div class="flex justify-between items-center"><span class="font-black text-xs text-slate-900">' + w.name + ' (' + w.role.toUpperCase() + ')</span><span class="bg-amber-100 text-amber-800 text-[9px] font-black px-2 py-0.5 rounded-full">' + w.status + '</span></div>' +
-                    '<p class="text-xs font-black text-emerald-600">Nominal: Rp ' + formatRupiah(w.amount) + '</p>' +
-                    '<p class="text-[11px] text-slate-600"><strong>Metode:</strong> ' + w.method + ' - ' + w.accountInfo + '</p>' +
-                    '<div class="pt-2 flex gap-2">' +
-                      '<button type="button" onclick="approveWithdrawal(\'' + w.phone + '\', ' + w.amount + ')" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-black py-2.5 rounded-xl text-xs active:scale-95 shadow-xs"><i class="fa-solid fa-check mr-1"></i> Tandai Selesai / Ditransfer</button>' +
-                    '</div>' +
-                  '</div>';
-        }
-        container.innerHTML = html;
-      }).catch(() => {
-        container.innerHTML = '<div class="text-center py-6 text-slate-400 text-xs font-bold"><p>Belum ada data permintaan.</p></div>';
-      });
+      switchAdminWithdrawalTab('pending');
     }
 
     function closeAdminWithdrawalsModal() {
       document.getElementById('admin-withdrawals-modal').classList.add('hidden');
     }
 
+    function switchAdminWithdrawalTab(tab) {
+      var btnPending = document.getElementById('admin-w-tab-pending');
+      var btnHistory = document.getElementById('admin-w-tab-history');
+      var container = document.getElementById('admin-withdrawals-container');
+      container.innerHTML = '<p class="text-xs text-slate-400 text-center py-4">Memuat data...</p>';
+
+      if (tab === 'pending') {
+        btnPending.className = "flex-1 py-2.5 rounded-xl bg-emerald-600 text-white shadow-sm transition-all text-center";
+        btnHistory.className = "flex-1 py-2.5 rounded-xl text-slate-600 transition-all text-center";
+        
+        callApiGet('getWithdrawalRequests').then(list => {
+          if (!list || list.length === 0) { container.innerHTML = '<div class="text-center py-6 text-slate-400 text-xs font-bold"><p>Tidak ada permintaan yang menunggu.</p></div>'; return; }
+          var html = '';
+          for (var i = 0; i < list.length; i++) {
+            var w = list[i];
+            html += '<div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 space-y-2">' +
+                      '<div class="flex justify-between items-center"><span class="font-black text-xs text-slate-900">' + w.name + ' (' + w.role.toUpperCase() + ')</span><span class="bg-amber-100 text-amber-800 text-[9px] font-black px-2 py-0.5 rounded-full">' + w.status + '</span></div>' +
+                      '<p class="text-xs font-black text-emerald-600">Nominal: Rp ' + formatRupiah(w.amount) + '</p>' +
+                      '<p class="text-[11px] text-slate-600"><strong>Metode:</strong> ' + w.method + ' - ' + w.accountInfo + '</p>' +
+                      '<div class="pt-2 flex gap-2">' +
+                        '<button type="button" onclick="approveWithdrawal(\'' + w.phone + '\', ' + w.amount + ')" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-black py-2.5 rounded-xl text-xs active:scale-95 shadow-xs"><i class="fa-solid fa-check mr-1"></i> Tandai Selesai / Ditransfer</button>' +
+                      '</div>' +
+                    '</div>';
+          }
+          container.innerHTML = html;
+        });
+      } else {
+        btnHistory.className = "flex-1 py-2.5 rounded-xl bg-slate-900 text-white shadow-sm transition-all text-center";
+        btnPending.className = "flex-1 py-2.5 rounded-xl text-slate-600 transition-all text-center";
+
+        callApiGet('getAllWithdrawalHistory').then(list => {
+          if (!list || list.length === 0) { container.innerHTML = '<div class="text-center py-6 text-slate-400 text-xs font-bold"><p>Belum ada riwayat transaksi.</p></div>'; return; }
+          var html = '';
+          for (var i = 0; i < list.length; i++) {
+            var w = list[i];
+            var isSuccess = w.status === "Selesai / Ditransfer";
+            var statusBadge = isSuccess 
+              ? '<span class="bg-emerald-100 text-emerald-700 text-[9px] font-black px-2.5 py-1 rounded-full">Selesai / Sukses</span>' 
+              : '<span class="bg-amber-100 text-amber-800 text-[9px] font-black px-2.5 py-1 rounded-full">Menunggu Transfer</span>';
+
+            html += '<div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 space-y-1.5">' +
+                      '<div class="flex justify-between items-center"><span class="font-bold text-[10px] text-slate-500">' + w.date + ' (' + w.role.toUpperCase() + ')</span>' + statusBadge + '</div>' +
+                      '<div class="flex justify-between items-center"><span class="font-black text-xs text-slate-900">' + w.name + '</span><span class="font-black text-xs text-emerald-600">Rp ' + formatRupiah(w.amount) + '</span></div>' +
+                      '<p class="text-[10px] text-slate-500">Metode: <strong>' + w.method + '</strong> (' + w.accountInfo + ')</p>' +
+                    '</div>';
+          }
+          container.innerHTML = html;
+        });
+      }
+    }
+
     function approveWithdrawal(phone, amount) {
       callApiPost('approveWithdrawal', { phone: phone, amount: amount }).then(() => {
         showToast("Pencairan dana ditandai selesai!");
-        openAdminWithdrawalsModal();
+        switchAdminWithdrawalTab('pending');
       });
     }
 
