@@ -136,7 +136,6 @@
     <div class="text-center text-[10px] text-slate-400 pb-1">Beli Disini! © 2026 • Powered by Supabase</div>
   </div>
 
-  <!-- MODAL STAFF (MITRA & KURIR) -->
   <div id="staff-auth-modal" class="fixed inset-0 bg-slate-900/60 z-50 flex items-end justify-center hidden backdrop-blur-sm transition-all">
     <div class="bg-white rounded-t-[32px] w-full p-6 max-h-[88vh] overflow-y-auto relative animate-slide-up shadow-2xl max-w-md mx-auto text-slate-800">
       <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-4"></div>
@@ -208,7 +207,6 @@
     </div>
   </div>
 
-  <!-- APLIKASI UTAMA -->
   <div id="main-app" class="hidden w-full min-h-screen relative pb-40 max-w-4xl mx-auto shadow-2xl transition-all">
     <div id="app-header" class="flex justify-between items-center px-6 pt-6 pb-4 bg-white/90 backdrop-blur-md sticky top-0 z-30 border-b border-slate-200/80">
       <div>
@@ -330,7 +328,6 @@
     </div>
   </div>
 
-  <!-- MODAL-MODAL PENDUKUNG -->
   <div id="withdraw-modal" class="fixed inset-0 bg-slate-900/70 z-50 flex items-center justify-center hidden backdrop-blur-sm p-4">
     <div class="bg-white rounded-3xl w-full max-w-xs p-6 shadow-2xl space-y-4 max-w-md mx-auto animate-slide-up text-slate-800">
       <div class="flex justify-between items-center border-b border-slate-100 pb-3">
@@ -578,17 +575,11 @@
   </div>
 
   <script>
-    // ==========================================
-    // KONFIGURASI SUPABASE DATABASE
-    // ==========================================
     const SUPABASE_URL = 'https://cbsucahvrowgxvtnerf.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNic3VjYWh2cm93b2d4dnRuZXJmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc2NjE3MjEsImV4cCI6MjEwMzIzNzcyMX0.4TEcksJ4bfPBcloOV44trNtseblmuj3KrQWo2yNRVFA'; //[cite: 1]
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNic3VjYWh2cm93b2d4dnRuZXJmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc2NjE3MjEsImV4cCI6MjEwMzIzNzcyMX0.4TEcksJ4bfPBcloOV44trNtseblmuj3KrQWo2yNRVFA';
     
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // ==========================================
-    // WRAPPER PENGGANTI GOOGLE APPS SCRIPT KE SUPABASE
-    // ==========================================
     async function callApiGet(action, params = {}) {
       try {
         if (action === 'getStores') {
@@ -783,7 +774,6 @@
           return { status: "Success" };
         }
         else if (action === 'getMidtransSnapToken') {
-          // Midtrans token handling or direct fallback
           return "mock-snap-token";
         }
       } catch(e) { console.error(e); return null; }
