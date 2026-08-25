@@ -637,20 +637,28 @@
     }
 
     document.addEventListener("DOMContentLoaded", function() {
+      var urlParams = new URLSearchParams(window.location.search);
+      var isAdminUrl = (urlParams.get('role') === 'admin');
+
       var activeSession = safeStorage.getItem('app_active_session');
       if (activeSession) {
         try {
           var parsed = JSON.parse(activeSession);
           if (parsed && parsed.role) {
-            currentUser = parsed;
-            openMainApp(currentUser.role === 'admin' ? "Admin Utama" : (currentUser.role === 'courier' ? "Kurir: " + currentUser.name : (currentUser.role === 'merchant' ? "Mitra: " + currentUser.name : currentUser.name)));
-            return;
+            // Jika sesi tersimpan adalah admin, namun URL saat ini TIDAK memiliki ?role=admin,
+            // hapus sesi admin tersebut agar tidak menyangkut saat ingin login sebagai konsumen.
+            if (parsed.role === 'admin' && !isAdminUrl) {
+              safeStorage.removeItem('app_active_session');
+            } else {
+              currentUser = parsed;
+              openMainApp(currentUser.role === 'admin' ? "Admin Utama" : (currentUser.role === 'courier' ? "Kurir: " + currentUser.name : (currentUser.role === 'merchant' ? "Mitra: " + currentUser.name : currentUser.name)));
+              return;
+            }
           }
         } catch(e) {}
       }
 
-      var urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.get('role') === 'admin') {
+      if (isAdminUrl) {
         currentUser = { name: "Admin Utama", role: "admin" };
         safeStorage.setItem('app_active_session', JSON.stringify(currentUser));
         openMainApp("Admin Utama");
