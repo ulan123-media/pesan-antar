@@ -37,10 +37,9 @@
     <span id="toast-message" class="truncate">Barang ditambahkan!</span>
   </div>
 
-  <!-- HALAMAN UTAMA KONSUMEN (FORM LOGIN & DAFTAR LANGSUNG TERLIHAT) -->
+  <!-- HALAMAN UTAMA KONSUMEN -->
   <div id="auth-screen" class="fixed inset-0 z-50 flex flex-col justify-between bg-white p-6 overflow-y-auto max-w-md mx-auto shadow-2xl">
     
-    <!-- TOP BAR: KIRI (KONSUMEN/LABEL), KANAN (MITRA & KURIR) -->
     <div class="flex justify-between items-center w-full pt-2">
       <div class="flex items-center gap-1.5 text-[11px] font-extrabold text-slate-700 bg-slate-100 px-3.5 py-2 rounded-full shadow-xs">
         <i class="fa-solid fa-user text-rose-600 text-xs"></i> Portal Konsumen
@@ -50,7 +49,6 @@
       </button>
     </div>
 
-    <!-- KONTEN UTAMA: FORM KONSUMEN LANGSUNG MUNCUL -->
     <div class="w-full my-auto py-6">
       <div class="text-center mb-5">
         <div class="w-16 h-16 bg-rose-50 border border-rose-100 rounded-3xl flex items-center justify-center mx-auto mb-3 text-rose-600 shadow-inner">
@@ -60,13 +58,11 @@
         <p class="text-slate-400 text-[11px] font-semibold mt-0.5">Silakan masuk atau daftar untuk mulai belanja</p>
       </div>
 
-      <!-- TAB SUB-MENU KONSUMEN (MASUK / DAFTAR) -->
       <div class="flex bg-slate-100 p-1 rounded-2xl text-xs font-bold mb-4 border border-slate-200/60">
         <button type="button" id="subtab-consumer-login" onclick="switchConsumerMode('login')" class="flex-1 py-2.5 rounded-xl bg-rose-600 text-white shadow-xs transition-all text-center">Masuk</button>
         <button type="button" id="subtab-consumer-register" onclick="switchConsumerMode('register')" class="flex-1 py-2.5 rounded-xl text-slate-600 transition-all text-center">Daftar</button>
       </div>
 
-      <!-- FORM LOGIN KONSUMEN -->
       <div id="consumer-login-box" class="space-y-3.5">
         <div>
           <label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Nomor WhatsApp *</label>
@@ -90,7 +86,6 @@
         </button>
       </div>
 
-      <!-- FORM DAFTAR KONSUMEN -->
       <div id="consumer-register-box" class="space-y-3 hidden">
         <div>
           <label class="text-[10px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Nama Lengkap *</label>
@@ -121,7 +116,7 @@
     <div class="text-center text-[10px] text-slate-400 pb-1">Beli Disini! © 2026 • Professional Logistics</div>
   </div>
 
-  <!-- MODAL LOGIN / REGISTER MITRA & KURIR (HANYA MUNCUL JIKA DIKLIK DI KANAN ATAS) -->
+  <!-- MODAL STAFF (MITRA & KURIR) -->
   <div id="staff-auth-modal" class="fixed inset-0 bg-slate-900/60 z-50 flex items-end justify-center hidden backdrop-blur-sm transition-all">
     <div class="bg-white rounded-t-[32px] w-full p-6 max-h-[88vh] overflow-y-auto relative animate-slide-up shadow-2xl max-w-md mx-auto text-slate-800">
       <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-4"></div>
@@ -149,11 +144,18 @@
         </div>
 
         <div id="c-reg-form" class="space-y-3 hidden">
-          <div><label class="text-[10px] font-extrabold text-slate-700 block mb-1">Nama Lengkap *</label><input type="text" id="c-reg-name" placeholder="Nama Kurir" class="w-full bg-slate-50 rounded-xl px-3 py-2 text-xs border"></div>
-          <div><label class="text-[10px] font-extrabold text-slate-700 block mb-1">No. WhatsApp *</label><input type="tel" id="c-reg-phone" placeholder="081234567890" class="w-full bg-slate-50 rounded-xl px-3 py-2 text-xs border"></div>
-          <div><label class="text-[10px] font-extrabold text-slate-700 block mb-1">Kendaraan *</label><input type="text" id="c-reg-vehicle" placeholder="Honda Beat / Hitam" class="w-full bg-slate-50 rounded-xl px-3 py-2 text-xs border"></div>
-          <div><label class="text-[10px] font-extrabold text-slate-700 block mb-1">Password *</label><input type="password" id="c-reg-password" placeholder="Password akun" class="w-full bg-slate-50 rounded-xl px-3 py-2 text-xs border"></div>
-          <button type="button" onclick="registerCourier()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-3 rounded-xl text-xs transition-all shadow-md">KIRIM LAMARAN KURIR</button>
+          <!-- PESAN PEMBERITAHUAN JIKA PENDAFTARAN DITUTUP -->
+          <div id="courier-closed-notice" class="hidden bg-red-500 text-white font-black text-center text-xs py-3.5 px-4 rounded-2xl shadow-md flex items-center justify-center gap-2">
+            <i class="fa-solid fa-triangle-exclamation text-base"></i> Mohon maaf, saat ini belum menerima lowongan kurir.
+          </div>
+          
+          <div id="c-reg-inputs-wrapper" class="space-y-3">
+            <div><label class="text-[10px] font-extrabold text-slate-700 block mb-1">Nama Lengkap *</label><input type="text" id="c-reg-name" placeholder="Nama Kurir" class="w-full bg-slate-50 rounded-xl px-3 py-2 text-xs border"></div>
+            <div><label class="text-[10px] font-extrabold text-slate-700 block mb-1">No. WhatsApp *</label><input type="tel" id="c-reg-phone" placeholder="081234567890" class="w-full bg-slate-50 rounded-xl px-3 py-2 text-xs border"></div>
+            <div><label class="text-[10px] font-extrabold text-slate-700 block mb-1">Kendaraan *</label><input type="text" id="c-reg-vehicle" placeholder="Honda Beat / Hitam" class="w-full bg-slate-50 rounded-xl px-3 py-2 text-xs border"></div>
+            <div><label class="text-[10px] font-extrabold text-slate-700 block mb-1">Password *</label><input type="password" id="c-reg-password" placeholder="Password akun" class="w-full bg-slate-50 rounded-xl px-3 py-2 text-xs border"></div>
+            <button type="button" id="btn-submit-courier-reg" onclick="registerCourier()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-3 rounded-xl text-xs transition-all shadow-md">KIRIM LAMARAN KURIR</button>
+          </div>
         </div>
       </div>
 
@@ -170,7 +172,6 @@
   <!-- APLIKASI UTAMA -->
   <div id="main-app" class="hidden w-full min-h-screen relative pb-40 max-w-4xl mx-auto shadow-2xl transition-all">
     
-    <!-- HEADER UTAMA -->
     <div id="app-header" class="flex justify-between items-center px-6 pt-6 pb-4 bg-white/90 backdrop-blur-md sticky top-0 z-30 border-b border-slate-200/80">
       <div>
         <h1 id="app-title-main" class="text-xl font-black text-slate-900 tracking-tight">Beli Disini!</h1>
@@ -184,7 +185,6 @@
       </div>
     </div>
 
-    <!-- PANEL ADMIN & KURIR & MITRA -->
     <div id="admin-control-bar" class="hidden px-6 pt-5 mb-6">
       <div id="panel-card-box" class="relative overflow-hidden bg-gradient-to-br from-red-950 via-rose-900 to-red-900 text-white p-5 rounded-3xl flex flex-col sm:flex-row justify-between items-start sm:items-center shadow-xl shadow-red-900/40 border border-red-800/50 gap-4 mb-4 group">
         <div class="absolute bottom-0 left-0 w-full opacity-20 pointer-events-none">
@@ -207,7 +207,6 @@
         </div>
       </div>
       
-      <!-- STATISTIK OMSET & DOMPET DIGITAL -->
       <div id="admin-omset-grid" class="grid grid-cols-3 gap-2.5">
         <div class="relative overflow-hidden bg-slate-800 p-3 rounded-2xl shadow-md border border-slate-700 flex flex-col justify-between">
           <div class="flex items-center gap-1.5 mb-1">
@@ -247,7 +246,6 @@
 
     <div id="store-closed-banner" class="hidden px-6 pt-2 mb-4"><div class="bg-red-500 text-white font-black text-center text-xs py-4 px-5 rounded-2xl shadow-md flex items-center justify-center gap-2 animate-bounce"><i class="fa-solid fa-store-slash text-base"></i> MAAF, TOKO SEDANG TUTUP! PESANAN BELUM BISA DIPROSES.</div></div>
 
-    <!-- KATALOG TOKO & DAFTAR WARUNG MITRA -->
     <div id="view-toko">
       <div class="px-6 pt-3 mb-5">
         <div class="bg-gradient-to-r from-red-900 via-rose-700 to-rose-600 rounded-3xl p-6 flex justify-between items-center shadow-lg shadow-rose-900/20 relative overflow-hidden text-white">
@@ -267,7 +265,6 @@
         </div>
       </div>
 
-      <!-- DAFTAR WARUNG / TOKO MITRA -->
       <div class="mb-6">
         <h3 class="text-[11px] font-black uppercase text-slate-400 tracking-wider mb-3 px-6">DAFTAR WARUNG / TOKO MITRA</h3>
         <div id="stores-container" class="flex overflow-x-auto gap-3 px-6 pb-2 scroll-smooth"></div>
@@ -279,7 +276,6 @@
       </div>
     </div>
 
-    <!-- HALAMAN STATUS PESANAN -->
     <div id="view-status" class="hidden px-6 pt-3 mb-8">
       <div class="flex justify-between items-center mb-4">
         <h3 id="status-tab-title" class="text-xs font-black uppercase text-slate-500 tracking-wider">RIWAYAT & STATUS PESANAN</h3>
@@ -288,12 +284,10 @@
       <div id="order-history-container" class="space-y-4"></div>
     </div>
 
-    <!-- TOMBOL WHATSAPP MELAYANG -->
     <a id="floating-wa-btn" href="#" target="_blank" class="hidden fixed bottom-24 right-6 z-40 bg-emerald-500 hover:bg-emerald-600 text-white w-14 h-14 rounded-full shadow-2xl flex items-center justify-center text-2xl transition-all active:scale-95 animate-bounce">
       <i class="fa-brands fa-whatsapp"></i>
     </a>
 
-    <!-- NAVIGASI BAWAH -->
     <div class="fixed bottom-0 left-0 right-0 z-40 p-4 pointer-events-none">
       <div class="bg-white/95 backdrop-blur-xl rounded-full shadow-2xl py-3 px-8 flex justify-around items-center border border-slate-200/80 max-w-md mx-auto pointer-events-auto">
         <button type="button" onclick="switchTab('toko')" id="nav-toko" class="flex flex-col items-center text-rose-600 font-bold transition-all active:scale-90 px-4"><i class="fa-solid fa-store text-lg mb-0.5"></i><span class="text-[10px]">Toko</span></button>
@@ -303,7 +297,7 @@
     </div>
   </div>
 
-  <!-- MODAL PENARIKAN SALDO (WITHDRAWAL) -->
+  <!-- MODAL PENARIKAN SALDO -->
   <div id="withdraw-modal" class="fixed inset-0 bg-slate-900/70 z-50 flex items-center justify-center hidden backdrop-blur-sm p-4">
     <div class="bg-white rounded-3xl w-full max-w-xs p-6 shadow-2xl space-y-4 max-w-md mx-auto animate-slide-up text-slate-800">
       <div class="flex justify-between items-center border-b border-slate-100 pb-3">
@@ -337,7 +331,7 @@
     </div>
   </div>
 
-  <!-- MODAL RIWAYAT PENARIKAN SALDO -->
+  <!-- MODAL RIWAYAT PENARIKAN -->
   <div id="withdrawal-history-modal" class="fixed inset-0 bg-slate-900/70 z-50 flex items-center justify-center hidden backdrop-blur-sm p-4">
     <div class="bg-white rounded-3xl w-full max-w-md p-6 shadow-2xl space-y-4 max-h-[85vh] overflow-y-auto animate-slide-up text-slate-800">
       <div class="flex justify-between items-center border-b border-slate-100 pb-3">
@@ -400,7 +394,7 @@
     </div>
   </div>
 
-  <!-- MODAL TAMBAH WARUNG / TOKO BARU -->
+  <!-- MODAL TAMBAH WARUNG -->
   <div id="add-store-modal" class="fixed inset-0 bg-slate-900/60 z-50 flex items-end justify-center hidden backdrop-blur-sm transition-all">
     <div class="bg-white rounded-t-[32px] w-full p-6 max-h-[85vh] overflow-y-auto relative animate-slide-up shadow-2xl max-w-md mx-auto">
       <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-4"></div>
@@ -601,7 +595,6 @@
     var userActiveBalance = 0;
 
     document.addEventListener("DOMContentLoaded", function() {
-      // CEK LINK RAHASIA ADMIN ?role=admin
       var urlParams = new URLSearchParams(window.location.search);
       if (urlParams.get('role') === 'admin') {
         currentUser = { name: "Admin Utama", role: "admin" };
@@ -633,7 +626,6 @@
       }
     });
 
-    // FUNGSI MODAL STAFF (MITRA & KURIR) DI KANAN ATAS
     function openStaffAuthModal() { document.getElementById('staff-auth-modal').classList.remove('hidden'); }
     function closeStaffAuthModal() { document.getElementById('staff-auth-modal').classList.add('hidden'); }
 
@@ -734,6 +726,31 @@
     function applyRecruitmentStatus(status) {
       recruitmentStatus = status;
       updateAdminMenuModalUI();
+      updateCourierRegistrationUI();
+    }
+
+    function updateCourierRegistrationUI() {
+      var notice = document.getElementById('courier-closed-notice');
+      var inputsWrapper = document.getElementById('c-reg-inputs-wrapper');
+      var regBtn = document.getElementById('btn-submit-courier-reg');
+      
+      if (recruitmentStatus === "TUTUP") {
+        if (notice) notice.classList.remove('hidden');
+        if (inputsWrapper) inputsWrapper.classList.add('opacity-50', 'pointer-events-none');
+        if (regBtn) {
+          regBtn.disabled = true;
+          regBtn.className = "w-full bg-slate-400 text-white font-black py-3 rounded-xl text-xs cursor-not-allowed shadow-none";
+          regBtn.innerText = "PENDAFTARAN KURIR DITUTUP";
+        }
+      } else {
+        if (notice) notice.classList.add('hidden');
+        if (inputsWrapper) inputsWrapper.classList.remove('opacity-50', 'pointer-events-none');
+        if (regBtn) {
+          regBtn.disabled = false;
+          regBtn.className = "w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-3 rounded-xl text-xs transition-all shadow-md";
+          regBtn.innerText = "KIRIM LAMARAN KURIR";
+        }
+      }
     }
 
     function toggleRecruitmentStatus() {
@@ -864,6 +881,10 @@
     }
 
     function registerCourier() {
+      if (recruitmentStatus === "TUTUP") {
+        alert("Mohon maaf, saat ini lowongan kurir belum dibuka.");
+        return;
+      }
       var name = document.getElementById('c-reg-name').value.trim();
       var phone = document.getElementById('c-reg-phone').value.trim();
       var vehicle = document.getElementById('c-reg-vehicle').value.trim();
@@ -1108,6 +1129,7 @@
                                     '<i class="fa-solid fa-plus-circle text-base"></i> Tambah Produk Baru ke Warung Saya' +
                                   '</button>';
         }
+        updateAdminMenuModalUI();
         modal.classList.remove('hidden');
       } else { modal.classList.add('hidden'); }
     }
@@ -1124,6 +1146,7 @@
         recBtn.className = recruitmentStatus === "BUKA" ? "px-4 py-2.5 rounded-xl text-xs font-black text-white bg-emerald-500 shadow-xs" : "px-4 py-2.5 rounded-xl text-xs font-black text-white bg-red-500 shadow-xs";
         recBtn.innerHTML = recruitmentStatus === "BUKA" ? 'Lowongan Buka' : 'Lowongan Tutup';
       }
+      updateCourierRegistrationUI();
     }
 
     function getGPSLocation() {
@@ -1695,12 +1718,12 @@
             var btnSelesai = (!isMerchant && ordStatus === 'Sedang Diantar') ? '<button type="button" onclick="promptCompleteOrder(\'' + ord.invoiceId + '\')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-black py-2.5 px-3 rounded-xl text-[10px] shadow-xs">Selesai (+Foto)</button>' : '';
             var btnPeta = '<button type="button" onclick="openLiveTracking(\'' + ord.invoiceId + '\', ' + (ord.lat || 'null') + ', ' + (ord.lng || 'null') + ')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold py-2.5 px-3 rounded-xl text-[10px]">Peta</button>';
             var btnCetak = '<button type="button" onclick="openReceiptModal(\'' + ord.invoiceId + '\')" class="bg-amber-600 hover:bg-amber-700 text-white font-black py-2.5 px-3 rounded-xl text-[10px] shadow-xs">Struk</button>';
-            var btnBuktiFoto = ord.deliveryProof ? '<button type="button" onclick="openImageModal(\'' + ord.deliveryProof.replace(/'/g, "\\'") + '\', \'Bukti Tiba: ' + ord.invoiceId + '\')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-black py-2.5 px-3 rounded-xl text-[10px] shadow-xs">Foto Bukti</button>' : '';
+            var btnBuktiFoto = ord.deliveryProof ? '<button type="button" onclick="openImageModal(\'' + ord.deliveryProof.replace(/'/g, "\\'") + '\', \'Foto Bukti: ' + ord.invoiceId + '\')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-black py-2.5 px-3 rounded-xl text-[10px] shadow-xs">Foto Bukti</button>' : '';
             
             actionButtons = '<div class="pt-3 border-t border-slate-800 grid grid-cols-3 sm:grid-cols-4 gap-2">' + btnChatWa + btnAcc + btnSiapkanBarang + btnKirim + btnGps + btnSelesai + btnCetak + btnPeta + btnBuktiFoto + '</div>';
           }
         } else {
-          var btnBuktiFotoCust = ord.deliveryProof ? '<button type="button" onclick="openImageModal(\'' + ord.deliveryProof.replace(/'/g, "\\'") + '\', \'Bukti Tiba: ' + ord.invoiceId + '\')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-black px-3 py-2 rounded-xl text-[10px] shadow-xs">Lihat Bukti Foto</button>' : '';
+          var btnBuktiFotoCust = ord.deliveryProof ? '<button type="button" onclick="openImageModal(\'' + ord.deliveryProof.replace(/'/g, "\\'") + '\', \'Foto Bukti: ' + ord.invoiceId + '\')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-black px-3 py-2 rounded-xl text-[10px] shadow-xs">Lihat Bukti Foto</button>' : '';
           var btnLacak = (ordStatus === 'Sedang Diantar') ? '<button type="button" onclick="openLiveTracking(\'' + ord.invoiceId + '\', ' + (ord.lat || 'null') + ', ' + (ord.lng || 'null') + ')" class="bg-rose-600 hover:bg-rose-700 text-white font-black px-3 py-2 rounded-xl text-[10px] shadow-xs">Lacak Kurir</button>' : '<span class="text-[10px] font-bold text-slate-400 italic">Diproses</span>';
           actionButtons = '<div class="pt-3 border-t border-slate-100 flex justify-between items-center"><span class="text-xs font-black text-slate-900">Total: Rp ' + formatRupiah(ord.total) + '</span><div class="flex gap-1.5">' + btnBuktiFotoCust + btnLacak + '</div></div>';
         }
