@@ -763,7 +763,22 @@
           return { status: "Success" };
         }
         else if (action === 'getMidtransSnapToken') {
-          return "mock-snap-token";
+          // Terhubung langsung ke Supabase Edge Function / Backend Anda yang aman untuk mengambil Snap Token asli
+          try {
+            let response = await fetch('https://zsutpgbychoctxszpmch.supabase.co/functions/v1/get-snap-token', {
+              method: 'POST',
+              headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + SUPABASE_ANON_KEY
+              },
+              body: JSON.stringify(data.orderData)
+            });
+            let resJson = await response.json();
+            return resJson.token; // Mengembalikan token Snap asli dari Midtrans
+          } catch(e) {
+            console.error("Gagal mengambil Midtrans Snap Token:", e);
+            return "Error: Gagal terhubung ke server pembayaran";
+          }
         }
       } catch(e) { console.error(e); return null; }
     }
