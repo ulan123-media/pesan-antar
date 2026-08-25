@@ -144,7 +144,6 @@
         </div>
 
         <div id="c-reg-form" class="space-y-3 hidden">
-          <!-- PESAN PEMBERITAHUAN JIKA PENDAFTARAN DITUTUP -->
           <div id="courier-closed-notice" class="hidden bg-red-500 text-white font-black text-center text-xs py-3.5 px-4 rounded-2xl shadow-md flex items-center justify-center gap-2">
             <i class="fa-solid fa-triangle-exclamation text-base"></i> Mohon maaf, saat ini belum menerima lowongan kurir.
           </div>
@@ -596,11 +595,24 @@
 
     document.addEventListener("DOMContentLoaded", function() {
       var urlParams = new URLSearchParams(window.location.search);
+      
+      // Jika URL memiliki parameter ?role=admin, set session admin
       if (urlParams.get('role') === 'admin') {
         currentUser = { name: "Admin Utama", role: "admin" };
         safeStorage.setItem('app_active_session', JSON.stringify(currentUser));
         openMainApp("Admin Utama");
         return;
+      }
+
+      // Jika URL BUKAN / tidak ada ?role=admin, pastikan hapus sesi admin dari localStorage agar konsumen tidak terbawa masuk mode admin
+      var activeSession = safeStorage.getItem('app_active_session');
+      if (activeSession) {
+        try {
+          var parsed = JSON.parse(activeSession);
+          if (parsed && parsed.role === 'admin') {
+            safeStorage.removeItem('app_active_session');
+          }
+        } catch(e) {}
       }
 
       checkActiveSession(); 
@@ -697,6 +709,13 @@
         try {
           currentUser = JSON.parse(activeSession);
           if (currentUser && currentUser.role) {
+            // Pengamanan tambahan: jika role admin tersimpan tapi URL tidak ada ?role=admin, hapus sesi
+            var urlParams = new URLSearchParams(window.location.search);
+            if (currentUser.role === 'admin' && urlParams.get('role') !== 'admin') {
+              safeStorage.removeItem('app_active_session');
+              currentUser = null;
+              return;
+            }
             openMainApp(currentUser.role === 'admin' ? "Admin Utama" : (currentUser.role === 'courier' ? "Kurir: " + currentUser.name : (currentUser.role === 'merchant' ? "Mitra: " + currentUser.name : currentUser.name)));
             return;
           }
