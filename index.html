@@ -153,7 +153,32 @@
             <div><label class="text-[10px] font-extrabold text-slate-700 block mb-1">No. WhatsApp *</label><input type="tel" id="c-reg-phone" placeholder="081234567890" class="w-full bg-slate-50 rounded-xl px-3 py-2 text-xs border"></div>
             <div><label class="text-[10px] font-extrabold text-slate-700 block mb-1">Kendaraan *</label><input type="text" id="c-reg-vehicle" placeholder="Honda Beat / Hitam" class="w-full bg-slate-50 rounded-xl px-3 py-2 text-xs border"></div>
             <div><label class="text-[10px] font-extrabold text-slate-700 block mb-1">Password *</label><input type="password" id="c-reg-password" placeholder="Password akun" class="w-full bg-slate-50 rounded-xl px-3 py-2 text-xs border"></div>
-            <button type="button" id="btn-submit-courier-reg" onclick="registerCourier()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-3 rounded-xl text-xs transition-all shadow-md">KIRIM LAMARAN KURIR</button>
+            
+            <!-- SYARAT PENDAFTARAN KURIR (DITAMBAHKAN AGAR TIDAK HILANG) -->
+            <div class="border-t pt-2 border-slate-200">
+              <label class="text-[10px] font-extrabold text-rose-600 block mb-1">Unggah Syarat Berkas Kurir *</label>
+              
+              <div class="space-y-2 mt-1">
+                <div>
+                  <span class="text-[9px] text-slate-600 font-bold block">1. Foto Kendaraan</span>
+                  <input type="file" id="c-reg-vehicle-file" accept="image/*" class="w-full bg-slate-50 rounded-xl p-1.5 text-[10px] border file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-[10px] file:font-semibold file:bg-amber-600 file:text-white">
+                </div>
+                <div>
+                  <span class="text-[9px] text-slate-600 font-bold block">2. Foto KTP</span>
+                  <input type="file" id="c-reg-ktp-file" accept="image/*" class="w-full bg-slate-50 rounded-xl p-1.5 text-[10px] border file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-[10px] file:font-semibold file:bg-amber-600 file:text-white">
+                </div>
+                <div>
+                  <span class="text-[9px] text-slate-600 font-bold block">3. Foto STNK</span>
+                  <input type="file" id="c-reg-stnk-file" accept="image/*" class="w-full bg-slate-50 rounded-xl p-1.5 text-[10px] border file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-[10px] file:font-semibold file:bg-amber-600 file:text-white">
+                </div>
+                <div>
+                  <span class="text-[9px] text-slate-600 font-bold block">4. Foto SIM</span>
+                  <input type="file" id="c-reg-sim-file" accept="image/*" class="w-full bg-slate-50 rounded-xl p-1.5 text-[10px] border file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-[10px] file:font-semibold file:bg-amber-600 file:text-white">
+                </div>
+              </div>
+            </div>
+
+            <button type="button" id="btn-submit-courier-reg" onclick="registerCourier()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-3 rounded-xl text-xs transition-all shadow-md mt-2">KIRIM LAMARAN KURIR</button>
           </div>
         </div>
       </div>
@@ -594,25 +619,25 @@
     var userActiveBalance = 0;
 
     document.addEventListener("DOMContentLoaded", function() {
+      // PERBAIKAN SESI: Cek sesi lokal dulu agar tidak terhapus saat refresh tanpa parameter url admin
+      var activeSession = safeStorage.getItem('app_active_session');
+      if (activeSession) {
+        try {
+          var parsed = JSON.parse(activeSession);
+          if (parsed && parsed.role) {
+            currentUser = parsed;
+            openMainApp(currentUser.role === 'admin' ? "Admin Utama" : (currentUser.role === 'courier' ? "Kurir: " + currentUser.name : (currentUser.role === 'merchant' ? "Mitra: " + currentUser.name : currentUser.name)));
+            return;
+          }
+        } catch(e) {}
+      }
+
       var urlParams = new URLSearchParams(window.location.search);
-      
-      // Jika URL memiliki parameter ?role=admin, set session admin
       if (urlParams.get('role') === 'admin') {
         currentUser = { name: "Admin Utama", role: "admin" };
         safeStorage.setItem('app_active_session', JSON.stringify(currentUser));
         openMainApp("Admin Utama");
         return;
-      }
-
-      // Jika URL BUKAN / tidak ada ?role=admin, pastikan hapus sesi admin dari localStorage agar konsumen tidak terbawa masuk mode admin
-      var activeSession = safeStorage.getItem('app_active_session');
-      if (activeSession) {
-        try {
-          var parsed = JSON.parse(activeSession);
-          if (parsed && parsed.role === 'admin') {
-            safeStorage.removeItem('app_active_session');
-          }
-        } catch(e) {}
       }
 
       checkActiveSession(); 
@@ -709,13 +734,6 @@
         try {
           currentUser = JSON.parse(activeSession);
           if (currentUser && currentUser.role) {
-            // Pengamanan tambahan: jika role admin tersimpan tapi URL tidak ada ?role=admin, hapus sesi
-            var urlParams = new URLSearchParams(window.location.search);
-            if (currentUser.role === 'admin' && urlParams.get('role') !== 'admin') {
-              safeStorage.removeItem('app_active_session');
-              currentUser = null;
-              return;
-            }
             openMainApp(currentUser.role === 'admin' ? "Admin Utama" : (currentUser.role === 'courier' ? "Kurir: " + currentUser.name : (currentUser.role === 'merchant' ? "Mitra: " + currentUser.name : currentUser.name)));
             return;
           }
@@ -803,10 +821,10 @@
                     '<p class="text-[11px] text-slate-600"><strong>WhatsApp:</strong> ' + c.phone + '</p>' +
                     '<p class="text-[11px] text-slate-600"><strong>Kendaraan:</strong> ' + c.vehicle + '</p>' +
                     '<div class="grid grid-cols-4 gap-1.5 pt-1">' +
-                      (c.vehiclePhoto ? '<img src="' + c.vehiclePhoto + '" onclick="openImageModal(\'' + c.vehiclePhoto + '\', \'Kendaraan\')" class="w-full h-12 object-cover rounded-xl cursor-pointer border border-slate-200">' : '') +
-                      (c.ktpPhoto ? '<img src="' + c.ktpPhoto + '" onclick="openImageModal(\'' + c.ktpPhoto + '\', \'KTP\')" class="w-full h-12 object-cover rounded-xl cursor-pointer border border-slate-200">' : '') +
-                      (c.stnkPhoto ? '<img src="' + c.stnkPhoto + '" onclick="openImageModal(\'' + c.stnkPhoto + '\', \'STNK\')" class="w-full h-12 object-cover rounded-xl cursor-pointer border border-slate-200">' : '') +
-                      (c.simPhoto ? '<img src="' + c.simPhoto + '" onclick="openImageModal(\'' + c.simPhoto + '\', \'SIM\')" class="w-full h-12 object-cover rounded-xl cursor-pointer border border-slate-200">' : '') +
+                      (c.vehiclePhoto ? '<img src="' + c.vehiclePhoto + '" onclick="openImageModal(\'' + c.vehiclePhoto + '\', \'Kendaraan\')" class="w-full h-12 object-cover rounded-xl cursor-pointer border border-slate-200">' : '<span class="text-[8px] text-slate-400">No Vehicle</span>') +
+                      (c.ktpPhoto ? '<img src="' + c.ktpPhoto + '" onclick="openImageModal(\'' + c.ktpPhoto + '\', \'KTP\')" class="w-full h-12 object-cover rounded-xl cursor-pointer border border-slate-200">' : '<span class="text-[8px] text-slate-400">No KTP</span>') +
+                      (c.stnkPhoto ? '<img src="' + c.stnkPhoto + '" onclick="openImageModal(\'' + c.stnkPhoto + '\', \'STNK\')" class="w-full h-12 object-cover rounded-xl cursor-pointer border border-slate-200">' : '<span class="text-[8px] text-slate-400">No STNK</span>') +
+                      (c.simPhoto ? '<img src="' + c.simPhoto + '" onclick="openImageModal(\'' + c.simPhoto + '\', \'SIM\')" class="w-full h-12 object-cover rounded-xl cursor-pointer border border-slate-200">' : '<span class="text-[8px] text-slate-400">No SIM</span>') +
                     '</div>' +
                     '<div class="pt-2 flex gap-2">' +
                       '<button type="button" onclick="approveCourier(\'' + c.phone + '\', \'' + c.name + '\')" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-black py-2.5 rounded-xl text-xs active:scale-95 shadow-xs"><i class="fa-solid fa-check mr-1"></i> ACC & Luluskan</button>' +
@@ -911,17 +929,59 @@
       
       if (!name || !phone || !vehicle || !password) { alert("Lengkapi data formulir pendaftaran kurir."); return; }
 
-      showToast("Mengirim lamaran kurir...");
-      var courierData = { name: name, phone: phone, vehicle: vehicle, password: password, vehiclePhoto: "", ktpPhoto: "", stnkPhoto: "", simPhoto: "" };
-      
-      callApiPost('registerCourier', { courier: courierData }).then(res => {
-        if (res && res.status === "Exists") { alert("Nomor WhatsApp sudah terdaftar sebagai kurir."); }
-        else {
-          showToast("Lamaran terkirim! Menunggu persetujuan Admin.");
-          switchCourierMode('login');
-          document.getElementById('courier-login-phone').value = phone;
-        }
+      showToast("Mengunggah berkas syarat lamaran...");
+
+      var fVehicle = document.getElementById('c-reg-vehicle-file').files[0];
+      var fKtp = document.getElementById('c-reg-ktp-file').files[0];
+      var fStnk = document.getElementById('c-reg-stnk-file').files[0];
+      var fSim = document.getElementById('c-reg-sim-file').files[0];
+
+      readFilesAsBase64([fVehicle, fKtp, fStnk, fSim], function(base64Results) {
+        var courierData = { 
+          name: name, 
+          phone: phone, 
+          vehicle: vehicle, 
+          password: password, 
+          vehiclePhoto: base64Results[0] || "", 
+          ktpPhoto: base64Results[1] || "", 
+          stnkPhoto: base64Results[2] || "", 
+          simPhoto: base64Results[3] || "" 
+        };
+        
+        callApiPost('registerCourier', { courier: courierData }).then(res => {
+          if (res && res.status === "Exists") { alert("Nomor WhatsApp sudah terdaftar sebagai kurir."); }
+          else {
+            showToast("Lamaran terkirim dengan berkas syarat! Menunggu persetujuan Admin.");
+            switchCourierMode('login');
+            document.getElementById('courier-login-phone').value = phone;
+          }
+        });
       });
+    }
+
+    function readFilesAsBase64(files, callback) {
+      var results = [];
+      var index = 0;
+      function next() {
+        if (index >= files.length) {
+          callback(results);
+          return;
+        }
+        var file = files[index];
+        index++;
+        if (!file) {
+          results.push("");
+          next();
+          return;
+        }
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          results.push(e.target.result);
+          next();
+        };
+        reader.readAsDataURL(file);
+      }
+      next();
     }
 
     function loginMerchant() {
