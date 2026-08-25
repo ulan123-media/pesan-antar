@@ -1065,12 +1065,22 @@
       openMainApp("Jelajah Produk");
     }
 
-    function registerCustomer() {
-      var name = document.getElementById('reg-name').value.trim(), phone = document.getElementById('reg-phone').value.trim(), address = document.getElementById('reg-address').value.trim(), password = document.getElementById('reg-password').value.trim();
+function registerCustomer() {
+      var name = document.getElementById('reg-name').value.trim();
+      var phone = document.getElementById('reg-phone').value.trim();
+      var address = document.getElementById('reg-address').value.trim();
+      var password = document.getElementById('reg-password').value.trim();
+      
       if (!name || !phone || !address || !password) { alert("Lengkapi seluruh kolom pendaftaran."); return; }
+      
       callApiPost('registerCustomer', { customer: { name: name, phone: phone, address: address, password: password } }).then(res => { 
-        if (res && res.status === "Exists") { alert("⚠️ Akun Anda sudah pernah terdaftar!"); switchConsumerMode('login'); document.getElementById('login-phone').value = phone; }
-        else {
+        if (!res || res.status === "Error") {
+          alert("❌ Gagal simpan ke database: " + (res ? res.message : "Kesalahan koneksi / tabel tidak sesuai"));
+        } else if (res.status === "Exists") { 
+          alert("⚠️ Akun Anda sudah pernah terdaftar!"); 
+          switchConsumerMode('login'); 
+          document.getElementById('login-phone').value = phone; 
+        } else if (res.status === "Created") {
           showToast("Pendaftaran akun berhasil!");
           currentUser = { name: name, phone: phone, address: address, role: 'customer' };
           safeStorage.setItem('app_active_session', JSON.stringify(currentUser));
