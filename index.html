@@ -39,10 +39,8 @@
 
   <!-- HALAMAN AUTENTIKASI -->
   <div id="auth-screen" class="fixed inset-0 z-50 flex flex-col justify-between bg-white p-6 overflow-y-auto max-w-md mx-auto shadow-2xl">
-    <div class="flex justify-between items-center w-full pt-2">
-      <button id="tab-btn-user" type="button" onclick="switchAuthTab('user')" class="w-11 h-11 rounded-2xl bg-rose-600 text-white flex items-center justify-center shadow-md shadow-rose-600/20 active:scale-95 transition-all text-sm" title="Mode Konsumen"><i class="fa-solid fa-user"></i></button>
+    <div class="flex justify-center items-center w-full pt-2">
       <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest bg-slate-100 px-3 py-1 rounded-full">Portal Akses Aman</span>
-      <button id="tab-btn-admin" type="button" onclick="switchAuthTab('admin')" class="w-11 h-11 rounded-2xl bg-slate-100 text-slate-600 flex items-center justify-center shadow-sm active:scale-95 transition-all text-sm" title="Mode Staff / Mitra"><i class="fa-solid fa-user-shield"></i></button>
     </div>
 
     <div class="w-full my-auto py-6">
@@ -79,66 +77,6 @@
         <button type="button" onclick="loginAsGuest()" class="w-full bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 font-extrabold py-4 rounded-2xl text-xs transition-all border border-slate-200 flex items-center justify-center gap-2 mt-3"><i class="fa-solid fa-eye text-rose-600"></i> LIHAT PRODUK DULU (PENGUNJUNG)</button>
       </div>
 
-      <!-- FORM ADMIN / KURIR / MITRA -->
-      <div id="form-admin" class="hidden space-y-4">
-        <div class="grid grid-cols-4 bg-slate-100 p-1 rounded-2xl text-[9px] font-bold mb-4 border border-slate-200/60 gap-0.5">
-          <button type="button" id="adminsub-pin" onclick="switchAdminSubTab('pin')" class="py-2.5 rounded-xl bg-slate-900 text-white shadow-md transition-all text-center">PIN Utama</button>
-          <button type="button" id="adminsub-merchant" onclick="switchAdminSubTab('merchant')" class="py-2.5 rounded-xl text-slate-600 transition-all text-center">Login Mitra</button>
-          <button type="button" id="adminsub-login" onclick="switchAdminSubTab('login')" class="py-2.5 rounded-xl text-slate-600 transition-all text-center">Login Kurir</button>
-          <button type="button" id="adminsub-register" onclick="switchAdminSubTab('register')" class="py-2.5 rounded-xl text-slate-600 transition-all text-center">Daftar Kurir</button>
-        </div>
-
-        <div id="admin-subsect-pin" class="space-y-4 text-center">
-          <p class="text-xs text-slate-500 font-bold">Masukkan PIN Admin Utama</p>
-          <div><input type="password" id="admin-pin-input" maxlength="6" placeholder="••••" onkeypress="handleAdminKeyPress(event)" class="w-full bg-slate-50 text-center text-4xl font-black tracking-[16px] py-5 rounded-2xl border-2 border-slate-200 focus:border-slate-900 focus:bg-white focus:outline-none transition-all text-slate-800"></div>
-          <button type="button" onclick="checkAdminLogin()" class="w-full bg-slate-900 hover:bg-slate-800 active:scale-95 text-white font-black py-4 rounded-2xl shadow-lg shadow-slate-900/20 transition-all text-xs tracking-wider">MASUK SEBAGAI ADMIN UTAMA</button>
-          <p id="admin-error-msg" class="text-red-500 text-xs font-bold hidden animate-bounce"><i class="fa-solid fa-circle-exclamation mr-1"></i> PIN Salah!</p>
-        </div>
-
-        <!-- FORM LOGIN MITRA / WARUNG -->
-        <div id="admin-subsect-merchant" class="hidden space-y-4">
-          <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1.5">WhatsApp Warung / Mitra *</label><div class="relative flex items-center"><i class="fa-brands fa-whatsapp absolute left-4 text-slate-400 text-base"></i><input type="tel" id="merchant-login-phone" placeholder="Contoh: 081234567891" class="w-full bg-slate-50 rounded-2xl pl-11 pr-4 py-4 text-xs border border-slate-200 focus:outline-none focus:border-slate-900 focus:bg-white font-medium transition-all"></div></div>
-          <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1.5">Password Warung *</label><div class="relative flex items-center"><i class="fa-solid fa-lock absolute left-4 text-slate-400 text-sm"></i><input type="password" id="merchant-login-password" placeholder="••••••••" class="w-full bg-slate-50 rounded-2xl pl-11 pr-4 py-4 text-xs border border-slate-200 focus:outline-none focus:border-slate-900 focus:bg-white font-medium transition-all"></div></div>
-          <button type="button" onclick="loginMerchant()" class="w-full bg-amber-600 hover:bg-amber-700 active:scale-95 text-white font-black py-4 rounded-2xl shadow-lg shadow-amber-600/20 transition-all text-xs tracking-wider flex items-center justify-center gap-2 pt-4"><i class="fa-solid fa-store text-base"></i> MASUK SEBAGAI MITRA WARUNG</button>
-        </div>
-
-        <div id="admin-subsect-login" class="hidden space-y-4">
-          <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1.5">WhatsApp Kurir *</label><div class="relative flex items-center"><i class="fa-brands fa-whatsapp absolute left-4 text-slate-400 text-base"></i><input type="tel" id="courier-login-phone" placeholder="Contoh: 081234567890" class="w-full bg-slate-50 rounded-2xl pl-11 pr-4 py-4 text-xs border border-slate-200 focus:outline-none focus:border-slate-900 focus:bg-white font-medium transition-all"></div></div>
-          <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1.5">Password *</label><div class="relative flex items-center"><i class="fa-solid fa-lock absolute left-4 text-slate-400 text-sm"></i><input type="password" id="courier-login-password" placeholder="••••••••" class="w-full bg-slate-50 rounded-2xl pl-11 pr-4 py-4 text-xs border border-slate-200 focus:outline-none focus:border-slate-900 focus:bg-white font-medium transition-all"></div></div>
-          <button type="button" onclick="loginCourier()" class="w-full bg-slate-900 hover:bg-slate-800 active:scale-95 text-white font-black py-4 rounded-2xl shadow-lg shadow-slate-900/20 transition-all text-xs tracking-wider flex items-center justify-center gap-2 pt-4"><i class="fa-solid fa-motorcycle text-base"></i> MASUK SEBAGAI KURIR</button>
-        </div>
-
-        <div id="admin-subsect-register" class="hidden space-y-4">
-          <div id="courier-recruitment-open-box" class="space-y-3.5">
-            <p class="text-[11px] font-bold text-emerald-700 bg-emerald-50 p-3 rounded-2xl border border-emerald-200 text-center"><i class="fa-solid fa-circle-check mr-1"></i> Lowongan Kurir Sedang Dibuka!</p>
-            <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Nama Lengkap Kurir *</label><div class="relative flex items-center"><i class="fa-solid fa-user absolute left-4 text-slate-400 text-sm"></i><input type="text" id="courier-reg-name" placeholder="Contoh: Budi Kurir" class="w-full bg-slate-50 rounded-2xl pl-11 pr-4 py-3.5 text-xs border border-slate-200 focus:outline-none focus:border-slate-900 font-medium"></div></div>
-            <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Nomor WhatsApp *</label><div class="relative flex items-center"><i class="fa-brands fa-whatsapp absolute left-4 text-slate-400 text-base"></i><input type="tel" id="courier-reg-phone" placeholder="Contoh: 081234567890" class="w-full bg-slate-50 rounded-2xl pl-11 pr-4 py-3.5 text-xs border border-slate-200 focus:outline-none focus:border-slate-900 font-medium"></div></div>
-            <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Jenis Kendaraan & Plat *</label><div class="relative flex items-center"><i class="fa-solid fa-motorcycle absolute left-4 text-slate-400 text-sm"></i><input type="text" id="courier-reg-vehicle" placeholder="Contoh: Honda Beat - Plat DD 1234 XX" class="w-full bg-slate-50 rounded-2xl pl-11 pr-4 py-3.5 text-xs border border-slate-200 focus:outline-none focus:border-slate-900 font-medium"></div></div>
-            
-            <div class="grid grid-cols-2 gap-2.5 pt-1">
-              <div><label class="text-[10px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Foto Kendaraan *</label><input type="file" id="reg-file-vehicle" accept="image/*" class="w-full bg-slate-50 rounded-xl p-2 text-[10px] border border-slate-200 file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-[10px] file:font-semibold file:bg-slate-200 file:text-slate-700"></div>
-              <div><label class="text-[10px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Foto KTP *</label><input type="file" id="reg-file-ktp" accept="image/*" class="w-full bg-slate-50 rounded-xl p-2 text-[10px] border border-slate-200 file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-[10px] file:font-semibold file:bg-slate-200 file:text-slate-700"></div>
-              <div><label class="text-[10px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">STNK Motor *</label><input type="file" id="reg-file-stnk" accept="image/*" class="w-full bg-slate-50 rounded-xl p-2 text-[10px] border border-slate-200 file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-[10px] file:font-semibold file:bg-slate-200 file:text-slate-700"></div>
-              <div><label class="text-[10px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">SIM Kurir *</label><input type="file" id="reg-file-sim" accept="image/*" class="w-full bg-slate-50 rounded-xl p-2 text-[10px] border border-slate-200 file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-[10px] file:font-semibold file:bg-slate-200 file:text-slate-700"></div>
-            </div>
-
-            <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Password Akun *</label><div class="relative flex items-center"><i class="fa-solid fa-lock absolute left-4 text-slate-400 text-sm"></i><input type="password" id="courier-reg-password" placeholder="Buat password rahasia" class="w-full bg-slate-50 rounded-2xl pl-11 pr-4 py-3.5 text-xs border border-slate-200 focus:outline-none focus:border-slate-900 font-medium"></div></div>
-            <button type="button" onclick="registerCourier()" id="btn-submit-courier-reg" class="w-full bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-black py-4 rounded-2xl shadow-lg transition-all text-xs tracking-wider flex items-center justify-center gap-2 pt-4"><i class="fa-solid fa-paper-plane text-base"></i> KIRIM LAMARAN KURIR</button>
-          </div>
-
-          <div id="courier-success-notification" class="hidden text-center py-6 px-4 bg-emerald-50 rounded-2xl border border-emerald-200 space-y-3">
-            <i class="fa-solid fa-circle-check text-emerald-600 text-3xl"></i>
-            <h4 class="text-xs font-black text-slate-900 uppercase">Lamaran Berhasil Dikirim!</h4>
-            <p class="text-[11px] text-slate-700 leading-relaxed font-semibold">Data lamaran dan dokumen Anda telah dikirim ke Admin Utama. Mohon tunggu proses verifikasi.</p>
-            <button type="button" onclick="switchAdminSubTab('login')" class="bg-slate-900 text-white font-black py-2.5 px-5 rounded-xl text-xs active:scale-95 transition-all">Kembali ke Menu Login</button>
-          </div>
-
-          <div id="courier-recruitment-closed-box" class="hidden text-center py-6 px-4 bg-red-50 rounded-2xl border border-red-200">
-            <i class="fa-solid fa-store-slash text-red-500 text-3xl mb-2"></i>
-            <h4 class="text-xs font-black text-slate-900 uppercase">Lowongan Belum Dibuka</h4>
-          </div>
-        </div>
-      </div>
     </div>
     <div class="text-center text-[10px] text-slate-400 pb-2">Beli Disini! © 2026 • Professional Logistics</div>
   </div>
@@ -418,16 +356,14 @@
     </div>
   </div>
 
-  <!-- MODAL PROFIL (DENGAN OPSI UBAH FOTO WARUNG BAGI MITRA) -->
+  <!-- MODAL PROFIL -->
   <div id="profile-modal" class="fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center hidden backdrop-blur-sm p-4">
     <div class="bg-white rounded-3xl w-full max-w-xs p-6 shadow-2xl space-y-4 relative animate-slide-up max-h-[85vh] overflow-y-auto text-slate-800">
       <div class="flex justify-between items-center border-b border-slate-100 pb-3">
         <h3 id="profile-modal-title" class="text-sm font-black text-slate-900 flex items-center gap-2"><i class="fa-solid fa-id-card text-rose-600"></i> Profil Akun Saya</h3>
         <button type="button" onclick="closeProfileModal()" class="w-7 h-7 bg-slate-100 rounded-full text-slate-500 flex items-center justify-center text-xs font-bold active:scale-90"><i class="fa-solid fa-xmark"></i></button>
       </div>
-      <div class="space-y-3 text-xs" id="profile-modal-content">
-        <!-- Diisi dinamis -->
-      </div>
+      <div class="space-y-3 text-xs" id="profile-modal-content"></div>
       <button type="button" onclick="logout()" class="w-full bg-red-50 hover:bg-red-100 text-red-600 font-black py-3 rounded-2xl text-xs transition-all flex items-center justify-center gap-2 active:scale-95"><i class="fa-solid fa-right-from-bracket"></i> KELUAR AKUN</button>
     </div>
   </div>
@@ -483,7 +419,7 @@
         <div><label class="text-[11px] font-extrabold text-slate-700 block mb-1">Nama Produk *</label><input type="text" id="new-prod-name" placeholder="Contoh: Es Jeruk Nipis" class="w-full bg-slate-50 rounded-2xl px-4 py-3.5 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium"></div>
         <div class="grid grid-cols-2 gap-2.5">
           <div><label class="text-[11px] font-extrabold text-slate-700 block mb-1">Harga (Rp) *</label><input type="number" id="new-prod-price" placeholder="10000" class="w-full bg-slate-50 rounded-2xl px-4 py-3.5 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium"></div>
-          <div><label class="text-[11px] font-extrabold text-slate-700 block mb-1">Pilih Warung Mitra *</label><select id="new-prod-store" class="w-full bg-slate-50 rounded-2xl px-3 py-3.5 text-xs border border-slate-200 font-bold text-slate-700 focus:outline-none focus:border-rose-600"><!-- Diisi dinamis --></select></div>
+          <div><label class="text-[11px] font-extrabold text-slate-700 block mb-1">Pilih Warung Mitra *</label><select id="new-prod-store" class="w-full bg-slate-50 rounded-2xl px-3 py-3.5 text-xs border border-slate-200 font-bold text-slate-700 focus:outline-none focus:border-rose-600"></select></div>
         </div>
         <div>
           <label class="text-[11px] font-extrabold text-slate-700 block mb-1">Foto Produk (Dari HP)</label>
@@ -563,7 +499,6 @@
     }
 
     var WA_NUMBER = "6281993827358"; 
-    var ADMIN_PIN = "5555";          
     var STORE_COORDS = { lat: -4.605417, lng: 121.960444 };
 
     var safeStorage = {
@@ -581,6 +516,15 @@
     var userActiveBalance = 0;
 
     document.addEventListener("DOMContentLoaded", function() {
+      // CEK LINK RAHASIA ADMIN ?role=admin
+      var urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('role') === 'admin') {
+        currentUser = { name: "Admin Utama", role: "admin" };
+        safeStorage.setItem('app_active_session', JSON.stringify(currentUser));
+        openMainApp("Admin Utama");
+        return;
+      }
+
       checkActiveSession(); 
       generateNewInvoiceId();
       checkStoreStatus();
@@ -652,20 +596,6 @@
       document.getElementById('invoice-id-display').innerText = currentInvoiceId;
     }
 
-    function switchAuthTab(tab) {
-      if (tab === 'user') {
-        document.getElementById('tab-btn-user').className = "w-11 h-11 rounded-2xl bg-rose-600 text-white flex items-center justify-center shadow-md shadow-rose-600/20 active:scale-95 transition-all text-sm";
-        document.getElementById('tab-btn-admin').className = "w-11 h-11 rounded-2xl bg-slate-100 text-slate-600 flex items-center justify-center shadow-sm active:scale-95 transition-all text-sm";
-        document.getElementById('form-user').classList.remove('hidden');
-        document.getElementById('form-admin').classList.add('hidden');
-      } else {
-        document.getElementById('tab-btn-admin').className = "w-11 h-11 rounded-2xl bg-slate-900 text-white flex items-center justify-center shadow-md shadow-slate-900/20 active:scale-95 transition-all text-sm";
-        document.getElementById('tab-btn-user').className = "w-11 h-11 rounded-2xl bg-slate-100 text-slate-600 flex items-center justify-center shadow-sm active:scale-95 transition-all text-sm";
-        document.getElementById('form-admin').classList.remove('hidden');
-        document.getElementById('form-user').classList.add('hidden');
-      }
-    }
-
     function switchConsumerMode(mode) {
       if (mode === 'login') {
         document.getElementById('subtab-login').className = "flex-1 py-3 rounded-xl bg-rose-600 text-white shadow-md shadow-rose-600/20 transition-all text-center";
@@ -680,47 +610,12 @@
       }
     }
 
-    function switchAdminSubTab(sub) {
-      var btnPin = document.getElementById('adminsub-pin'), btnMerch = document.getElementById('adminsub-merchant'), btnLogin = document.getElementById('adminsub-login'), btnReg = document.getElementById('adminsub-register');
-      var secPin = document.getElementById('admin-subsect-pin'), secMerch = document.getElementById('admin-subsect-merchant'), secLogin = document.getElementById('admin-subsect-login'), secReg = document.getElementById('admin-subsect-register');
-
-      btnPin.className = "py-2.5 rounded-xl text-slate-600 transition-all text-center";
-      btnMerch.className = "py-2.5 rounded-xl text-slate-600 transition-all text-center";
-      btnLogin.className = "py-2.5 rounded-xl text-slate-600 transition-all text-center";
-      btnReg.className = "py-2.5 rounded-xl text-slate-600 transition-all text-center";
-      secPin.classList.add('hidden'); secMerch.classList.add('hidden'); secLogin.classList.add('hidden'); secReg.classList.add('hidden');
-
-      if (sub === 'pin') { btnPin.className = "py-2.5 rounded-xl bg-slate-900 text-white shadow-md transition-all text-center"; secPin.classList.remove('hidden'); }
-      else if (sub === 'merchant') { btnMerch.className = "py-2.5 rounded-xl bg-amber-600 text-white shadow-md transition-all text-center"; secMerch.classList.remove('hidden'); }
-      else if (sub === 'login') { btnLogin.className = "py-2.5 rounded-xl bg-slate-900 text-white shadow-md transition-all text-center"; secLogin.classList.remove('hidden'); }
-      else if (sub === 'register') { btnReg.className = "py-2.5 rounded-xl bg-emerald-600 text-white shadow-md transition-all text-center"; secReg.classList.remove('hidden'); checkRecruitmentStatus(); }
-    }
-
-    function loginMerchant() {
-      var phone = document.getElementById('merchant-login-phone').value.trim();
-      var password = document.getElementById('merchant-login-password').value.trim();
-      if (!phone || !password) { alert("Masukkan WhatsApp dan Password Warung."); return; }
-
-      callApiPost('loginMerchant', { phone: phone, password: password }).then(res => {
-        if (res && res.status === "Success") {
-          currentUser = { name: res.name, phone: res.phone, storeId: res.id, address: res.address, role: 'merchant' };
-          safeStorage.setItem('app_active_session', JSON.stringify(currentUser));
-          showToast("Login Mitra Berhasil!");
-          openMainApp("Mitra: " + currentUser.name);
-        } else { alert("❌ " + (res.message || "WhatsApp atau Password warung salah!")); }
-      });
-    }
-
     function checkRecruitmentStatus() {
       callApiGet('getRecruitmentStatus').then(status => { applyRecruitmentStatus(status || "TUTUP"); }).catch(err => { applyRecruitmentStatus("TUTUP"); });
     }
 
     function applyRecruitmentStatus(status) {
       recruitmentStatus = status;
-      var openBox = document.getElementById('courier-recruitment-open-box');
-      var closedBox = document.getElementById('courier-recruitment-closed-box');
-      if (openBox) openBox.classList.toggle('hidden', status !== "BUKA");
-      if (closedBox) closedBox.classList.toggle('hidden', status === "BUKA");
       updateAdminMenuModalUI();
     }
 
@@ -729,65 +624,6 @@
       applyRecruitmentStatus(newStatus);
       callApiPost('saveRecruitmentStatus', { status: newStatus });
       showToast("Status lowongan kurir diubah ke: " + newStatus);
-    }
-
-    function registerCourier() {
-      var name = document.getElementById('courier-reg-name').value.trim();
-      var phone = document.getElementById('courier-reg-phone').value.trim();
-      var vehicle = document.getElementById('courier-reg-vehicle').value.trim();
-      var password = document.getElementById('courier-reg-password').value.trim();
-      var fileVehicle = document.getElementById('reg-file-vehicle').files[0];
-      var fileKtp = document.getElementById('reg-file-ktp').files[0];
-      var fileStnk = document.getElementById('reg-file-stnk').files[0];
-      var fileSim = document.getElementById('reg-file-sim').files[0];
-
-      if (!name || !phone || !vehicle || !password || !fileVehicle || !fileKtp || !fileStnk || !fileSim) {
-        alert("Lengkapi seluruh kolom teks dan unggah semua dokumen wajib.");
-        return;
-      }
-
-      var btn = document.getElementById('btn-submit-courier-reg');
-      btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Mengunggah Dokumen...';
-
-      readFilesAsBase64([fileVehicle, fileKtp, fileStnk, fileSim], function(base64Arr) {
-        var courierData = { name: name, phone: phone, vehicle: vehicle, password: password, vehiclePhoto: base64Arr[0], ktpPhoto: base64Arr[1], stnkPhoto: base64Arr[2], simPhoto: base64Arr[3] };
-        callApiPost('registerCourier', { courier: courierData }).then(res => {
-          btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-paper-plane text-base"></i> KIRIM LAMARAN KURIR';
-          if (res && res.status === "Exists") { alert("⚠️ Nomor WhatsApp kurir sudah terdaftar!"); }
-          else {
-            document.getElementById('courier-recruitment-open-box').classList.add('hidden');
-            document.getElementById('courier-success-notification').classList.remove('hidden');
-            checkPendingCouriersCount();
-          }
-        });
-      });
-    }
-
-    function readFilesAsBase64(files, callback) {
-      var results = [], index = 0;
-      function next() {
-        if (index >= files.length) { callback(results); return; }
-        var reader = new FileReader();
-        reader.onload = function(e) { results.push(e.target.result); index++; next(); };
-        reader.readAsDataURL(files[index]);
-      }
-      next();
-    }
-
-    function loginCourier() {
-      var phone = document.getElementById('courier-login-phone').value.trim();
-      var password = document.getElementById('courier-login-password').value.trim();
-      if (!phone || !password) { alert("Masukkan WhatsApp dan Password Kurir."); return; }
-
-      callApiPost('loginCourier', { phone: phone, password: password }).then(res => {
-        if (res && res.status === "Success") {
-          currentUser = { name: res.name, phone: res.phone, vehicle: res.vehicle, role: 'courier' };
-          safeStorage.setItem('app_active_session', JSON.stringify(currentUser));
-          showToast("Login Kurir Berhasil!");
-          openMainApp("Kurir: " + currentUser.name);
-        } else if (res && res.status === "Pending") { alert("⏳ " + res.message); }
-        else { alert("❌ " + (res.message || "WhatsApp atau Password kurir salah!")); }
-      });
     }
 
     function checkPendingCouriersCount() {
@@ -898,16 +734,6 @@
     function forgotPassword() {
       window.open("https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent("Halo Admin, saya lupa password akun saya."), '_blank');
     }
-
-    function checkAdminLogin() {
-      if (document.getElementById('admin-pin-input').value.trim() === ADMIN_PIN) {
-        currentUser = { name: "Admin Utama", role: "admin" };
-        safeStorage.setItem('app_active_session', JSON.stringify(currentUser));
-        openMainApp("Admin Utama");
-      } else { document.getElementById('admin-error-msg').classList.remove('hidden'); }
-    }
-
-    function handleAdminKeyPress(e) { if (e.key === 'Enter') checkAdminLogin(); }
 
     function openMainApp(greetingText) {
       document.getElementById('auth-screen').classList.add('hidden');
