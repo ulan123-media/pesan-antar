@@ -556,11 +556,11 @@
   </div>
 
 <script>
-    // Inisialisasi Supabase yang Aman
+    // Inisialisasi Supabase yang Aman menggunakan var agar tidak bentrok
     const SUPABASE_URL = 'https://cbsucahvrowgxvtnerf.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNic3VjYWh2cm93b2d4dnRuZXJmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc2NjE3MjEsImV4cCI6MjEwMzIzNzcyMX0.4TEcksJ4bfPBcloOV44trNtseblmuj3KrQWo2yNRVFA';
 
-    let supabase = null;
+    var supabase = null;
     try {
       if (window.supabase && typeof window.supabase.createClient === 'function') {
         supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
