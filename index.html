@@ -183,9 +183,8 @@
         </div>
       </div>
       
-      <!-- STATISTIK OMSET & DOMPET DIGITAL (BERBARIS RAPI 3 KOLOM KECIL DI HP) -->
+      <!-- STATISTIK OMSET & DOMPET DIGITAL -->
       <div id="admin-omset-grid" class="grid grid-cols-3 gap-2.5">
-        <!-- Card 1: Omset -->
         <div class="relative overflow-hidden bg-slate-800 p-3 rounded-2xl shadow-md border border-slate-700 flex flex-col justify-between">
           <div class="flex items-center gap-1.5 mb-1">
             <div class="w-7 h-7 rounded-xl bg-rose-500/20 border border-rose-500/30 text-rose-400 flex items-center justify-center text-xs font-black shadow-inner"><i class="fa-solid fa-rupiah-sign"></i></div>
@@ -194,7 +193,6 @@
           <span id="dash-total-omset" class="text-xs sm:text-sm font-black text-white truncate">Rp 0</span>
         </div>
 
-        <!-- Card 2: Pesanan Selesai -->
         <div class="relative overflow-hidden bg-slate-800 p-3 rounded-2xl shadow-md border border-slate-700 flex flex-col justify-between">
           <div class="flex items-center gap-1.5 mb-1">
             <div class="w-7 h-7 rounded-xl bg-amber-500/20 border border-amber-500/30 text-amber-400 flex items-center justify-center text-xs font-black shadow-inner"><i class="fa-solid fa-cubes-stacked"></i></div>
@@ -203,7 +201,6 @@
           <span id="dash-total-orders" class="text-xs sm:text-sm font-black text-white truncate">0</span>
         </div>
 
-        <!-- Card 3: Saldo Dompet (Tarik & Riwayat WD) -->
         <div id="wallet-card-box" class="relative overflow-hidden bg-gradient-to-r from-emerald-900 to-teal-900 p-3 rounded-2xl shadow-md border border-emerald-700 flex flex-col justify-between">
           <div class="flex items-center gap-1.5 mb-1">
             <div class="w-7 h-7 rounded-xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 flex items-center justify-center text-xs font-black shadow-inner"><i class="fa-solid fa-wallet"></i></div>
@@ -373,14 +370,17 @@
     </div>
   </div>
 
-  <!-- MODAL TAMBAH WARUNG / TOKO BARU -->
+  <!-- MODAL TAMBAH WARUNG / TOKO BARU (DENGAN UPLOAD FOTO HP) -->
   <div id="add-store-modal" class="fixed inset-0 bg-slate-900/60 z-50 flex items-end justify-center hidden backdrop-blur-sm transition-all">
     <div class="bg-white rounded-t-[32px] w-full p-6 max-h-[85vh] overflow-y-auto relative animate-slide-up shadow-2xl max-w-md mx-auto">
       <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-4"></div>
       <div class="flex justify-between items-center pb-3 border-b border-slate-100 mb-4"><h3 class="text-base font-black text-slate-900 flex items-center gap-2"><i class="fa-solid fa-store text-amber-600"></i> Tambah Warung Mitra Baru</h3><button type="button" onclick="toggleAddStoreModal()" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 font-bold active:scale-90"><i class="fa-solid fa-xmark text-xs"></i></button></div>
       <div class="space-y-3.5">
         <div><label class="text-[11px] font-extrabold text-slate-700 block mb-1">Nama Warung / Toko *</label><input type="text" id="new-store-name" placeholder="Contoh: Warung Makan Moronene" class="w-full bg-slate-50 rounded-2xl px-4 py-3.5 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium"></div>
-        <div><label class="text-[11px] font-extrabold text-slate-700 block mb-1">URL Foto / Logo Warung *</label><input type="text" id="new-store-image" placeholder="https://..." class="w-full bg-slate-50 rounded-2xl px-4 py-3.5 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium"></div>
+        <div>
+          <label class="text-[11px] font-extrabold text-slate-700 block mb-1">Foto / Logo Warung (Dari HP) *</label>
+          <input type="file" id="new-store-image-file" accept="image/*" class="w-full bg-slate-50 rounded-2xl p-3 text-xs border border-slate-200 file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-amber-600 file:text-white">
+        </div>
         <div><label class="text-[11px] font-extrabold text-slate-700 block mb-1">Alamat Warung *</label><input type="text" id="new-store-address" placeholder="Contoh: Jl. Poros Bombana" class="w-full bg-slate-50 rounded-2xl px-4 py-3.5 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium"></div>
         <div><label class="text-[11px] font-extrabold text-slate-700 block mb-1">WhatsApp Mitra (Login) *</label><input type="tel" id="new-store-phone" placeholder="081234567891" class="w-full bg-slate-50 rounded-2xl px-4 py-3.5 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium"></div>
         <div><label class="text-[11px] font-extrabold text-slate-700 block mb-1">Password Warung *</label><input type="password" id="new-store-password" placeholder="Password rahasia login" class="w-full bg-slate-50 rounded-2xl px-4 py-3.5 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium"></div>
@@ -411,7 +411,7 @@
     </div>
   </div>
 
-  <!-- MODAL PROFIL (KONSUMEN / MITRA TOKO) -->
+  <!-- MODAL PROFIL -->
   <div id="profile-modal" class="fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center hidden backdrop-blur-sm p-4">
     <div class="bg-white rounded-3xl w-full max-w-xs p-6 shadow-2xl space-y-4 relative animate-slide-up max-h-[85vh] overflow-y-auto text-slate-800">
       <div class="flex justify-between items-center border-b border-slate-100 pb-3">
@@ -470,7 +470,7 @@
     </div>
   </div>
 
-  <!-- MODAL TAMBAH PRODUK -->
+  <!-- MODAL TAMBAH PRODUK (DENGAN UPLOAD FOTO HP) -->
   <div id="add-product-modal" class="fixed inset-0 bg-slate-900/60 z-50 flex items-end justify-center hidden backdrop-blur-sm transition-all">
     <div class="bg-white rounded-t-[32px] w-full p-6 max-h-[85vh] overflow-y-auto relative animate-slide-up shadow-2xl max-w-md mx-auto">
       <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-4"></div>
@@ -481,7 +481,10 @@
           <div><label class="text-[11px] font-extrabold text-slate-700 block mb-1">Harga (Rp) *</label><input type="number" id="new-prod-price" placeholder="10000" class="w-full bg-slate-50 rounded-2xl px-4 py-3.5 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium"></div>
           <div><label class="text-[11px] font-extrabold text-slate-700 block mb-1">Pilih Warung Mitra *</label><select id="new-prod-store" class="w-full bg-slate-50 rounded-2xl px-3 py-3.5 text-xs border border-slate-200 font-bold text-slate-700 focus:outline-none focus:border-rose-600"><!-- Diisi dinamis --></select></div>
         </div>
-        <div><label class="text-[11px] font-extrabold text-slate-700 block mb-1">URL Foto Produk</label><input type="text" id="new-prod-image" placeholder="https://..." class="w-full bg-slate-50 rounded-2xl px-4 py-3.5 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium"></div>
+        <div>
+          <label class="text-[11px] font-extrabold text-slate-700 block mb-1">Foto Produk (Dari HP)</label>
+          <input type="file" id="new-prod-image-file" accept="image/*" class="w-full bg-slate-50 rounded-2xl p-3 text-xs border border-slate-200 file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-rose-600 file:text-white">
+        </div>
         <div><label class="text-[11px] font-extrabold text-slate-700 block mb-1">Deskripsi Singkat</label><input type="text" id="new-prod-desc" placeholder="Rasa manis & segar..." class="w-full bg-slate-50 rounded-2xl px-4 py-3.5 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium"></div>
         <button type="button" onclick="saveNewProduct()" class="w-full bg-rose-600 hover:bg-rose-700 active:scale-95 text-white font-black py-4 rounded-2xl shadow-lg shadow-rose-600/25 transition-all text-xs tracking-wider mt-2">SIMPAN & SINKRON KE SHEETS</button>
       </div>
@@ -1864,35 +1867,59 @@
       }
     }
 
+    // Fungsi Simpan Warung dengan Unggah Foto Langsung dari HP
     function saveNewStore() {
       var name = document.getElementById('new-store-name').value.trim();
-      var image = document.getElementById('new-store-image').value.trim();
+      var fileInput = document.getElementById('new-store-image-file').files[0];
       var address = document.getElementById('new-store-address').value.trim();
       var phone = document.getElementById('new-store-phone').value.trim();
       var password = document.getElementById('new-store-password').value.trim();
-      if (!name || !image || !address || !phone || !password) { alert("Lengkapi semua data warung termasuk WhatsApp & Password login!"); return; }
+      if (!name || !fileInput || !address || !phone || !password) { alert("Lengkapi semua data warung termasuk foto dan password login!"); return; }
 
-      var newStore = { id: "store_" + Date.now(), name: name, image: image, address: address, phone: phone, password: password };
-      allStores.push(newStore);
-      callApiPost('saveStore', { store: newStore });
-      toggleAddStoreModal();
-      renderStores();
-      updateAdminStoreDropdown();
-      showToast("Warung mitra & akun login berhasil ditambahkan!");
+      showToast("Mengunggah foto warung...");
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        var imageBase64 = e.target.result;
+        var newStore = { id: "store_" + Date.now(), name: name, image: imageBase64, address: address, phone: phone, password: password };
+        allStores.push(newStore);
+        callApiPost('saveStore', { store: newStore }).then(() => {
+          toggleAddStoreModal();
+          renderStores();
+          updateAdminStoreDropdown();
+          showToast("Warung mitra & foto berhasil ditambahkan!");
+        });
+      };
+      reader.readAsDataURL(fileInput);
     }
 
+    // Fungsi Simpan Produk dengan Unggah Foto Langsung dari HP
     function saveNewProduct() {
       var name = document.getElementById('new-prod-name').value.trim();
       var price = parseInt(document.getElementById('new-prod-price').value.trim());
       var storeId = document.getElementById('new-prod-store').value;
-      var image = document.getElementById('new-prod-image').value.trim();
+      var fileInput = document.getElementById('new-prod-image-file').files[0];
       var desc = document.getElementById('new-prod-desc').value.trim();
       if (!name || isNaN(price) || !storeId) { alert("Lengkapi data produk dengan benar!"); return; }
 
-      var newProd = { id: String(Date.now()), name: name, price: price, storeId: storeId, image: image || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300", desc: desc || "", inStock: true, terlaris: true };
-      allProducts.unshift(newProd);
-      callApiPost('saveProduct', { product: newProd });
-      toggleAddProductModal(); renderProducts(); showToast("Produk baru tersimpan!");
+      if (fileInput) {
+        showToast("Mengunggah foto produk...");
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          var imageBase64 = e.target.result;
+          var newProd = { id: String(Date.now()), name: name, price: price, storeId: storeId, image: imageBase64, desc: desc || "", inStock: true, terlaris: true };
+          allProducts.unshift(newProd);
+          callApiPost('saveProduct', { product: newProd }).then(() => {
+            toggleAddProductModal(); renderProducts(); showToast("Produk baru & foto tersimpan!");
+          });
+        };
+        reader.readAsDataURL(fileInput);
+      } else {
+        var newProd = { id: String(Date.now()), name: name, price: price, storeId: storeId, image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300", desc: desc || "", inStock: true, terlaris: true };
+        allProducts.unshift(newProd);
+        callApiPost('saveProduct', { product: newProd }).then(() => {
+          toggleAddProductModal(); renderProducts(); showToast("Produk baru tersimpan!");
+        });
+      }
     }
   </script>
 </body>
