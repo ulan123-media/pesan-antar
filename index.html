@@ -5,17 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Beli Disini! - Toko Online & Kurir Profesional</title>
   
-  <!-- PWA & MOBILE META TAGS -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Beli Disini!">
   <meta name="theme-color" content="#991b1b">
   
-  <!-- APPLE TOUCH ICON -->
   <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1552566626-52f8b828add9?w=192&h=192&fit=crop">
   
-  <!-- WEB APP MANIFEST (INLINE DATA URI UNTUK GOOGLE APPS SCRIPT) -->
   <link rel="manifest" href='data:application/manifest+json;charset=utf-8,{"name":"Beli Disini! - Toko Online & Kurir","short_name":"Beli Disini","start_url":".","display":"standalone","background_color":"#f1f5f9","theme_color":"#991b1b","icons":[{"src":"https://images.unsplash.com/photo-1552566626-52f8b828add9?w=192&h=192&fit=crop","sizes":"192x192","type":"image/jpeg"},{"src":"https://images.unsplash.com/photo-1552566626-52f8b828add9?w=512&h=512&fit=crop","sizes":"512x512","type":"image/jpeg"}]}'>
 
   <script src="https://cdn.tailwindcss.com"></script>
@@ -24,7 +21,9 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-  <!-- MIDTRANS SNAP JS (PRODUCTION) -->
+  <!-- SUPABASE JS CLIENT SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <script src="https://app.midtrans.com/snap/snap.js" data-client-key="Mid-client-9M_SaFxGpxkqIh1J"></script>
   
   <style>
@@ -44,7 +43,6 @@
 </head>
 <body id="body-root" class="bg-slate-100 min-h-screen text-slate-800 antialiased selection:bg-rose-600 selection:text-white relative">
 
-  <!-- BANNER INSTAL PWA ( MUNCUL JIKA BISA DIINSTAL ) -->
   <div id="pwa-install-banner" class="hidden fixed top-0 left-0 right-0 z-[70] bg-rose-600 text-white px-4 py-2.5 flex justify-between items-center shadow-lg text-xs font-bold">
     <div class="flex items-center gap-2">
       <i class="fa-solid fa-mobile-screen-button text-base animate-bounce"></i>
@@ -56,15 +54,12 @@
     </div>
   </div>
 
-  <!-- TOAST NOTIFIKASI -->
   <div id="toast-notification" class="fixed top-5 left-1/2 -translate-x-1/2 z-[60] bg-slate-900/95 backdrop-blur-md text-white text-xs font-bold px-5 py-3 rounded-2xl shadow-xl flex items-center gap-3 transition-all duration-300 opacity-0 pointer-events-none -translate-y-6 w-[92%] max-w-sm justify-center border border-slate-800">
     <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400 text-sm"></i>
     <span id="toast-message" class="truncate">Barang ditambahkan!</span>
   </div>
 
-  <!-- HALAMAN UTAMA KONSUMEN -->
   <div id="auth-screen" class="fixed inset-0 z-50 flex flex-col justify-between bg-white p-6 overflow-y-auto max-w-md mx-auto shadow-2xl">
-    
     <div class="flex justify-between items-center w-full pt-2">
       <div class="flex items-center gap-1.5 text-[11px] font-extrabold text-slate-700 bg-slate-100 px-3.5 py-2 rounded-full shadow-xs">
         <i class="fa-solid fa-user text-rose-600 text-xs"></i> Portal Konsumen
@@ -138,7 +133,7 @@
       </button>
     </div>
 
-    <div class="text-center text-[10px] text-slate-400 pb-1">Beli Disini! © 2026 • Professional Logistics</div>
+    <div class="text-center text-[10px] text-slate-400 pb-1">Beli Disini! © 2026 • Powered by Supabase</div>
   </div>
 
   <!-- MODAL STAFF (MITRA & KURIR) -->
@@ -155,7 +150,6 @@
         <button type="button" id="staff-tab-merchant" onclick="switchStaffRole('merchant')" class="py-2.5 rounded-xl text-slate-600 transition-all text-center">Mitra Toko</button>
       </div>
 
-      <!-- KURIR SUB-SECTION -->
       <div id="staff-courier-box" class="space-y-4">
         <div class="flex bg-slate-100 p-1 rounded-2xl text-[11px] font-bold mb-2">
           <button type="button" id="subtab-c-login" onclick="switchCourierMode('login')" class="flex-1 py-2 rounded-lg bg-slate-900 text-white transition-all text-center">Masuk</button>
@@ -179,10 +173,8 @@
             <div><label class="text-[10px] font-extrabold text-slate-700 block mb-1">Kendaraan *</label><input type="text" id="c-reg-vehicle" placeholder="Honda Beat / Hitam" class="w-full bg-slate-50 rounded-xl px-3 py-2 text-xs border"></div>
             <div><label class="text-[10px] font-extrabold text-slate-700 block mb-1">Password *</label><input type="password" id="c-reg-password" placeholder="Password akun" class="w-full bg-slate-50 rounded-xl px-3 py-2 text-xs border"></div>
             
-            <!-- SYARAT PENDAFTARAN KURIR -->
             <div class="border-t pt-2 border-slate-200">
               <label class="text-[10px] font-extrabold text-rose-600 block mb-1">Unggah Syarat Berkas Kurir *</label>
-              
               <div class="space-y-2 mt-1">
                 <div>
                   <span class="text-[9px] text-slate-600 font-bold block">1. Foto Kendaraan</span>
@@ -208,19 +200,16 @@
         </div>
       </div>
 
-      <!-- MITRA TOKO SUB-SECTION -->
       <div id="staff-merchant-box" class="space-y-3.5 hidden">
         <div><label class="text-[11px] font-extrabold text-slate-700 block mb-1">WhatsApp Warung *</label><input type="tel" id="merchant-login-phone" placeholder="081234567891" class="w-full bg-slate-50 rounded-2xl px-4 py-3.5 text-xs border border-slate-200"></div>
         <div><label class="text-[11px] font-extrabold text-slate-700 block mb-1">Password Warung *</label><input type="password" id="merchant-login-password" placeholder="••••••••" class="w-full bg-slate-50 rounded-2xl px-4 py-3.5 text-xs border border-slate-200"></div>
         <button type="button" onclick="loginMerchant()" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-black py-4 rounded-2xl shadow-lg transition-all text-xs tracking-wider">MASUK PANEL MITRA WARUNG</button>
       </div>
-
     </div>
   </div>
 
   <!-- APLIKASI UTAMA -->
   <div id="main-app" class="hidden w-full min-h-screen relative pb-40 max-w-4xl mx-auto shadow-2xl transition-all">
-    
     <div id="app-header" class="flex justify-between items-center px-6 pt-6 pb-4 bg-white/90 backdrop-blur-md sticky top-0 z-30 border-b border-slate-200/80">
       <div>
         <h1 id="app-title-main" class="text-xl font-black text-slate-900 tracking-tight">Beli Disini!</h1>
@@ -236,11 +225,6 @@
 
     <div id="admin-control-bar" class="hidden px-6 pt-5 mb-6">
       <div id="panel-card-box" class="relative overflow-hidden bg-gradient-to-br from-red-950 via-rose-900 to-red-900 text-white p-5 rounded-3xl flex flex-col sm:flex-row justify-between items-start sm:items-center shadow-xl shadow-red-900/40 border border-red-800/50 gap-4 mb-4 group">
-        <div class="absolute bottom-0 left-0 w-full opacity-20 pointer-events-none">
-          <svg viewBox="0 0 1440 320" class="w-full h-auto" preserveAspectRatio="none">
-            <path fill="#ffffff" fill-opacity="1" d="M0,288L48,272C96,256,192,224,288,197.3C384,171,480,149,576,165.3C672,181,768,235,864,250.7C960,267,1056,245,1152,213.3C1248,181,1344,139,1392,117.3L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
-          </svg>
-        </div>
         <div class="relative z-10 flex items-center gap-3.5">
           <div class="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-amber-400 flex items-center justify-center text-xl shadow-inner"><i class="fa-solid fa-store"></i></div>
           <div>
@@ -346,7 +330,7 @@
     </div>
   </div>
 
-  <!-- MODAL PENARIKAN SALDO -->
+  <!-- MODAL-MODAL PENDUKUNG -->
   <div id="withdraw-modal" class="fixed inset-0 bg-slate-900/70 z-50 flex items-center justify-center hidden backdrop-blur-sm p-4">
     <div class="bg-white rounded-3xl w-full max-w-xs p-6 shadow-2xl space-y-4 max-w-md mx-auto animate-slide-up text-slate-800">
       <div class="flex justify-between items-center border-b border-slate-100 pb-3">
@@ -380,7 +364,6 @@
     </div>
   </div>
 
-  <!-- MODAL RIWAYAT PENARIKAN -->
   <div id="withdrawal-history-modal" class="fixed inset-0 bg-slate-900/70 z-50 flex items-center justify-center hidden backdrop-blur-sm p-4">
     <div class="bg-white rounded-3xl w-full max-w-md p-6 shadow-2xl space-y-4 max-h-[85vh] overflow-y-auto animate-slide-up text-slate-800">
       <div class="flex justify-between items-center border-b border-slate-100 pb-3">
@@ -391,24 +374,20 @@
     </div>
   </div>
 
-  <!-- MODAL PERSETUJUAN PENCAIRAN ADMIN -->
   <div id="admin-withdrawals-modal" class="fixed inset-0 bg-slate-900/70 z-50 flex items-center justify-center hidden backdrop-blur-sm p-4">
     <div class="bg-white rounded-3xl w-full max-w-lg p-6 shadow-2xl space-y-4 max-h-[85vh] overflow-y-auto animate-slide-up text-slate-800">
       <div class="flex justify-between items-center border-b border-slate-100 pb-3">
         <h3 class="text-sm font-black text-slate-900 flex items-center gap-2"><i class="fa-solid fa-money-check-dollar text-emerald-600"></i> Kelola Permintaan Tarik Saldo</h3>
         <button type="button" onclick="closeAdminWithdrawalsModal()" class="w-7 h-7 bg-slate-100 rounded-full text-slate-500 flex items-center justify-center text-xs font-bold"><i class="fa-solid fa-xmark"></i></button>
       </div>
-      
       <div class="flex bg-slate-100 p-1 rounded-2xl text-xs font-bold">
         <button type="button" id="admin-w-tab-pending" onclick="switchAdminWithdrawalTab('pending')" class="flex-1 py-2.5 rounded-xl bg-emerald-600 text-white shadow-sm transition-all text-center">Menunggu Transfer</button>
         <button type="button" id="admin-w-tab-history" onclick="switchAdminWithdrawalTab('history')" class="flex-1 py-2.5 rounded-xl text-slate-600 transition-all text-center">Semua Riwayat Transaksi</button>
       </div>
-
       <div id="admin-withdrawals-container" class="space-y-3"><p class="text-xs text-slate-400 text-center py-4">Memuat data...</p></div>
     </div>
   </div>
 
-  <!-- MODAL BUKTI FOTO PENGIRIMAN -->
   <div id="delivery-proof-modal" class="fixed inset-0 bg-slate-900/80 z-50 flex items-center justify-center hidden backdrop-blur-sm p-4">
     <div class="bg-white rounded-3xl w-full max-w-xs p-5 shadow-2xl space-y-4 max-w-md mx-auto animate-slide-up">
       <div class="flex justify-between items-center border-b border-slate-100 pb-2">
@@ -431,7 +410,6 @@
     </div>
   </div>
 
-  <!-- MODAL MENU ADMIN / MITRA -->
   <div id="admin-menu-modal" class="fixed inset-0 bg-slate-900/60 z-50 flex items-end justify-center hidden backdrop-blur-sm transition-all">
     <div class="bg-white rounded-t-[32px] w-full p-6 max-h-[85vh] overflow-y-auto relative animate-slide-up shadow-2xl space-y-4 max-w-md mx-auto">
       <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-2"></div>
@@ -443,7 +421,6 @@
     </div>
   </div>
 
-  <!-- MODAL TAMBAH WARUNG -->
   <div id="add-store-modal" class="fixed inset-0 bg-slate-900/60 z-50 flex items-end justify-center hidden backdrop-blur-sm transition-all">
     <div class="bg-white rounded-t-[32px] w-full p-6 max-h-[85vh] overflow-y-auto relative animate-slide-up shadow-2xl max-w-md mx-auto">
       <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-4"></div>
@@ -457,12 +434,11 @@
         <div><label class="text-[11px] font-extrabold text-slate-700 block mb-1">Alamat Warung *</label><input type="text" id="new-store-address" placeholder="Contoh: Jl. Poros Bombana" class="w-full bg-slate-50 rounded-2xl px-4 py-3.5 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium"></div>
         <div><label class="text-[11px] font-extrabold text-slate-700 block mb-1">WhatsApp Mitra (Login) *</label><input type="tel" id="new-store-phone" placeholder="081234567891" class="w-full bg-slate-50 rounded-2xl px-4 py-3.5 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium"></div>
         <div><label class="text-[11px] font-extrabold text-slate-700 block mb-1">Password Warung *</label><input type="password" id="new-store-password" placeholder="Password rahasia login" class="w-full bg-slate-50 rounded-2xl px-4 py-3.5 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium"></div>
-        <button type="button" onclick="saveNewStore()" class="w-full bg-amber-600 hover:bg-amber-700 active:scale-95 text-white font-black py-4 rounded-2xl shadow-lg transition-all text-xs tracking-wider mt-2">SIMPAN WARUNG BARU KE SHEETS</button>
+        <button type="button" onclick="saveNewStore()" class="w-full bg-amber-600 hover:bg-amber-700 active:scale-95 text-white font-black py-4 rounded-2xl shadow-lg transition-all text-xs tracking-wider mt-2">SIMPAN WARUNG BARU KE DATABASE</button>
       </div>
     </div>
   </div>
 
-  <!-- MODAL VERIFIKASI KURIR -->
   <div id="courier-approval-modal" class="fixed inset-0 bg-slate-900/70 z-50 flex items-center justify-center hidden backdrop-blur-sm p-4">
     <div class="bg-white rounded-3xl w-full max-w-md p-6 shadow-2xl space-y-4 max-h-[85vh] overflow-y-auto animate-slide-up">
       <div class="flex justify-between items-center border-b border-slate-100 pb-3">
@@ -473,7 +449,6 @@
     </div>
   </div>
 
-  <!-- MODAL PANTAU KURIR -->
   <div id="all-couriers-modal" class="fixed inset-0 bg-slate-900/70 z-50 flex items-center justify-center hidden backdrop-blur-sm p-4">
     <div class="bg-white rounded-3xl w-full max-w-md p-6 shadow-2xl space-y-4 max-h-[85vh] overflow-y-auto animate-slide-up">
       <div class="flex justify-between items-center border-b border-slate-100 pb-3">
@@ -484,7 +459,6 @@
     </div>
   </div>
 
-  <!-- MODAL PROFIL -->
   <div id="profile-modal" class="fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center hidden backdrop-blur-sm p-4">
     <div class="bg-white rounded-3xl w-full max-w-xs p-6 shadow-2xl space-y-4 relative animate-slide-up max-h-[85vh] overflow-y-auto text-slate-800">
       <div class="flex justify-between items-center border-b border-slate-100 pb-3">
@@ -496,7 +470,6 @@
     </div>
   </div>
 
-  <!-- MODAL CHECKOUT -->
   <div id="cart-modal" class="fixed inset-0 bg-slate-900/60 z-50 flex items-end justify-center hidden backdrop-blur-sm transition-all">
     <div class="bg-white rounded-t-[32px] w-full p-6 max-h-[88vh] overflow-y-auto relative animate-slide-up shadow-2xl max-w-md mx-auto">
       <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-4"></div>
@@ -538,7 +511,6 @@
     </div>
   </div>
 
-  <!-- MODAL TAMBAH PRODUK -->
   <div id="add-product-modal" class="fixed inset-0 bg-slate-900/60 z-50 flex items-end justify-center hidden backdrop-blur-sm transition-all">
     <div class="bg-white rounded-t-[32px] w-full p-6 max-h-[85vh] overflow-y-auto relative animate-slide-up shadow-2xl max-w-md mx-auto">
       <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-4"></div>
@@ -554,12 +526,11 @@
           <input type="file" id="new-prod-image-file" accept="image/*" class="w-full bg-slate-50 rounded-2xl p-3 text-xs border border-slate-200 file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-rose-600 file:text-white">
         </div>
         <div><label class="text-[11px] font-extrabold text-slate-700 block mb-1">Deskripsi Singkat</label><input type="text" id="new-prod-desc" placeholder="Rasa manis & segar..." class="w-full bg-slate-50 rounded-2xl px-4 py-3.5 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium"></div>
-        <button type="button" onclick="saveNewProduct()" class="w-full bg-rose-600 hover:bg-rose-700 active:scale-95 text-white font-black py-4 rounded-2xl shadow-lg shadow-rose-600/25 transition-all text-xs tracking-wider mt-2">SIMPAN & SINKRON KE SHEETS</button>
+        <button type="button" onclick="saveNewProduct()" class="w-full bg-rose-600 hover:bg-rose-700 active:scale-95 text-white font-black py-4 rounded-2xl shadow-lg shadow-rose-600/25 transition-all text-xs tracking-wider mt-2">SIMPAN & SINKRON KE DATABASE</button>
       </div>
     </div>
   </div>
 
-  <!-- MODAL ZOOM FOTO -->
   <div id="image-modal" class="fixed inset-0 bg-slate-900/90 z-[80] flex items-center justify-center hidden backdrop-blur-md p-4" onclick="closeImageModal()">
     <div class="relative max-w-sm w-full flex flex-col items-center" onclick="event.stopPropagation()">
       <button type="button" onclick="closeImageModal()" class="absolute -top-12 right-0 w-10 h-10 rounded-full bg-white/20 text-white flex items-center justify-center font-bold text-base active:scale-90"><i class="fa-solid fa-xmark"></i></button>
@@ -568,7 +539,6 @@
     </div>
   </div>
 
-  <!-- MODAL STRUK -->
   <div id="receipt-modal" class="fixed inset-0 bg-slate-900/70 z-50 flex items-center justify-center hidden backdrop-blur-sm p-4">
     <div class="bg-white rounded-3xl w-full max-w-xs p-5 shadow-2xl space-y-4 max-w-md mx-auto">
       <div class="flex justify-between items-center border-b border-slate-100 pb-2"><h3 class="text-xs font-black text-slate-900 flex items-center gap-1.5"><i class="fa-solid fa-print text-rose-600"></i> Pratinjau Struk Thermal</h3><button type="button" onclick="closeReceiptModal()" class="w-7 h-7 bg-slate-100 rounded-full text-slate-500 flex items-center justify-center text-xs font-bold"><i class="fa-solid fa-xmark"></i></button></div>
@@ -588,7 +558,6 @@
     </div>
   </div>
 
-  <!-- MODAL TRACKING PETA -->
   <div id="tracking-modal" class="fixed inset-0 bg-slate-900/70 z-50 flex items-end justify-center hidden backdrop-blur-sm transition-all">
     <div class="bg-white rounded-t-[32px] w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh] animate-slide-up max-w-lg mx-auto">
       <div class="bg-slate-900 text-white p-4 flex justify-between items-center">
@@ -609,43 +578,215 @@
   </div>
 
   <script>
-    var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyvSIUlQzYYvWy916YAz32DyoZHV2wYbYfuCTG0HE_iP2EDKSfgEF32G1oitfA4NxmPBA/exec";
+    // ==========================================
+    // KONFIGURASI SUPABASE DATABASE
+    // ==========================================
+    const SUPABASE_URL = 'https://cbsucahvrowgxvtnerf.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNic3VjYWh2cm93b2d4dnRuZXJmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc2NjE3MjEsImV4cCI6MjEwMzIzNzcyMX0.4TEcksJ4bfPBcloOV44trNtseblmuj3KrQWo2yNRVFA'; //[cite: 1]
+    
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // PWA INSTALL PROMPT HANDLER
-    let deferredPWAEvent = null;
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPWAEvent = e;
-      var banner = document.getElementById('pwa-install-banner');
-      if (banner) banner.classList.remove('hidden');
-    });
+    // ==========================================
+    // WRAPPER PENGGANTI GOOGLE APPS SCRIPT KE SUPABASE
+    // ==========================================
+    async function callApiGet(action, params = {}) {
+      try {
+        if (action === 'getStores') {
+          let { data: stores } = await supabase.from('stores').select('*');
+          let { data: setting } = await supabase.from('settings').select('*').eq('key', 'store_order').single();
+          
+          let formattedStores = (stores || []).map(s => ({
+            id: s.id, name: s.name, image: s.image, address: s.address, phone: s.phone, password: s.password
+          }));
 
-    function triggerPWAInstall() {
-      if (deferredPWAEvent) {
-        deferredPWAEvent.prompt();
-        deferredPWAEvent.userChoice.then((choiceResult) => {
-          if (choiceResult.outcome === 'accepted') {
-            showToast("Aplikasi berhasil diinstal ke layar utama!");
+          if (setting && setting.value) {
+            try {
+              let orderIds = JSON.parse(setting.value);
+              formattedStores.sort((a, b) => {
+                let idxA = orderIds.indexOf(a.id), idxB = orderIds.indexOf(b.id);
+                return (idxA === -1 ? 999 : idxA) - (idxB === -1 ? 999 : idxB);
+              });
+            } catch(e) {}
           }
-          deferredPWAEvent = null;
-          document.getElementById('pwa-install-banner').classList.add('hidden');
-        });
-      }
+          return formattedStores.length > 0 ? formattedStores : null;
+        }
+        else if (action === 'getProducts') {
+          let { data: prods } = await supabase.from('products').select('*');
+          return (prods || []).map(p => ({
+            id: p.id, name: p.name, price: Number(p.price), storeId: p.store_id, image: p.image, desc: p.description, inStock: p.stock !== 'Habis', terlaris: p.terlaris
+          }));
+        }
+        else if (action === 'getOrders') {
+          let { data: ords } = await supabase.from('orders').select('*');
+          return (ords || []).map(o => ({
+            invoiceId: o.invoice_id, name: o.name, phone: o.phone, address: o.address, total: Number(o.total), itemsSummary: o.items_summary, status: o.status, location: o.location, lat: o.lat ? Number(o.lat) : null, lng: o.lng ? Number(o.lng) : null, date: o.date, ongkir: Number(o.ongkir || 0), notes: o.notes, courierLat: o.courier_lat ? Number(o.courier_lat) : null, courierLng: o.courier_lng ? Number(o.courier_lng) : null, courierName: o.courier_name, courierPhone: o.courier_phone, deliveryProof: o.delivery_proof, storeName: o.store_name
+          }));
+        }
+        else if (action === 'getStoreStatus') {
+          let { data } = await supabase.from('settings').select('value').eq('key', 'store_status').single();
+          return data ? data.value : 'BUKA';
+        }
+        else if (action === 'getRecruitmentStatus') {
+          let { data } = await supabase.from('settings').select('value').eq('key', 'recruitment_status').single();
+          return data ? data.value : 'TUTUP';
+        }
+        else if (action === 'getPendingCouriers') {
+          let { data } = await supabase.from('couriers').select('*').eq('status', 'Pending');
+          return (data || []).map(c => ({
+            name: c.name, phone: c.phone, vehicle: c.vehicle, vehiclePhoto: c.vehicle_photo, ktpPhoto: c.ktp_photo, stnkPhoto: c.stnk_photo, simPhoto: c.sim_photo
+          }));
+        }
+        else if (action === 'getAllCouriersWithStatus') {
+          let { data: couriers } = await supabase.from('couriers').select('*').eq('status', 'Approved');
+          let { data: orders } = await supabase.from('orders').select('courier_phone, status').eq('status', 'Sedang Diantar');
+          let activePhones = (orders || []).map(o => normalizePhone(o.courier_phone));
+          let now = Date.now();
+          return (couriers || []).map(c => {
+            let lastActive = Number(c.last_heartbeat || 0);
+            let isOnline = (now - lastActive) < 90000;
+            let isDelivering = activePhones.includes(normalizePhone(c.phone));
+            return { name: c.name, phone: c.phone, vehicle: c.vehicle, isOnline: isOnline, status: isDelivering ? "Sedang Mengantar" : (isOnline ? "Online" : "Offline") };
+          });
+        }
+        else if (action === 'getCourierHistory') {
+          let { data } = await supabase.from('withdrawals').select('*').eq('phone', normalizePhone(params.phone));
+          return (data || []).map(w => ({ name: w.name, role: w.role, phone: w.phone, amount: Number(w.amount), method: w.method, accountInfo: w.account_info, status: w.status, date: w.date })).reverse();
+        }
+        else if (action === 'getWithdrawalRequests') {
+          let { data } = await supabase.from('withdrawals').select('*').eq('status', 'Menunggu Transfer Admin');
+          return (data || []).map(w => ({ name: w.name, role: w.role, phone: w.phone, amount: Number(w.amount), method: w.method, accountInfo: w.account_info, status: w.status, date: w.date }));
+        }
+        else if (action === 'getAllWithdrawalHistory') {
+          let { data } = await supabase.from('withdrawals').select('*');
+          return (data || []).map(w => ({ name: w.name, role: w.role, phone: w.phone, amount: Number(w.amount), method: w.method, accountInfo: w.account_info, status: w.status, date: w.date })).reverse();
+        }
+        else if (action === 'getWithdrawalHistory') {
+          let { data } = await supabase.from('withdrawals').select('*').eq('phone', normalizePhone(params.phone));
+          return (data || []).map(w => ({ name: w.name, role: w.role, phone: w.phone, amount: Number(w.amount), method: w.method, accountInfo: w.account_info, status: w.status, date: w.date })).reverse();
+        }
+      } catch (err) { console.error(err); return null; }
     }
 
-    function callApiGet(action, params = {}) {
-      var url = SCRIPT_URL + "?action=" + action;
-      for (var key in params) { url += "&" + key + "=" + encodeURIComponent(params[key]); }
-      return fetch(url).then(res => res.json());
-    }
-
-    function callApiPost(action, data = {}) {
-      data.action = action;
-      return fetch(SCRIPT_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(data)
-      }).then(res => res.json());
+    async function callApiPost(action, data = {}) {
+      try {
+        if (action === 'saveProduct') {
+          let p = data.product;
+          await supabase.from('products').upsert({ id: p.id, name: p.name, price: p.price, store_id: p.storeId, image: p.image, description: p.desc, stock: p.inStock !== false ? 'Tersedia' : 'Habis', terlaris: p.terlaris });
+          return { status: "Success" };
+        }
+        else if (action === 'saveStore') {
+          let s = data.store;
+          await supabase.from('stores').upsert({ id: s.id, name: s.name, image: s.image, address: s.address, phone: s.phone, password: s.password });
+          return { status: "Success" };
+        }
+        else if (action === 'updateStoreImage') {
+          await supabase.from('stores').update({ image: data.newImage }).eq('id', data.storeId);
+          return { status: "Success" };
+        }
+        else if (action === 'saveStoreOrder') {
+          await supabase.from('settings').upsert({ key: 'store_order', value: data.storeOrder });
+          return { status: "Success" };
+        }
+        else if (action === 'processOrder') {
+          let o = data.order;
+          await supabase.from('orders').upsert({ invoice_id: o.invoiceId, name: o.name, phone: o.phone, address: o.address, total: o.total, items_summary: o.itemsSummary, status: o.status, location: o.location, lat: o.lat || null, lng: o.lng || null, date: o.date, ongkir: o.ongkir || 0, notes: o.notes || "", store_name: o.storeName || "Warung Mitra" });
+          return { status: "Success" };
+        }
+        else if (action === 'updateOrderStatus') {
+          await supabase.from('orders').update({ status: data.newStatus }).eq('invoice_id', data.invoiceId);
+          return { status: "Success" };
+        }
+        else if (action === 'updateOrderStatusWithProof') {
+          await supabase.from('orders').update({ status: data.newStatus, delivery_proof: data.deliveryProof }).eq('invoice_id', data.invoiceId);
+          return { status: "Success" };
+        }
+        else if (action === 'assignCourierAndDeliver') {
+          await supabase.from('orders').update({ status: 'Sedang Diantar', courier_name: data.courierName, courier_phone: data.courierPhone }).eq('invoice_id', data.invoiceId);
+          return { status: "Success" };
+        }
+        else if (action === 'saveStoreStatus') {
+          await supabase.from('settings').upsert({ key: 'store_status', value: data.status });
+          return { status: "Success" };
+        }
+        else if (action === 'saveRecruitmentStatus') {
+          await supabase.from('settings').upsert({ key: 'recruitment_status', value: data.status });
+          return { status: "Success" };
+        }
+        else if (action === 'updateCourierLocation') {
+          let updateData = { courier_lat: data.lat, courier_lng: data.lng };
+          if (data.courierName) updateData.courier_name = data.courierName;
+          await supabase.from('orders').update(updateData).eq('invoice_id', data.invoiceId);
+          return { status: "Success" };
+        }
+        else if (action === 'registerCustomer') {
+          let c = data.customer;
+          let phoneClean = normalizePhone(c.phone);
+          let { data: existing } = await supabase.from('customers').select('*').eq('phone', phoneClean).single();
+          if (existing) return { status: "Exists" };
+          await supabase.from('customers').insert({ phone: phoneClean, time: new Date().toISOString(), name: c.name, address: c.address, password: c.password });
+          return { status: "Created" };
+        }
+        else if (action === 'loginCustomer') {
+          let phoneClean = normalizePhone(data.phone);
+          let { data: user } = await supabase.from('customers').select('*').eq('phone', phoneClean).single();
+          if (!user) return { status: "Error", message: "Nomor tidak terdaftar!" };
+          if (String(user.password) === String(data.password)) return { status: "Success", name: user.name, phone: user.phone, address: user.address };
+          return { status: "Error", message: "Password salah!" };
+        }
+        else if (action === 'registerCourier') {
+          let c = data.courier;
+          let phoneClean = normalizePhone(c.phone);
+          let { data: existing } = await supabase.from('couriers').select('*').eq('phone', phoneClean).single();
+          if (existing) return { status: "Exists" };
+          await supabase.from('couriers').insert({ phone: phoneClean, time: new Date().toISOString(), name: c.name, vehicle: c.vehicle, password: c.password, vehicle_photo: c.vehiclePhoto, ktp_photo: c.ktpPhoto, stnk_photo: c.stnkPhoto, sim_photo: c.simPhoto, status: 'Pending', last_heartbeat: 0 });
+          return { status: "Created" };
+        }
+        else if (action === 'loginCourier') {
+          let phoneClean = normalizePhone(data.phone);
+          let { data: c } = await supabase.from('couriers').select('*').eq('phone', phoneClean).single();
+          if (!c) return { status: "Error", message: "Kurir tidak ditemukan!" };
+          if (String(c.status).trim() !== "Approved") return { status: "Pending", message: "Akun Anda masih dalam peninjauan Admin." };
+          if (String(c.password) === String(data.password)) return { status: "Success", name: c.name, phone: c.phone, vehicle: c.vehicle };
+          return { status: "Error", message: "Password salah!" };
+        }
+        else if (action === 'loginMerchant') {
+          let phoneClean = normalizePhone(data.phone);
+          let { data: stores } = await supabase.from('stores').select('*');
+          let store = (stores || []).find(s => normalizePhone(s.phone) === phoneClean);
+          if (!store) return { status: "Error", message: "Warung tidak ditemukan!" };
+          if (String(store.password || "123") === String(data.password)) return { status: "Success", id: store.id, name: store.name, phone: store.phone, address: store.address };
+          return { status: "Error", message: "Password salah!" };
+        }
+        else if (action === 'approveCourier') {
+          await supabase.from('couriers').update({ status: 'Approved' }).eq('phone', normalizePhone(data.phone));
+          return { status: "Success" };
+        }
+        else if (action === 'rejectCourier') {
+          await supabase.from('couriers').update({ status: 'Rejected' }).eq('phone', normalizePhone(data.phone));
+          return { status: "Success" };
+        }
+        else if (action === 'updateProductStock') {
+          await supabase.from('products').update({ stock: data.stockStatus }).eq('id', data.productId);
+          return { status: "Success" };
+        }
+        else if (action === 'courierHeartbeat') {
+          await supabase.from('couriers').update({ last_heartbeat: Date.now() }).eq('phone', normalizePhone(data.phone));
+          return { status: "Success" };
+        }
+        else if (action === 'requestWithdrawal') {
+          let r = data.request;
+          await supabase.from('withdrawals').insert({ time: new Date().toISOString(), name: r.name, role: r.role, phone: normalizePhone(r.phone), amount: r.amount, method: r.method, account_info: r.accountInfo, status: r.status, date: r.date });
+          return { status: "Success" };
+        }
+        else if (action === 'approveWithdrawal') {
+          await supabase.from('withdrawals').update({ status: 'Selesai / Ditransfer' }).eq('phone', normalizePhone(data.phone)).eq('status', 'Menunggu Transfer Admin');
+          return { status: "Success" };
+        }
+        else if (action === 'getMidtransSnapToken') {
+          // Midtrans token handling or direct fallback
+          return "mock-snap-token";
+        }
+      } catch(e) { console.error(e); return null; }
     }
 
     var WA_NUMBER = "6281993827358"; 
@@ -1331,10 +1472,6 @@
         callApiGet('getProducts').catch(() => null)
       ]).then(([storesData, productsData]) => {
         allStores = (storesData && storesData.length > 0) ? storesData : mockStoresDefault;
-        
-        // Memuat preferensi urutan toko lokal sebagai fallback
-        loadStoreOrderPreference();
-
         allProducts = (productsData && productsData.length > 0) ? productsData : mockProductsDefault;
         
         if (currentUser && currentUser.role === 'merchant') {
@@ -1359,7 +1496,6 @@
 
     function formatRupiah(n) { return new Intl.NumberFormat("id-ID").format(n); }
 
-    // --- FITUR DRAG & DROP & ATUR URUTAN TOKO UNTUK ADMIN ---
     var draggedStoreIndex = null;
 
     function onStoreDragStart(e, index) {
@@ -1400,38 +1536,9 @@
     function saveStoreOrderPreference() {
       try {
         var idsOrder = allStores.map(s => s.id);
-        // Simpan lokal
-        safeStorage.setItem('admin_store_order', JSON.stringify(idsOrder));
-        
-        // KIRIM KE GOOGLE SHEETS / BACKEND AGAR TERSIMPAN SECARA GLOBAL & KONSUMEN IKUT BERUBAH
         callApiPost('saveStoreOrder', { storeOrder: JSON.stringify(idsOrder) });
       } catch(e) {}
     }
-
-    function loadStoreOrderPreference() {
-      try {
-        var savedOrder = safeStorage.getItem('admin_store_order');
-        if (savedOrder && allStores.length > 0) {
-          var parsedIds = JSON.parse(savedOrder);
-          var reordered = [];
-          for (var i = 0; i < parsedIds.length; i++) {
-            for (var j = 0; j < allStores.length; j++) {
-              if (allStores[j].id === parsedIds[i]) {
-                reordered.push(allStores[j]);
-                break;
-              }
-            }
-          }
-          for (var k = 0; k < allStores.length; k++) {
-            if (!reordered.includes(allStores[k])) {
-              reordered.push(allStores[k]);
-            }
-          }
-          allStores = reordered;
-        }
-      } catch(e) {}
-    }
-    // --------------------------------------------------------
 
     function renderStores() {
       var container = document.getElementById('stores-container');
