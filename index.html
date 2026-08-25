@@ -324,7 +324,7 @@
     </div>
   </div>
 
-  <!-- MODAL PERSETUJUAN PENCAIRAN ADMIN (DENGAN TAB RIWAYAT) -->
+  <!-- MODAL PERSETUJUAN PENCAIRAN ADMIN -->
   <div id="admin-withdrawals-modal" class="fixed inset-0 bg-slate-900/70 z-50 flex items-center justify-center hidden backdrop-blur-sm p-4">
     <div class="bg-white rounded-3xl w-full max-w-lg p-6 shadow-2xl space-y-4 max-h-[85vh] overflow-y-auto animate-slide-up text-slate-800">
       <div class="flex justify-between items-center border-b border-slate-100 pb-3">
@@ -418,18 +418,15 @@
     </div>
   </div>
 
-  <!-- MODAL PROFIL -->
+  <!-- MODAL PROFIL (DENGAN OPSI UBAH FOTO WARUNG BAGI MITRA) -->
   <div id="profile-modal" class="fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center hidden backdrop-blur-sm p-4">
     <div class="bg-white rounded-3xl w-full max-w-xs p-6 shadow-2xl space-y-4 relative animate-slide-up max-h-[85vh] overflow-y-auto text-slate-800">
       <div class="flex justify-between items-center border-b border-slate-100 pb-3">
         <h3 id="profile-modal-title" class="text-sm font-black text-slate-900 flex items-center gap-2"><i class="fa-solid fa-id-card text-rose-600"></i> Profil Akun Saya</h3>
         <button type="button" onclick="closeProfileModal()" class="w-7 h-7 bg-slate-100 rounded-full text-slate-500 flex items-center justify-center text-xs font-bold active:scale-90"><i class="fa-solid fa-xmark"></i></button>
       </div>
-      <div class="space-y-3 text-xs">
-        <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100"><span id="profile-name-label" class="text-[10px] text-slate-400 font-bold uppercase block mb-0.5">Nama Lengkap</span><span id="profile-name" class="font-extrabold text-slate-900 text-sm">--</span></div>
-        <div id="profile-id-box" class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100 hidden"><span class="text-[10px] text-slate-400 font-bold uppercase block mb-0.5">ID Toko / Mitra</span><span id="profile-store-id" class="font-extrabold text-slate-900 text-sm">--</span></div>
-        <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100"><span class="text-[10px] text-slate-400 font-bold uppercase block mb-0.5">Nomor WhatsApp</span><span id="profile-phone" class="font-extrabold text-slate-900 text-sm">--</span></div>
-        <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100"><span id="profile-address-label" class="text-[10px] text-slate-400 font-bold uppercase block mb-0.5">Alamat Pengiriman</span><span id="profile-address" class="font-extrabold text-slate-900">--</span></div>
+      <div class="space-y-3 text-xs" id="profile-modal-content">
+        <!-- Diisi dinamis -->
       </div>
       <button type="button" onclick="logout()" class="w-full bg-red-50 hover:bg-red-100 text-red-600 font-black py-3 rounded-2xl text-xs transition-all flex items-center justify-center gap-2 active:scale-95"><i class="fa-solid fa-right-from-bracket"></i> KELUAR AKUN</button>
     </div>
@@ -996,30 +993,51 @@
         showToast("Fitur profil khusus konsumen & mitra toko.", false); 
         return; 
       }
-      var addrLabel = document.getElementById('profile-address-label'), modalTitle = document.getElementById('profile-modal-title');
-      var nameLabel = document.getElementById('profile-name-label');
-      var idBox = document.getElementById('profile-id-box');
+      var modalTitle = document.getElementById('profile-modal-title');
+      var contentContainer = document.getElementById('profile-modal-content');
 
       if (currentUser.role === 'customer') {
         modalTitle.innerHTML = '<i class="fa-solid fa-id-card text-rose-600"></i> Profil Konsumen';
-        nameLabel.innerText = "Nama Lengkap";
-        addrLabel.innerText = "Alamat Pengiriman";
-        idBox.classList.add('hidden');
-        document.getElementById('profile-name').innerText = currentUser.name || '-';
-        document.getElementById('profile-phone').innerText = currentUser.phone || '-';
-        document.getElementById('profile-address').innerText = currentUser.address || '-';
+        contentContainer.innerHTML = '<div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100"><span class="text-[10px] text-slate-400 font-bold uppercase block mb-0.5">Nama Lengkap</span><span class="font-extrabold text-slate-900 text-sm">' + (currentUser.name || '-') + '</span></div>' +
+                                     '<div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100"><span class="text-[10px] text-slate-400 font-bold uppercase block mb-0.5">Nomor WhatsApp</span><span class="font-extrabold text-slate-900 text-sm">' + (currentUser.phone || '-') + '</span></div>' +
+                                     '<div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100"><span class="text-[10px] text-slate-400 font-bold uppercase block mb-0.5">Alamat Pengiriman</span><span class="font-extrabold text-slate-900">' + (currentUser.address || '-') + '</span></div>';
         document.getElementById('profile-modal').classList.remove('hidden');
       } else if (currentUser.role === 'merchant') {
         modalTitle.innerHTML = '<i class="fa-solid fa-store text-amber-600"></i> Profil Toko / Mitra';
-        nameLabel.innerText = "Nama Toko";
-        addrLabel.innerText = "Alamat Toko";
-        idBox.classList.remove('hidden');
-        document.getElementById('profile-store-id').innerText = currentUser.storeId || '-';
-        document.getElementById('profile-name').innerText = currentUser.name || '-';
-        document.getElementById('profile-phone').innerText = currentUser.phone || '-';
-        document.getElementById('profile-address').innerText = currentUser.address || '-';
+        contentContainer.innerHTML = '<div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100"><span class="text-[10px] text-slate-400 font-bold uppercase block mb-0.5">ID Toko</span><span class="font-extrabold text-slate-900 text-sm">' + (currentUser.storeId || '-') + '</span></div>' +
+                                     '<div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100"><span class="text-[10px] text-slate-400 font-bold uppercase block mb-0.5">Nama Toko</span><span class="font-extrabold text-slate-900 text-sm">' + (currentUser.name || '-') + '</span></div>' +
+                                     '<div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100"><span class="text-[10px] text-slate-400 font-bold uppercase block mb-0.5">Nomor WhatsApp</span><span class="font-extrabold text-slate-900 text-sm">' + (currentUser.phone || '-') + '</span></div>' +
+                                     '<div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100"><span class="text-[10px] text-slate-400 font-bold uppercase block mb-0.5">Alamat Toko</span><span class="font-extrabold text-slate-900">' + (currentUser.address || '-') + '</span></div>' +
+                                     '<div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100 space-y-2">' +
+                                       '<span class="text-[10px] text-amber-700 font-bold uppercase block">Ubah Foto / Logo Warung</span>' +
+                                       '<input type="file" id="merchant-new-store-photo" accept="image/*" class="w-full bg-white rounded-xl p-2 text-[10px] border border-slate-200 file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-[10px] file:font-semibold file:bg-amber-600 file:text-white">' +
+                                       '<button type="button" onclick="updateMerchantStorePhoto()" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-black py-2.5 rounded-xl text-xs active:scale-95 transition-all">Simpan Foto Baru</button>' +
+                                     '</div>';
         document.getElementById('profile-modal').classList.remove('hidden');
       }
+    }
+
+    function updateMerchantStorePhoto() {
+      var fileInput = document.getElementById('merchant-new-store-photo').files[0];
+      if (!fileInput) { alert("Pilih file foto baru terlebih dahulu!"); return; }
+
+      showToast("Mengunggah foto baru...");
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        var base64Img = e.target.result;
+        for (var i = 0; i < allStores.length; i++) {
+          if (String(allStores[i].id) === String(currentUser.storeId)) {
+            allStores[i].image = base64Img;
+            break;
+          }
+        }
+        callApiPost('updateStoreImage', { storeId: currentUser.storeId, newImage: base64Img }).then(() => {
+          showToast("Foto warung berhasil diperbarui!");
+          closeProfileModal();
+          renderStores();
+        });
+      };
+      reader.readAsDataURL(fileInput);
     }
 
     function closeProfileModal() { document.getElementById('profile-modal').classList.add('hidden'); }
@@ -1176,7 +1194,25 @@
       var isMerchant = currentUser && currentUser.role === 'merchant';
       
       if (isMerchant) {
-        container.innerHTML = '<div class="bg-amber-500/10 border border-amber-500/30 text-amber-300 px-5 py-3 rounded-2xl text-xs font-bold w-full"><i class="fa-solid fa-store mr-1"></i> Anda sedang mengelola toko: <strong>' + currentUser.name + '</strong></div>';
+        var currentStoreObj = null;
+        for (var k = 0; k < allStores.length; k++) {
+          if (String(allStores[k].id) === String(currentUser.storeId)) {
+            currentStoreObj = allStores[k];
+            break;
+          }
+        }
+        var storeImg = currentStoreObj ? currentStoreObj.image : "https://images.unsplash.com/photo-1552566626-52f8b828add9?w=300";
+
+        container.innerHTML = '<div class="bg-amber-500/10 border border-amber-500/30 text-amber-300 px-5 py-4 rounded-2xl text-xs font-bold w-full flex items-center justify-between">' +
+                                '<div class="flex items-center gap-3">' +
+                                  '<img src="' + storeImg + '" class="w-12 h-12 rounded-xl object-cover border border-amber-500/30 shadow-sm">' +
+                                  '<div>' +
+                                    '<span class="text-[9px] text-amber-400 uppercase tracking-wider block">Kelola Toko Anda</span>' +
+                                    '<span class="text-sm font-black text-white">' + currentUser.name + '</span>' +
+                                  '</div>' +
+                                '</div>' +
+                                '<button type="button" onclick="openProfileModal()" class="bg-amber-600 hover:bg-amber-700 text-white font-black px-3.5 py-2 rounded-xl text-[10px] shadow-sm active:scale-95 transition-all"><i class="fa-solid fa-camera mr-1"></i> Ubah Foto</button>' +
+                              '</div>';
         return;
       }
 
@@ -1905,7 +1941,6 @@
       }
     }
 
-    // Fungsi Simpan Warung dengan Unggah Foto Langsung dari HP
     function saveNewStore() {
       var name = document.getElementById('new-store-name').value.trim();
       var fileInput = document.getElementById('new-store-image-file').files[0];
@@ -1930,7 +1965,6 @@
       reader.readAsDataURL(fileInput);
     }
 
-    // Fungsi Simpan Produk dengan Unggah Foto Langsung dari HP
     function saveNewProduct() {
       var name = document.getElementById('new-prod-name').value.trim();
       var price = parseInt(document.getElementById('new-prod-price').value.trim());
