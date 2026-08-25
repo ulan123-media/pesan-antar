@@ -1332,7 +1332,7 @@
       ]).then(([storesData, productsData]) => {
         allStores = (storesData && storesData.length > 0) ? storesData : mockStoresDefault;
         
-        // Muat preferensi urutan toko yang diatur Admin
+        // Memuat preferensi urutan toko lokal sebagai fallback
         loadStoreOrderPreference();
 
         allProducts = (productsData && productsData.length > 0) ? productsData : mockProductsDefault;
@@ -1400,7 +1400,11 @@
     function saveStoreOrderPreference() {
       try {
         var idsOrder = allStores.map(s => s.id);
+        // Simpan lokal
         safeStorage.setItem('admin_store_order', JSON.stringify(idsOrder));
+        
+        // KIRIM KE GOOGLE SHEETS / BACKEND AGAR TERSIMPAN SECARA GLOBAL & KONSUMEN IKUT BERUBAH
+        callApiPost('saveStoreOrder', { storeOrder: JSON.stringify(idsOrder) });
       } catch(e) {}
     }
 
