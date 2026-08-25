@@ -693,29 +693,31 @@
         else if (action === 'registerCustomer') {
           let c = data.customer;
           let phoneClean = normalizePhone(c.phone);
-          let { data: existing } = await supabase.from('customers').select('*').eq('phone', phoneClean).single();
+          // Ganti .single() menjadi .maybeSingle()
+          let { data: existing } = await supabase.from('customers').select('*').eq('phone', phoneClean).maybeSingle();
           if (existing) return { status: "Exists" };
           await supabase.from('customers').insert({ phone: phoneClean, time: new Date().toISOString(), name: c.name, address: c.address, password: c.password });
           return { status: "Created" };
         }
         else if (action === 'loginCustomer') {
           let phoneClean = normalizePhone(data.phone);
-          let { data: user } = await supabase.from('customers').select('*').eq('phone', phoneClean).single();
+          // Ganti .single() menjadi .maybeSingle()
+          let { data: user } = await supabase.from('customers').select('*').eq('phone', phoneClean).maybeSingle();
           if (!user) return { status: "Error", message: "Nomor tidak terdaftar!" };
           if (String(user.password) === String(data.password)) return { status: "Success", name: user.name, phone: user.phone, address: user.address };
           return { status: "Error", message: "Password salah!" };
         }
-        else if (action === 'registerCourier') {
+       else if (action === 'registerCourier') {
           let c = data.courier;
           let phoneClean = normalizePhone(c.phone);
-          let { data: existing } = await supabase.from('couriers').select('*').eq('phone', phoneClean).single();
+          let { data: existing } = await supabase.from('couriers').select('*').eq('phone', phoneClean).maybeSingle();
           if (existing) return { status: "Exists" };
           await supabase.from('couriers').insert({ phone: phoneClean, time: new Date().toISOString(), name: c.name, vehicle: c.vehicle, password: c.password, vehicle_photo: c.vehiclePhoto, ktp_photo: c.ktpPhoto, stnk_photo: c.stnkPhoto, sim_photo: c.simPhoto, status: 'Pending', last_heartbeat: 0 });
           return { status: "Created" };
         }
         else if (action === 'loginCourier') {
           let phoneClean = normalizePhone(data.phone);
-          let { data: c } = await supabase.from('couriers').select('*').eq('phone', phoneClean).single();
+          let { data: c } = await supabase.from('couriers').select('*').eq('phone', phoneClean).maybeSingle();
           if (!c) return { status: "Error", message: "Kurir tidak ditemukan!" };
           if (String(c.status).trim() !== "Approved") return { status: "Pending", message: "Akun Anda masih dalam peninjauan Admin." };
           if (String(c.password) === String(data.password)) return { status: "Success", name: c.name, phone: c.phone, vehicle: c.vehicle };
