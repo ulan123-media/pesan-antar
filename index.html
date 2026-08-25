@@ -1331,6 +1331,10 @@
         callApiGet('getProducts').catch(() => null)
       ]).then(([storesData, productsData]) => {
         allStores = (storesData && storesData.length > 0) ? storesData : mockStoresDefault;
+        
+        // Muat preferensi urutan toko yang diatur Admin
+        loadStoreOrderPreference();
+
         allProducts = (productsData && productsData.length > 0) ? productsData : mockProductsDefault;
         
         if (currentUser && currentUser.role === 'merchant') {
@@ -1355,10 +1359,81 @@
 
     function formatRupiah(n) { return new Intl.NumberFormat("id-ID").format(n); }
 
+    // --- FITUR DRAG & DROP & ATUR URUTAN TOKO UNTUK ADMIN ---
+    var draggedStoreIndex = null;
+
+    function onStoreDragStart(e, index) {
+      draggedStoreIndex = index;
+      e.dataTransfer.effectAllowed = 'move';
+    }
+
+    function onStoreDrop(e, targetIndex) {
+      e.preventDefault();
+      if (draggedStoreIndex === null || draggedStoreIndex === targetIndex) return;
+      
+      var movedStore = allStores.splice(draggedStoreIndex, 1)[0];
+      allStores.splice(targetIndex, 0, movedStore);
+      draggedStoreIndex = null;
+
+      saveStoreOrderPreference();
+      renderStores();
+      showToast("Urutan rekomendasi toko berhasil diperbarui!");
+    }
+
+    function setStorePriority(storeId) {
+      var targetIndex = -1;
+      for (var i = 0; i < allStores.length; i++) {
+        if (allStores[i].id === storeId) {
+          targetIndex = i;
+          break;
+        }
+      }
+      if (targetIndex > 0) {
+        var store = allStores.splice(targetIndex, 1)[0];
+        allStores.unshift(store);
+        saveStoreOrderPreference();
+        renderStores();
+        showToast("Toko berhasil dipindahkan ke urutan pertama!");
+      }
+    }
+
+    function saveStoreOrderPreference() {
+      try {
+        var idsOrder = allStores.map(s => s.id);
+        safeStorage.setItem('admin_store_order', JSON.stringify(idsOrder));
+      } catch(e) {}
+    }
+
+    function loadStoreOrderPreference() {
+      try {
+        var savedOrder = safeStorage.getItem('admin_store_order');
+        if (savedOrder && allStores.length > 0) {
+          var parsedIds = JSON.parse(savedOrder);
+          var reordered = [];
+          for (var i = 0; i < parsedIds.length; i++) {
+            for (var j = 0; j < allStores.length; j++) {
+              if (allStores[j].id === parsedIds[i]) {
+                reordered.push(allStores[j]);
+                break;
+              }
+            }
+          }
+          for (var k = 0; k < allStores.length; k++) {
+            if (!reordered.includes(allStores[k])) {
+              reordered.push(allStores[k]);
+            }
+          }
+          allStores = reordered;
+        }
+      } catch(e) {}
+    }
+    // --------------------------------------------------------
+
     function renderStores() {
       var container = document.getElementById('stores-container');
       var html = '';
       var isMerchant = currentUser && currentUser.role === 'merchant';
+      var isAdmin = currentUser && currentUser.role === 'admin';
       
       if (isMerchant) {
         var currentStoreObj = null;
@@ -1396,11 +1471,19 @@
         if (s.id === "Semua") continue;
         var isActive = currentStoreId === s.id;
         
-        html += '<button type="button" onclick="selectStore(\'' + s.id + '\')" class="store-btn shrink-0 w-32 ' + (isActive ? 'active-store' : 'bg-white') + ' rounded-2xl p-2.5 flex flex-col items-center text-center shadow-xs border border-slate-200/80 transition-all active:scale-95">' +
-                  '<div class="w-full h-16 rounded-xl overflow-hidden bg-slate-100 mb-2 shadow-inner border border-slate-200"><img src="' + s.image + '" class="w-full h-full object-cover"></div>' +
-                  '<span class="text-[11px] font-black text-slate-800 truncate w-full">' + s.name + '</span>' +
-                  '<span class="text-[9px] text-slate-400 truncate w-full">' + (s.address || 'Mitra') + '</span>' +
-                '</button>';
+        var dragAttrs = isAdmin ? ' draggable="true" ondragstart="onStoreDragStart(event, ' + i + ')" ondragover="event.preventDefault()" ondrop="onStoreDrop(event, ' + i + ')" title="Tarik untuk mengubah urutan rekomendasi"' : '';
+        var adminDragHandle = isAdmin ? '<div class="absolute top-2 right-2 bg-slate-900/80 text-amber-300 text-[9px] font-black px-1.5 py-0.5 rounded-md shadow-xs"><i class="fa-solid fa-grip-vertical"></i></div>' : '';
+        var adminPriorityBtn = isAdmin ? '<button type="button" onclick="event.stopPropagation(); setStorePriority(\'' + s.id + '\')" class="mt-1 bg-amber-500 hover:bg-amber-600 text-white text-[9px] font-black py-1 px-2 rounded-lg shadow-xs w-full"><i class="fa-solid fa-star mr-0.5"></i> Jadikan Utama</button>' : '';
+
+        html += '<div ' + dragAttrs + ' class="relative shrink-0 w-36 cursor-grab active:cursor-grabbing">' +
+                  '<button type="button" onclick="selectStore(\'' + s.id + '\')" class="w-full store-btn ' + (isActive ? 'active-store' : 'bg-white') + ' rounded-2xl p-2.5 flex flex-col items-center text-center shadow-xs border border-slate-200/80 transition-all">' +
+                    adminDragHandle +
+                    '<div class="w-full h-14 rounded-xl overflow-hidden bg-slate-100 mb-2 shadow-inner border border-slate-200"><img src="' + s.image + '" class="w-full h-full object-cover pointer-events-none"></div>' +
+                    '<span class="text-[11px] font-black text-slate-800 truncate w-full">' + s.name + '</span>' +
+                    '<span class="text-[9px] text-slate-400 truncate w-full">' + (s.address || 'Mitra') + '</span>' +
+                  '</button>' +
+                  adminPriorityBtn +
+                '</div>';
       }
       container.innerHTML = html;
     }
