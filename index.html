@@ -31,6 +31,20 @@
       #print-receipt-area, #print-receipt-area * { visibility: visible; }
       #print-receipt-area { position: absolute; left: 0; top: 0; width: 58mm; margin: 0; padding: 5px; font-family: monospace; font-size: 10px; }
     }
+
+    /* Style Khusus Peta Ala Gojek */
+    .courier-marker-icon {
+      transition: all 1s linear;
+    }
+    .marker-pulse {
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+      animation: pulse-green 1.5s infinite;
+    }
+    @keyframes pulse-green {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
   </style>
 </head>
 <body id="body-root" class="bg-slate-100 min-h-screen text-slate-800 antialiased selection:bg-rose-600 selection:text-white relative">
@@ -536,20 +550,51 @@
     </div>
   </div>
 
-  <div id="tracking-modal" class="fixed inset-0 bg-slate-900/70 z-50 flex items-end justify-center hidden backdrop-blur-sm transition-all">
-    <div class="bg-white rounded-t-[32px] w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh] animate-slide-up max-w-lg mx-auto">
-      <div class="bg-slate-900 text-white p-4 flex justify-between items-center">
-        <div class="flex items-center gap-2">
-          <span class="flex h-3 w-3 relative"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span></span>
-          <div><h3 class="font-black text-xs">Peta GPS Kurir Presisi (Live)</h3><p id="tracking-invoice-id" class="text-[10px] text-slate-400">#INV-00000</p></div>
+  <!-- TRACKING MODAL DENGAN PETA PERSISI ALA GOJEK -->
+  <div id="tracking-modal" class="fixed inset-0 bg-slate-950/80 z-50 flex items-end justify-center hidden backdrop-blur-md transition-all">
+    <div class="bg-slate-900 text-white rounded-t-[36px] w-full overflow-hidden shadow-2xl flex flex-col max-h-[92vh] animate-slide-up max-w-lg mx-auto border-t border-slate-800">
+      <div class="bg-slate-900/90 backdrop-blur-md px-5 py-4 flex justify-between items-center border-b border-slate-800">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 flex items-center justify-center text-lg shadow-inner">
+            <i class="fa-solid fa-motorcycle"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="flex h-2.5 w-2.5 relative"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span></span>
+              <h3 class="font-black text-xs text-white uppercase tracking-wide">PETA GPS PRESISI (LIVE)</h3>
+            </div>
+            <p id="tracking-invoice-id" class="text-[10px] text-slate-400 font-medium">#INV-00000</p>
+          </div>
         </div>
-        <button type="button" onclick="closeTrackingModal()" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-white active:scale-90"><i class="fa-solid fa-xmark text-xs"></i></button>
+        <button type="button" onclick="closeTrackingModal()" class="w-9 h-9 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:text-white active:scale-90 transition-all border border-slate-700"><i class="fa-solid fa-xmark text-sm"></i></button>
       </div>
-      <div id="map-container" class="w-full h-80 bg-slate-100 relative"></div>
-      <div class="p-4 bg-white border-t border-slate-100 space-y-3">
-        <div class="grid grid-cols-2 gap-2.5 text-center">
-          <div class="bg-rose-50 p-3 rounded-2xl border border-rose-100"><span class="text-[9px] text-slate-400 font-bold block uppercase tracking-wider">SISA JARAK GPS</span><span id="track-distance" class="text-xs font-black text-rose-600">Menghitung...</span></div>
-          <div class="bg-emerald-50 p-3 rounded-2xl border border-emerald-100"><span class="text-[9px] text-slate-400 font-bold block uppercase tracking-wider">ESTIMASI TIBA</span><span id="track-eta" class="text-xs font-black text-emerald-600">-- Menit</span></div>
+      
+      <!-- CONTAINER PETA VECTOR SLICK -->
+      <div id="map-container" class="w-full h-96 bg-slate-950 relative"></div>
+      
+      <div class="p-5 bg-slate-900 border-t border-slate-800 space-y-3.5">
+        <div class="flex items-center justify-between bg-slate-800/80 p-3.5 rounded-2xl border border-slate-700/60">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-rose-500/20 text-rose-400 border border-rose-500/30 flex items-center justify-center text-sm font-black"><i class="fa-solid fa-user-gear"></i></div>
+            <div>
+              <p id="track-courier-name" class="text-xs font-black text-white">Kurir Siap Antar</p>
+              <p id="track-courier-phone" class="text-[10px] text-slate-400 font-medium">Melacak koordinat presisi...</p>
+            </div>
+          </div>
+          <a id="track-courier-wa-btn" href="#" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white font-black text-[10px] px-3.5 py-2 rounded-xl flex items-center gap-1.5 shadow-sm active:scale-95 transition-all">
+            <i class="fa-brands fa-whatsapp text-xs"></i> Hubungi
+          </a>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 text-center">
+          <div class="bg-slate-800/50 p-3.5 rounded-2xl border border-slate-800">
+            <span class="text-[9px] text-slate-400 font-black uppercase tracking-wider block mb-0.5">ESTIMASI JARAK</span>
+            <span id="track-distance" class="text-sm font-black text-rose-400">Menghitung...</span>
+          </div>
+          <div class="bg-slate-800/50 p-3.5 rounded-2xl border border-slate-800">
+            <span class="text-[9px] text-slate-400 font-black uppercase tracking-wider block mb-0.5">WAKTU TEMPUH</span>
+            <span id="track-eta" class="text-sm font-black text-emerald-400">-- Menit</span>
+          </div>
         </div>
       </div>
     </div>
@@ -763,7 +808,6 @@
           return { status: "Success" };
         }
         else if (action === 'getMidtransSnapToken') {
-          // Terhubung langsung ke Supabase Edge Function / Backend Anda yang aman untuk mengambil Snap Token asli
           try {
             let response = await fetch('https://zsutpgbychoctxszpmch.supabase.co/functions/v1/get-snap-token', {
               method: 'POST',
@@ -774,7 +818,7 @@
               body: JSON.stringify(data.orderData)
             });
             let resJson = await response.json();
-            return resJson.token; // Mengembalikan token Snap asli dari Midtrans
+            return resJson.token;
           } catch(e) {
             console.error("Gagal mengambil Midtrans Snap Token:", e);
             return "Error: Gagal terhubung ke server pembayaran";
@@ -793,7 +837,10 @@
     };
 
     var currentUser = null, currentLocation = null, currentCoords = null, currentInvoiceId = "", allProducts = [], allStores = [], currentStoreId = "Semua", cart = {}, storeStatus = "BUKA", recruitmentStatus = "TUTUP", currentDistance = 0, calculatedOngkir = 6000, rawOrdersList = [];
-    var liveMap = null, customerMarker = null, courierWatchId = null, adminNotifierInterval = null;
+    
+    // VARIABEL MAP DILENGKAPI UNTUK REAL-TIME PRESISI
+    var liveMap = null, customerMarker = null, courierMarker = null, routePolyline = null, liveTrackingInterval = null;
+    var courierWatchId = null, adminNotifierInterval = null;
     var courierHeartbeatInterval = null, lastKnownCustomerOrderStatus = "", customerNotifierInterval = null;
     var selectedPaymentMethod = 'midtrans';
     var lastSentTime = 0;
@@ -1356,6 +1403,7 @@
       if (courierWatchId) navigator.geolocation.clearWatch(courierWatchId);
       if (courierHeartbeatInterval) clearInterval(courierHeartbeatInterval);
       if (customerNotifierInterval) clearInterval(customerNotifierInterval);
+      if (liveTrackingInterval) clearInterval(liveTrackingInterval);
       safeStorage.removeItem('app_active_session');
       currentUser = null;
       document.getElementById('main-app').classList.add('hidden');
@@ -1758,16 +1806,16 @@
 
     function startCourierGPSBroadcaster(invId) {
       if (!navigator.geolocation) { showToast("GPS tidak didukung.", false); return; }
-      showToast("GPS Aktif! Mengirim koordinat...");
+      showToast("GPS Presisi Aktif! Mengirim koordinat...");
       if (courierWatchId) navigator.geolocation.clearWatch(courierWatchId);
       
       courierWatchId = navigator.geolocation.watchPosition(function(pos) {
         var now = Date.now();
-        if (now - lastSentTime >= 10000) {
+        if (now - lastSentTime >= 5000) { // Kirim tiap 5 detik untuk presisi tinggi
           lastSentTime = now;
           callApiPost('updateCourierLocation', { invoiceId: invId, lat: pos.coords.latitude, lng: pos.coords.longitude, courierName: currentUser ? currentUser.name : "Kurir" });
         }
-      }, function(err) { showToast("Gagal akses GPS.", false); }, { enableHighAccuracy: true, maximumAge: 0, timeout: 5000 });
+      }, function(err) { showToast("Gagal akses GPS presisi.", false); }, { enableHighAccuracy: true, maximumAge: 0, timeout: 5000 });
     }
 
     function renderOrderStatus() {
@@ -2062,7 +2110,7 @@
             var btnKirim = (!isMerchant && ordStatus !== 'Selesai' && ordStatus !== 'Sedang Diantar') ? '<button type="button" onclick="assignAndDeliver(\'' + ord.invoiceId + '\')" class="bg-rose-600 hover:bg-rose-700 text-white font-black py-2.5 px-3 rounded-xl text-[10px] shadow-xs">Ambil</button>' : '';
             var btnGps = (ordStatus === 'Sedang Diantar' && (isAdmin || ord.courierPhone === currentUser.phone)) ? '<button type="button" onclick="startCourierGPSBroadcaster(\'' + ord.invoiceId + '\')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-black py-2.5 px-3 rounded-xl text-[10px] shadow-xs">GPS</button>' : '';
             var btnSelesai = (!isMerchant && ordStatus === 'Sedang Diantar') ? '<button type="button" onclick="promptCompleteOrder(\'' + ord.invoiceId + '\')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-black py-2.5 px-3 rounded-xl text-[10px] shadow-xs">Selesai (+Foto)</button>' : '';
-            var btnPeta = '<button type="button" onclick="openLiveTracking(\'' + ord.invoiceId + '\', ' + (ord.lat || 'null') + ', ' + (ord.lng || 'null') + ')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold py-2.5 px-3 rounded-xl text-[10px]">Peta</button>';
+            var btnPeta = '<button type="button" onclick="openLiveTracking(\'' + ord.invoiceId + '\')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold py-2.5 px-3 rounded-xl text-[10px]">Peta</button>';
             var btnCetak = '<button type="button" onclick="openReceiptModal(\'' + ord.invoiceId + '\')" class="bg-amber-600 hover:bg-amber-700 text-white font-black py-2.5 px-3 rounded-xl text-[10px] shadow-xs">Struk</button>';
             var btnBuktiFoto = ord.deliveryProof ? '<button type="button" onclick="openImageModal(\'' + ord.deliveryProof.replace(/'/g, "\\'") + '\', \'Foto Bukti: ' + ord.invoiceId + '\')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-black py-2.5 px-3 rounded-xl text-[10px] shadow-xs">Foto Bukti</button>' : '';
             
@@ -2070,7 +2118,7 @@
           }
         } else {
           var btnBuktiFotoCust = ord.deliveryProof ? '<button type="button" onclick="openImageModal(\'' + ord.deliveryProof.replace(/'/g, "\\'") + '\', \'Foto Bukti: ' + ord.invoiceId + '\')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-black px-3 py-2 rounded-xl text-[10px] shadow-xs">Lihat Bukti Foto</button>' : '';
-          var btnLacak = (ordStatus === 'Sedang Diantar') ? '<button type="button" onclick="openLiveTracking(\'' + ord.invoiceId + '\', ' + (ord.lat || 'null') + ', ' + (ord.lng || 'null') + ')" class="bg-rose-600 hover:bg-rose-700 text-white font-black px-3 py-2 rounded-xl text-[10px] shadow-xs">Lacak Kurir</button>' : '<span class="text-[10px] font-bold text-slate-400 italic">Diproses</span>';
+          var btnLacak = (ordStatus === 'Sedang Diantar') ? '<button type="button" onclick="openLiveTracking(\'' + ord.invoiceId + '\')" class="bg-rose-600 hover:bg-rose-700 text-white font-black px-3 py-2 rounded-xl text-[10px] shadow-xs">Lacak Kurir</button>' : '<span class="text-[10px] font-bold text-slate-400 italic">Diproses</span>';
           actionButtons = '<div class="pt-3 border-t border-slate-100 flex justify-between items-center"><span class="text-xs font-black text-slate-900">Total: Rp ' + formatRupiah(ord.total) + '</span><div class="flex gap-1.5">' + btnBuktiFotoCust + btnLacak + '</div></div>';
         }
 
@@ -2339,22 +2387,98 @@
       window.open("https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(message), '_blank');
     }
 
-    function openLiveTracking(invId, targetLat, targetLng) {
+    // FUNGSI PETA LIVE TRACKING PRESISI ALA GOJEK
+    function openLiveTracking(invId) {
       document.getElementById('tracking-modal').classList.remove('hidden');
       document.getElementById('tracking-invoice-id').innerText = invId;
-      var destCoords = (targetLat && targetLng) ? { lat: targetLat, lng: targetLng } : STORE_COORDS;
-      setTimeout(function() {
-        if (!liveMap) {
-          liveMap = L.map('map-container').setView([destCoords.lat, destCoords.lng], 15);
-          L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(liveMap);
-        } else { liveMap.setView([destCoords.lat, destCoords.lng], 15); }
-        liveMap.invalidateSize();
-        if (customerMarker) liveMap.removeLayer(customerMarker);
-        customerMarker = L.marker([destCoords.lat, destCoords.lng]).addTo(liveMap).bindPopup("<b>Lokasi Tujuan</b>");
-      }, 350);
+
+      if (liveTrackingInterval) clearInterval(liveTrackingInterval);
+
+      var updateTrackingData = function() {
+        callApiGet('getOrders').then(orders => {
+          var ord = (orders || []).find(o => o.invoiceId === invId);
+          if (!ord) return;
+
+          var custLat = ord.lat || STORE_COORDS.lat;
+          var custLng = ord.lng || STORE_COORDS.lng;
+          var courierLat = ord.courierLat || STORE_COORDS.lat;
+          var courierLng = ord.courierLng || STORE_COORDS.lng;
+
+          document.getElementById('track-courier-name').innerText = ord.courierName || "Kurir Pengantar";
+          document.getElementById('track-courier-phone').innerText = ord.courierPhone ? "WhatsApp: " + ord.courierPhone : "Kurir Standby";
+          if (ord.courierPhone) {
+            document.getElementById('track-courier-wa-btn').href = "https://wa.me/" + formatWhatsAppNumber(ord.courierPhone) + "?text=" + encodeURIComponent("Halo " + ord.courierName + ", posisi di mana?");
+          }
+
+          setTimeout(function() {
+            if (!liveMap) {
+              // Dark Mode Tile Vector ala Gojek/Grab
+              liveMap = L.map('map-container', { zoomControl: false }).setView([courierLat, courierLng], 16);
+              L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(liveMap);
+            }
+            liveMap.invalidateSize();
+
+            // Custom Marker Rumah Konsumen
+            var houseIcon = L.divIcon({
+              className: 'custom-house-pin',
+              html: '<div class="w-10 h-10 bg-rose-600 rounded-2xl text-white flex items-center justify-center text-lg shadow-xl border-2 border-white"><i class="fa-solid fa-house"></i></div>',
+              iconSize: [40, 40],
+              iconAnchor: [20, 20]
+            });
+
+            if (customerMarker) liveMap.removeLayer(customerMarker);
+            customerMarker = L.marker([custLat, custLng], { icon: houseIcon }).addTo(liveMap).bindPopup("<b style='color:#0f172a;'>Lokasi Pemesan</b>");
+
+            // Custom Marker Kurir (Motor Move Animasi)
+            var bikeIcon = L.divIcon({
+              className: 'courier-marker-icon',
+              html: '<div class="w-11 h-11 bg-emerald-500 rounded-full text-white flex items-center justify-center text-xl shadow-2xl border-2 border-white marker-pulse"><i class="fa-solid fa-motorcycle"></i></div>',
+              iconSize: [44, 44],
+              iconAnchor: [22, 22]
+            });
+
+            if (!courierMarker) {
+              courierMarker = L.marker([courierLat, courierLng], { icon: bikeIcon }).addTo(liveMap);
+            } else {
+              // Interpolasi Pergerakan Mulus
+              courierMarker.setLatLng([courierLat, courierLng]);
+            }
+
+            // Garis Rute Presisi
+            if (routePolyline) liveMap.removeLayer(routePolyline);
+            var routeUrl = "https://router.project-osrm.org/route/v1/driving/" + courierLng + "," + courierLat + ";" + custLng + "," + custLat + "?overview=full&geometries=geojson";
+            
+            fetch(routeUrl).then(res => res.json()).then(data => {
+              if (data.routes && data.routes[0]) {
+                var coords = data.routes[0].geometry.coordinates.map(c => [c[1], c[0]]);
+                routePolyline = L.polyline(coords, { color: '#10b981', weight: 6, opacity: 0.85, lineCap: 'round' }).addTo(liveMap);
+                
+                var distKm = (data.routes[0].distance / 1000).toFixed(2);
+                var durationMin = Math.ceil(data.routes[0].duration / 60);
+
+                document.getElementById('track-distance').innerText = distKm + " km";
+                document.getElementById('track-eta').innerText = durationMin + " Menit";
+
+                // Auto Fit Layar Peta
+                var bounds = L.latLngBounds([courierLat, courierLng], [custLat, custLng]);
+                liveMap.fitBounds(bounds, { padding: [40, 40] });
+              }
+            }).catch(e => {
+              document.getElementById('track-distance').innerText = "Menghitung...";
+            });
+          }, 200);
+        });
+      };
+
+      updateTrackingData();
+      liveTrackingInterval = setInterval(updateTrackingData, 4000); // Polling presisi tiap 4 detik
     }
 
-    function closeTrackingModal() { document.getElementById('tracking-modal').classList.add('hidden'); }
+    function closeTrackingModal() {
+      if (liveTrackingInterval) clearInterval(liveTrackingInterval);
+      document.getElementById('tracking-modal').classList.add('hidden');
+    }
+    
     function toggleAddProductModal() { document.getElementById('add-product-modal').classList.toggle('hidden'); }
     function toggleAddStoreModal() { document.getElementById('add-store-modal').classList.toggle('hidden'); }
 
