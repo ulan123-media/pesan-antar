@@ -555,15 +555,15 @@
     </div>
   </div>
 
-<script>
-    // Inisialisasi Supabase yang Aman menggunakan var agar tidak bentrok
+  <script>
+    // Inisialisasi Supabase menggunakan variabel 'db' agar aman dan tidak menimpa objek CDN
     const SUPABASE_URL = 'https://cbsucahvrowgxvtnerf.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNic3VjYWh2cm93b2d4dnRuZXJmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc2NjE3MjEsImV4cCI6MjEwMzIzNzcyMX0.4TEcksJ4bfPBcloOV44trNtseblmuj3KrQWo2yNRVFA';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNic3VjVjYWh2cm93b2d4dnRuZXJmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc2NjE3MjEsImV4cCI6MjEwMzIzNzcyMX0.4TEcksJ4bfPBcloOV44trNtseblmuj3KrQWo2yNRVFA';
 
-    var supabase = null;
+    var db = null;
     try {
       if (window.supabase && typeof window.supabase.createClient === 'function') {
-        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
       }
     } catch (e) {
       console.error("Gagal menginisialisasi Supabase:", e);
@@ -572,8 +572,8 @@
     async function callApiGet(action, params = {}) {
       try {
         if (action === 'getStores') {
-          let { data: stores } = await supabase.from('stores').select('*');
-          let { data: setting } = await supabase.from('settings').select('*').eq('key', 'store_order').maybeSingle();
+          let { data: stores } = await db.from('stores').select('*');
+          let { data: setting } = await db.from('settings').select('*').eq('key', 'store_order').maybeSingle();
           
           let formattedStores = (stores || []).map(s => ({
             id: s.id, name: s.name, image: s.image, address: s.address, phone: s.phone, password: s.password
@@ -591,34 +591,34 @@
           return formattedStores.length > 0 ? formattedStores : null;
         }
         else if (action === 'getProducts') {
-          let { data: prods } = await supabase.from('products').select('*');
+          let { data: prods } = await db.from('products').select('*');
           return (prods || []).map(p => ({
             id: p.id, name: p.name, price: Number(p.price), storeId: p.store_id, image: p.image, desc: p.description, inStock: p.stock !== 'Habis', terlaris: p.terlaris
           }));
         }
         else if (action === 'getOrders') {
-          let { data: ords } = await supabase.from('orders').select('*');
+          let { data: ords } = await db.from('orders').select('*');
           return (ords || []).map(o => ({
             invoiceId: o.invoice_id, name: o.name, phone: o.phone, address: o.address, total: Number(o.total), itemsSummary: o.items_summary, status: o.status, location: o.location, lat: o.lat ? Number(o.lat) : null, lng: o.lng ? Number(o.lng) : null, date: o.date, ongkir: Number(o.ongkir || 0), notes: o.notes, courierLat: o.courier_lat ? Number(o.courier_lat) : null, courierLng: o.courier_lng ? Number(o.courier_lng) : null, courierName: o.courier_name, courierPhone: o.courier_phone, deliveryProof: o.delivery_proof, storeName: o.store_name
           }));
         }
         else if (action === 'getStoreStatus') {
-          let { data } = await supabase.from('settings').select('value').eq('key', 'store_status').maybeSingle();
+          let { data } = await db.from('settings').select('value').eq('key', 'store_status').maybeSingle();
           return data ? data.value : 'BUKA';
         }
         else if (action === 'getRecruitmentStatus') {
-          let { data } = await supabase.from('settings').select('value').eq('key', 'recruitment_status').maybeSingle();
+          let { data } = await db.from('settings').select('value').eq('key', 'recruitment_status').maybeSingle();
           return data ? data.value : 'TUTUP';
         }
         else if (action === 'getPendingCouriers') {
-          let { data } = await supabase.from('couriers').select('*').eq('status', 'Pending');
+          let { data } = await db.from('couriers').select('*').eq('status', 'Pending');
           return (data || []).map(c => ({
             name: c.name, phone: c.phone, vehicle: c.vehicle, vehiclePhoto: c.vehicle_photo, ktpPhoto: c.ktp_photo, stnkPhoto: c.stnk_photo, simPhoto: c.sim_photo
           }));
         }
         else if (action === 'getAllCouriersWithStatus') {
-          let { data: couriers } = await supabase.from('couriers').select('*').eq('status', 'Approved');
-          let { data: orders } = await supabase.from('orders').select('courier_phone, status').eq('status', 'Sedang Diantar');
+          let { data: couriers } = await db.from('couriers').select('*').eq('status', 'Approved');
+          let { data: orders } = await db.from('orders').select('courier_phone, status').eq('status', 'Sedang Diantar');
           let activePhones = (orders || []).map(o => normalizePhone(o.courier_phone));
           let now = Date.now();
           return (couriers || []).map(c => {
@@ -629,19 +629,19 @@
           });
         }
         else if (action === 'getCourierHistory') {
-          let { data } = await supabase.from('withdrawals').select('*').eq('phone', normalizePhone(params.phone));
+          let { data } = await db.from('withdrawals').select('*').eq('phone', normalizePhone(params.phone));
           return (data || []).map(w => ({ name: w.name, role: w.role, phone: w.phone, amount: Number(w.amount), method: w.method, accountInfo: w.account_info, status: w.status, date: w.date })).reverse();
         }
         else if (action === 'getWithdrawalRequests') {
-          let { data } = await supabase.from('withdrawals').select('*').eq('status', 'Menunggu Transfer Admin');
+          let { data } = await db.from('withdrawals').select('*').eq('status', 'Menunggu Transfer Admin');
           return (data || []).map(w => ({ name: w.name, role: w.role, phone: w.phone, amount: Number(w.amount), method: w.method, accountInfo: w.account_info, status: w.status, date: w.date }));
         }
         else if (action === 'getAllWithdrawalHistory') {
-          let { data } = await supabase.from('withdrawals').select('*');
+          let { data } = await db.from('withdrawals').select('*');
           return (data || []).map(w => ({ name: w.name, role: w.role, phone: w.phone, amount: Number(w.amount), method: w.method, accountInfo: w.account_info, status: w.status, date: w.date })).reverse();
         }
         else if (action === 'getWithdrawalHistory') {
-          let { data } = await supabase.from('withdrawals').select('*').eq('phone', normalizePhone(params.phone));
+          let { data } = await db.from('withdrawals').select('*').eq('phone', normalizePhone(params.phone));
           return (data || []).map(w => ({ name: w.name, role: w.role, phone: w.phone, amount: Number(w.amount), method: w.method, accountInfo: w.account_info, status: w.status, date: w.date })).reverse();
         }
       } catch (err) { console.error(err); return null; }
@@ -651,79 +651,79 @@
       try {
         if (action === 'saveProduct') {
           let p = data.product;
-          await supabase.from('products').upsert({ id: p.id, name: p.name, price: p.price, store_id: p.storeId, image: p.image, description: p.desc, stock: p.inStock !== false ? 'Tersedia' : 'Habis', terlaris: p.terlaris });
+          await db.from('products').upsert({ id: p.id, name: p.name, price: p.price, store_id: p.storeId, image: p.image, description: p.desc, stock: p.inStock !== false ? 'Tersedia' : 'Habis', terlaris: p.terlaris });
           return { status: "Success" };
         }
         else if (action === 'saveStore') {
           let s = data.store;
-          await supabase.from('stores').upsert({ id: s.id, name: s.name, image: s.image, address: s.address, phone: s.phone, password: s.password });
+          await db.from('stores').upsert({ id: s.id, name: s.name, image: s.image, address: s.address, phone: s.phone, password: s.password });
           return { status: "Success" };
         }
         else if (action === 'updateStoreImage') {
-          await supabase.from('stores').update({ image: data.newImage }).eq('id', data.storeId);
+          await db.from('stores').update({ image: data.newImage }).eq('id', data.storeId);
           return { status: "Success" };
         }
         else if (action === 'saveStoreOrder') {
-          await supabase.from('settings').upsert({ key: 'store_order', value: data.storeOrder });
+          await db.from('settings').upsert({ key: 'store_order', value: data.storeOrder });
           return { status: "Success" };
         }
         else if (action === 'processOrder') {
           let o = data.order;
-          await supabase.from('orders').upsert({ invoice_id: o.invoiceId, name: o.name, phone: o.phone, address: o.address, total: o.total, items_summary: o.itemsSummary, status: o.status, location: o.location, lat: o.lat || null, lng: o.lng || null, date: o.date, ongkir: o.ongkir || 0, notes: o.notes || "", store_name: o.storeName || "Warung Mitra" });
+          await db.from('orders').upsert({ invoice_id: o.invoiceId, name: o.name, phone: o.phone, address: o.address, total: o.total, items_summary: o.itemsSummary, status: o.status, location: o.location, lat: o.lat || null, lng: o.lng || null, date: o.date, ongkir: o.ongkir || 0, notes: o.notes || "", store_name: o.storeName || "Warung Mitra" });
           return { status: "Success" };
         }
         else if (action === 'updateOrderStatus') {
-          await supabase.from('orders').update({ status: data.newStatus }).eq('invoice_id', data.invoiceId);
+          await db.from('orders').update({ status: data.newStatus }).eq('invoice_id', data.invoiceId);
           return { status: "Success" };
         }
         else if (action === 'updateOrderStatusWithProof') {
-          await supabase.from('orders').update({ status: data.newStatus, delivery_proof: data.deliveryProof }).eq('invoice_id', data.invoiceId);
+          await db.from('orders').update({ status: data.newStatus, delivery_proof: data.deliveryProof }).eq('invoice_id', data.invoiceId);
           return { status: "Success" };
         }
         else if (action === 'assignCourierAndDeliver') {
-          await supabase.from('orders').update({ status: 'Sedang Diantar', courier_name: data.courierName, courier_phone: data.courierPhone }).eq('invoice_id', data.invoiceId);
+          await db.from('orders').update({ status: 'Sedang Diantar', courier_name: data.courierName, courier_phone: data.courierPhone }).eq('invoice_id', data.invoiceId);
           return { status: "Success" };
         }
         else if (action === 'saveStoreStatus') {
-          await supabase.from('settings').upsert({ key: 'store_status', value: data.status });
+          await db.from('settings').upsert({ key: 'store_status', value: data.status });
           return { status: "Success" };
         }
         else if (action === 'saveRecruitmentStatus') {
-          await supabase.from('settings').upsert({ key: 'recruitment_status', value: data.status });
+          await db.from('settings').upsert({ key: 'recruitment_status', value: data.status });
           return { status: "Success" };
         }
         else if (action === 'updateCourierLocation') {
           let updateData = { courier_lat: data.lat, courier_lng: data.lng };
           if (data.courierName) updateData.courier_name = data.courierName;
-          await supabase.from('orders').update(updateData).eq('invoice_id', data.invoiceId);
+          await db.from('orders').update(updateData).eq('invoice_id', data.invoiceId);
           return { status: "Success" };
         }
         else if (action === 'registerCustomer') {
           let c = data.customer;
           let phoneClean = normalizePhone(c.phone);
-          let { data: existing } = await supabase.from('customers').select('*').eq('phone', phoneClean).maybeSingle();
+          let { data: existing } = await db.from('customers').select('*').eq('phone', phoneClean).maybeSingle();
           if (existing) return { status: "Exists" };
-          await supabase.from('customers').insert({ phone: phoneClean, time: new Date().toISOString(), name: c.name, address: c.address, password: c.password });
+          await db.from('customers').insert({ phone: phoneClean, time: new Date().toISOString(), name: c.name, address: c.address, password: c.password });
           return { status: "Created" };
         }
         else if (action === 'loginCustomer') {
           let phoneClean = normalizePhone(data.phone);
-          let { data: user } = await supabase.from('customers').select('*').eq('phone', phoneClean).maybeSingle();
+          let { data: user } = await db.from('customers').select('*').eq('phone', phoneClean).maybeSingle();
           if (!user) return { status: "Error", message: "Nomor tidak terdaftar!" };
           if (String(user.password) === String(data.password)) return { status: "Success", name: user.name, phone: user.phone, address: user.address };
           return { status: "Error", message: "Password salah!" };
         }
-       else if (action === 'registerCourier') {
+        else if (action === 'registerCourier') {
           let c = data.courier;
           let phoneClean = normalizePhone(c.phone);
-          let { data: existing } = await supabase.from('couriers').select('*').eq('phone', phoneClean).maybeSingle();
+          let { data: existing } = await db.from('couriers').select('*').eq('phone', phoneClean).maybeSingle();
           if (existing) return { status: "Exists" };
-          await supabase.from('couriers').insert({ phone: phoneClean, time: new Date().toISOString(), name: c.name, vehicle: c.vehicle, password: c.password, vehicle_photo: c.vehiclePhoto, ktp_photo: c.ktpPhoto, stnk_photo: c.stnkPhoto, sim_photo: c.simPhoto, status: 'Pending', last_heartbeat: 0 });
+          await db.from('couriers').insert({ phone: phoneClean, time: new Date().toISOString(), name: c.name, vehicle: c.vehicle, password: c.password, vehicle_photo: c.vehiclePhoto, ktp_photo: c.ktpPhoto, stnk_photo: c.stnkPhoto, sim_photo: c.simPhoto, status: 'Pending', last_heartbeat: 0 });
           return { status: "Created" };
         }
         else if (action === 'loginCourier') {
           let phoneClean = normalizePhone(data.phone);
-          let { data: c } = await supabase.from('couriers').select('*').eq('phone', phoneClean).maybeSingle();
+          let { data: c } = await db.from('couriers').select('*').eq('phone', phoneClean).maybeSingle();
           if (!c) return { status: "Error", message: "Kurir tidak ditemukan!" };
           if (String(c.status).trim() !== "Approved") return { status: "Pending", message: "Akun Anda masih dalam peninjauan Admin." };
           if (String(c.password) === String(data.password)) return { status: "Success", name: c.name, phone: c.phone, vehicle: c.vehicle };
@@ -731,35 +731,35 @@
         }
         else if (action === 'loginMerchant') {
           let phoneClean = normalizePhone(data.phone);
-          let { data: stores } = await supabase.from('stores').select('*');
+          let { data: stores } = await db.from('stores').select('*');
           let store = (stores || []).find(s => normalizePhone(s.phone) === phoneClean);
           if (!store) return { status: "Error", message: "Warung tidak ditemukan!" };
           if (String(store.password || "123") === String(data.password)) return { status: "Success", id: store.id, name: store.name, phone: store.phone, address: store.address };
           return { status: "Error", message: "Password salah!" };
         }
         else if (action === 'approveCourier') {
-          await supabase.from('couriers').update({ status: 'Approved' }).eq('phone', normalizePhone(data.phone));
+          await db.from('couriers').update({ status: 'Approved' }).eq('phone', normalizePhone(data.phone));
           return { status: "Success" };
         }
         else if (action === 'rejectCourier') {
-          await supabase.from('couriers').update({ status: 'Rejected' }).eq('phone', normalizePhone(data.phone));
+          await db.from('couriers').update({ status: 'Rejected' }).eq('phone', normalizePhone(data.phone));
           return { status: "Success" };
         }
         else if (action === 'updateProductStock') {
-          await supabase.from('products').update({ stock: data.stockStatus }).eq('id', data.productId);
+          await db.from('products').update({ stock: data.stockStatus }).eq('id', data.productId);
           return { status: "Success" };
         }
         else if (action === 'courierHeartbeat') {
-          await supabase.from('couriers').update({ last_heartbeat: Date.now() }).eq('phone', normalizePhone(data.phone));
+          await db.from('couriers').update({ last_heartbeat: Date.now() }).eq('phone', normalizePhone(data.phone));
           return { status: "Success" };
         }
         else if (action === 'requestWithdrawal') {
           let r = data.request;
-          await supabase.from('withdrawals').insert({ time: new Date().toISOString(), name: r.name, role: r.role, phone: normalizePhone(r.phone), amount: r.amount, method: r.method, account_info: r.accountInfo, status: r.status, date: r.date });
+          await db.from('withdrawals').insert({ time: new Date().toISOString(), name: r.name, role: r.role, phone: normalizePhone(r.phone), amount: r.amount, method: r.method, account_info: r.accountInfo, status: r.status, date: r.date });
           return { status: "Success" };
         }
         else if (action === 'approveWithdrawal') {
-          await supabase.from('withdrawals').update({ status: 'Selesai / Ditransfer' }).eq('phone', normalizePhone(data.phone)).eq('status', 'Menunggu Transfer Admin');
+          await db.from('withdrawals').update({ status: 'Selesai / Ditransfer' }).eq('phone', normalizePhone(data.phone)).eq('status', 'Menunggu Transfer Admin');
           return { status: "Success" };
         }
         else if (action === 'getMidtransSnapToken') {
