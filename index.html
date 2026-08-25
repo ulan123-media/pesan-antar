@@ -154,7 +154,7 @@
             <div><label class="text-[10px] font-extrabold text-slate-700 block mb-1">Kendaraan *</label><input type="text" id="c-reg-vehicle" placeholder="Honda Beat / Hitam" class="w-full bg-slate-50 rounded-xl px-3 py-2 text-xs border"></div>
             <div><label class="text-[10px] font-extrabold text-slate-700 block mb-1">Password *</label><input type="password" id="c-reg-password" placeholder="Password akun" class="w-full bg-slate-50 rounded-xl px-3 py-2 text-xs border"></div>
             
-            <!-- SYARAT PENDAFTARAN KURIR (DITAMBAHKAN AGAR TIDAK HILANG) -->
+            <!-- SYARAT PENDAFTARAN KURIR -->
             <div class="border-t pt-2 border-slate-200">
               <label class="text-[10px] font-extrabold text-rose-600 block mb-1">Unggah Syarat Berkas Kurir *</label>
               
@@ -617,9 +617,9 @@
     var lastSentTime = 0;
     var activeCompletionInvoiceId = null;
     var userActiveBalance = 0;
+    var lastPendingCount = -1; // Variabel pelacak jumlah pesanan sebelumnya untuk notifikasi suara
 
     document.addEventListener("DOMContentLoaded", function() {
-      // PERBAIKAN SESI: Cek sesi lokal dulu agar tidak terhapus saat refresh tanpa parameter url admin
       var activeSession = safeStorage.getItem('app_active_session');
       if (activeSession) {
         try {
@@ -1906,6 +1906,36 @@
       callApiPost('updateOrderStatus', { invoiceId: invoiceId, newStatus: newStatus }).then(() => { showToast("Status diperbarui!"); renderOrderStatus(); });
     }
 
+    // Fungsi untuk menghasilkan suara beep/alarm notifikasi pesanan baru
+    function playNotificationSound() {
+      try {
+        var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        var now = audioCtx.currentTime;
+        
+        var osc1 = audioCtx.createOscillator();
+        var gain1 = audioCtx.createGain();
+        osc1.type = 'sine';
+        osc1.frequency.setValueAtTime(587.33, now); // Nada D5
+        gain1.gain.setValueAtTime(0.2, now);
+        osc1.connect(gain1);
+        gain1.connect(audioCtx.destination);
+        osc1.start(now);
+        osc1.stop(now + 0.15);
+
+        var osc2 = audioCtx.createOscillator();
+        var gain2 = audioCtx.createGain();
+        osc2.type = 'sine';
+        osc2.frequency.setValueAtTime(880, now + 0.2); // Nada A5
+        gain2.gain.setValueAtTime(0.2, now + 0.2);
+        osc2.connect(gain2);
+        gain2.connect(audioCtx.destination);
+        osc2.start(now + 0.2);
+        osc2.stop(now + 0.35);
+      } catch (e) {
+        console.log("Audio dibatasi oleh kebijakan browser:", e);
+      }
+    }
+
     function startBackgroundNotifier() {
       if (adminNotifierInterval) clearInterval(adminNotifierInterval);
       adminNotifierInterval = setInterval(function() {
@@ -1922,7 +1952,14 @@
             if (badge) { badge.innerText = pending.length + " PESANAN BARU"; badge.classList.toggle('hidden', pending.length === 0); }
             var dot = document.getElementById('nav-status-dot');
             if (dot) dot.classList.toggle('hidden', pending.length === 0);
-          });
+
+            // Jika jumlah pesanan pending bertambah (ada pesanan baru masuk), bunyikan suara dan tampilkan toast!
+            if (lastPendingCount !== -1 && pending.length > lastPendingCount) {
+              playNotificationSound();
+              showToast("🔔 Pesanan Baru Masuk!", false);
+            }
+            lastPendingCount = pending.length;
+          }).catch(e => {});
         }
       }, 3000);
     }
