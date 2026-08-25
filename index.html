@@ -1822,7 +1822,12 @@
                                          '<p class="text-xs font-extrabold text-white">' + (ord.storeName || 'Warung Mitra') + '</p>' +
                                        '</div>' : '';
 
-        var cardBg = isStaff ? "bg-slate-900 border border-slate-800 text-slate-100 shadow-xl rounded-3xl p-5 space-y-3" : "bg-white border border-slate-200/80 text-slate-800 shadow-xs rounded-3xl p-5 space-y-3";
+        // EFEK RADAR / GARIS MERAH MENYALA (PULSING GLOW) KHUSUS PESANAN BARU/PENDING
+        var isPendingOrder = (ordStatus === 'Menunggu ACC' || ordStatus.includes('Menunggu Verifikasi QRIS') || ordStatus.includes('Menunggu Pembayaran'));
+        var cardBg = isStaff 
+          ? (isPendingOrder ? "bg-slate-900 border-2 border-red-500 text-slate-100 shadow-2xl shadow-red-900/50 rounded-3xl p-5 space-y-3 animate-pulse" : "bg-slate-900 border border-slate-800 text-slate-100 shadow-xl rounded-3xl p-5 space-y-3")
+          : (isPendingOrder ? "bg-white border-2 border-red-500 text-slate-800 shadow-xl shadow-red-500/20 rounded-3xl p-5 space-y-3 animate-pulse" : "bg-white border border-slate-200/80 text-slate-800 shadow-xs rounded-3xl p-5 space-y-3");
+
         var textMuted = isStaff ? "text-slate-400" : "text-slate-500";
         var textBold = isStaff ? "text-white" : "text-slate-900";
 
@@ -1951,8 +1956,14 @@
         if (role === 'admin' || role === 'merchant' || role === 'courier') {
           callApiGet('getOrders').then(orders => {
             orders = orders || [];
-            if (role === 'admin') {
-              var pending = orders.filter(o => o.status === 'Menunggu ACC' || String(o.status).includes('Menunggu Verifikasi QRIS') || String(o.status).includes('Menunggu Pembayaran'));
+            if (role === 'admin' || role === 'merchant') {
+              var merchantName = (role === 'merchant') ? String(currentUser.name || "").trim().toLowerCase() : "";
+              var pending = orders.filter(o => {
+                var matchMerchant = (role === 'admin') || (String(o.storeName || "").trim().toLowerCase() === merchantName);
+                var isPending = (o.status === 'Menunggu ACC' || String(o.status).includes('Menunggu Verifikasi QRIS') || String(o.status).includes('Menunggu Pembayaran'));
+                return matchMerchant && isPending;
+              });
+
               var badge = document.getElementById('admin-badge-count');
               if (badge) { badge.innerText = pending.length + " PESANAN BARU"; badge.classList.toggle('hidden', pending.length === 0); }
               var dot = document.getElementById('nav-status-dot');
@@ -1962,22 +1973,13 @@
                 playNotificationSound();
                 showToast("🔔 Pesanan Baru Masuk!", false);
               }
-              lastPendingCount = pending.length;
-            } 
-            else if (role === 'merchant') {
-              var merchantName = String(currentUser.name || "").trim().toLowerCase();
-              var pending = orders.filter(o => String(o.storeName || "").trim().toLowerCase() === merchantName && (o.status === 'Menunggu ACC' || String(o.status).includes('Menunggu Verifikasi QRIS') || String(o.status).includes('Menunggu Pembayaran')));
-              var badge = document.getElementById('admin-badge-count');
-              if (badge) { badge.innerText = pending.length + " PESANAN BARU"; badge.classList.toggle('hidden', pending.length === 0); }
-              var dot = document.getElementById('nav-status-dot');
-              if (dot) dot.classList.toggle('hidden', pending.length === 0);
-
-              if (lastPendingCount !== -1 && pending.length > lastPendingCount) {
+              if (lastPendingCount === -1 && pending.length > 0) {
+                lastPendingCount = pending.length - 1; 
                 playNotificationSound();
-                showToast("🔔 Pesanan Baru Masuk untuk Warung!", false);
+              } else {
+                lastPendingCount = pending.length;
               }
-              lastPendingCount = pending.length;
-            }
+            } 
             else if (role === 'courier') {
               var availableForDelivery = orders.filter(o => o.status === 'Di-ACC (Diproses)' && (!o.courierPhone || o.courierPhone === ''));
               var badge = document.getElementById('admin-badge-count');
