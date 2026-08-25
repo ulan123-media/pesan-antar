@@ -1956,6 +1956,7 @@
         if (role === 'admin' || role === 'merchant' || role === 'courier') {
           callApiGet('getOrders').then(orders => {
             orders = orders || [];
+            
             if (role === 'admin' || role === 'merchant') {
               var merchantName = (role === 'merchant') ? String(currentUser.name || "").trim().toLowerCase() : "";
               var pending = orders.filter(o => {
@@ -1965,17 +1966,19 @@
               });
 
               var badge = document.getElementById('admin-badge-count');
-              if (badge) { badge.innerText = pending.length + " PESANAN BARU"; badge.classList.toggle('hidden', pending.length === 0); }
+              if (badge) { 
+                badge.innerText = pending.length + " PESANAN BARU"; 
+                badge.classList.toggle('hidden', pending.length === 0); 
+              }
               var dot = document.getElementById('nav-status-dot');
               if (dot) dot.classList.toggle('hidden', pending.length === 0);
 
-              if (lastPendingCount !== -1 && pending.length > lastPendingCount) {
+              if (lastPendingCount === -1) {
+                lastPendingCount = pending.length; 
+              } else if (pending.length > lastPendingCount) {
                 playNotificationSound();
                 showToast("🔔 Pesanan Baru Masuk!", false);
-              }
-              if (lastPendingCount === -1 && pending.length > 0) {
-                lastPendingCount = pending.length - 1; 
-                playNotificationSound();
+                lastPendingCount = pending.length;
               } else {
                 lastPendingCount = pending.length;
               }
@@ -1983,15 +1986,22 @@
             else if (role === 'courier') {
               var availableForDelivery = orders.filter(o => o.status === 'Di-ACC (Diproses)' && (!o.courierPhone || o.courierPhone === ''));
               var badge = document.getElementById('admin-badge-count');
-              if (badge) { badge.innerText = availableForDelivery.length + " ANTARAN BARU"; badge.classList.toggle('hidden', availableForDelivery.length === 0); }
+              if (badge) { 
+                badge.innerText = availableForDelivery.length + " ANTARAN BARU"; 
+                badge.classList.toggle('hidden', availableForDelivery.length === 0); 
+              }
               var dot = document.getElementById('nav-status-dot');
               if (dot) dot.classList.toggle('hidden', availableForDelivery.length === 0);
 
-              if (lastPendingCount !== -1 && availableForDelivery.length > lastPendingCount) {
+              if (lastPendingCount === -1) {
+                lastPendingCount = availableForDelivery.length; 
+              } else if (availableForDelivery.length > lastPendingCount) {
                 playNotificationSound();
                 showToast("🔔 Ada Antaran Pesanan Baru Siap Diantar!", false);
+                lastPendingCount = availableForDelivery.length;
+              } else {
+                lastPendingCount = availableForDelivery.length;
               }
-              lastPendingCount = availableForDelivery.length;
             }
           }).catch(e => {});
         }
