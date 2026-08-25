@@ -37,95 +37,114 @@
     <span id="toast-message" class="truncate">Barang ditambahkan!</span>
   </div>
 
-  <!-- HALAMAN AUTENTIKASI (LOGIN & REGISTER MULTI-ROLE) -->
+  <!-- HALAMAN UTAMA / LANDING (BERSIH & PROFESIONAL) -->
   <div id="auth-screen" class="fixed inset-0 z-50 flex flex-col justify-between bg-white p-6 overflow-y-auto max-w-md mx-auto shadow-2xl">
-    <div class="flex justify-center items-center w-full pt-2">
-      <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest bg-slate-100 px-3 py-1 rounded-full">Portal Akses Aman</span>
+    
+    <!-- TOP BAR DENGAN IKON KECIL DI KIRI & KANAN ATAS -->
+    <div class="flex justify-between items-center w-full pt-2">
+      <button type="button" onclick="openStaffAuthModal()" class="flex items-center gap-1.5 text-[11px] font-extrabold text-slate-600 bg-slate-100 hover:bg-slate-200 px-3.5 py-2 rounded-full transition-all shadow-xs active:scale-95">
+        <i class="fa-solid fa-store text-amber-600 text-xs"></i> Mitra & Kurir
+      </button>
+      <button type="button" onclick="openConsumerAuthModal()" class="flex items-center gap-1.5 text-[11px] font-extrabold text-slate-600 bg-slate-100 hover:bg-slate-200 px-3.5 py-2 rounded-full transition-all shadow-xs active:scale-95">
+        <i class="fa-solid fa-user text-rose-600 text-xs"></i> Masuk Akun
+      </button>
     </div>
 
-    <div class="w-full my-auto py-6">
-      <div class="text-center mb-6">
-        <div class="w-20 h-20 bg-rose-50 border border-rose-100 rounded-3xl flex items-center justify-center mx-auto mb-4 text-rose-600 shadow-inner"><i class="fa-solid fa-store text-3xl"></i></div>
+    <!-- KONTEN TENGAH YANG BERSIH -->
+    <div class="w-full my-auto py-8 text-center space-y-6">
+      <div class="w-24 h-24 bg-rose-50 border border-rose-100 rounded-3xl flex items-center justify-center mx-auto text-rose-600 shadow-inner">
+        <i class="fa-solid fa-store text-4xl"></i>
+      </div>
+      <div class="space-y-2">
         <h2 class="text-3xl font-black text-slate-900 tracking-tight">Beli Disini!</h2>
-        <p class="text-slate-400 text-xs font-semibold mt-1">Layanan Belanja & Kurir Cepat Terpercaya</p>
+        <p class="text-slate-400 text-xs font-semibold max-w-xs mx-auto">Layanan Pesan Antar Makanan & Kebutuhan Harian Cepat Terpercaya</p>
       </div>
 
-      <!-- PEMILIH ROLE UTAMA DI HALAMAN LOGIN -->
-      <div class="grid grid-cols-3 gap-1 bg-slate-100 p-1 rounded-2xl text-[11px] font-extrabold mb-5 border border-slate-200/60">
-        <button type="button" id="auth-role-consumer" onclick="switchAuthRole('consumer')" class="py-2.5 rounded-xl bg-rose-600 text-white shadow-sm transition-all text-center">Konsumen</button>
-        <button type="button" id="auth-role-courier" onclick="switchAuthRole('courier')" class="py-2.5 rounded-xl text-slate-600 transition-all text-center">Kurir</button>
-        <button type="button" id="auth-role-merchant" onclick="switchAuthRole('merchant')" class="py-2.5 rounded-xl text-slate-600 transition-all text-center">Mitra Toko</button>
+      <div class="pt-4 space-y-3">
+        <button type="button" onclick="loginAsGuest()" class="w-full bg-rose-600 hover:bg-rose-700 active:scale-95 text-white font-black py-4 rounded-2xl shadow-xl shadow-rose-600/25 transition-all text-xs tracking-wider flex items-center justify-center gap-2">
+          <i class="fa-solid fa-compass text-sm"></i> MULAI BELANJA SEKARANG
+        </button>
+      </div>
+    </div>
+
+    <div class="text-center text-[10px] text-slate-400 pb-2">Beli Disini! © 2026 • Professional Logistics</div>
+  </div>
+
+  <!-- MODAL LOGIN / REGISTER KONSUMEN -->
+  <div id="consumer-auth-modal" class="fixed inset-0 bg-slate-900/60 z-50 flex items-end justify-center hidden backdrop-blur-sm transition-all">
+    <div class="bg-white rounded-t-[32px] w-full p-6 max-h-[88vh] overflow-y-auto relative animate-slide-up shadow-2xl max-w-md mx-auto text-slate-800">
+      <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-4"></div>
+      <div class="flex justify-between items-center pb-3 border-b border-slate-100 mb-4">
+        <h3 class="text-sm font-black text-slate-900 flex items-center gap-2"><i class="fa-solid fa-user text-rose-600"></i> Portal Akun Konsumen</h3>
+        <button type="button" onclick="closeConsumerAuthModal()" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 font-bold active:scale-90"><i class="fa-solid fa-xmark text-xs"></i></button>
       </div>
 
-      <!-- 1. SECTION KONSUMEN -->
-      <div id="section-consumer" class="space-y-4">
-        <div class="flex bg-slate-100 p-1 rounded-2xl text-xs font-bold mb-3 border border-slate-200/60">
-          <button type="button" id="subtab-consumer-login" onclick="switchConsumerMode('login')" class="flex-1 py-2.5 rounded-xl bg-rose-600 text-white shadow-xs transition-all text-center">Masuk</button>
-          <button type="button" id="subtab-consumer-register" onclick="switchConsumerMode('register')" class="flex-1 py-2.5 rounded-xl text-slate-600 transition-all text-center">Daftar</button>
-        </div>
-
-        <div id="consumer-login-box" class="space-y-3.5">
-          <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Nomor WhatsApp *</label><div class="relative flex items-center"><i class="fa-brands fa-whatsapp absolute left-4 text-slate-400 text-base"></i><input type="tel" id="login-phone" placeholder="081234567890" class="w-full bg-slate-50 rounded-2xl pl-11 pr-4 py-3.5 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium"></div></div>
-          <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Password *</label><div class="relative flex items-center"><i class="fa-solid fa-lock absolute left-4 text-slate-400 text-sm"></i><input type="password" id="login-password" placeholder="••••••••" class="w-full bg-slate-50 rounded-2xl pl-11 pr-4 py-3.5 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium"></div></div>
-          <div class="flex justify-end text-[11px]"><button type="button" onclick="forgotPassword()" class="text-rose-600 font-bold hover:underline">Lupa Password?</button></div>
-          <button type="button" onclick="loginCustomer()" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-black py-4 rounded-2xl shadow-lg shadow-rose-600/25 transition-all text-xs tracking-wider flex items-center justify-center gap-2"><i class="fa-solid fa-right-to-bracket text-base"></i> MASUK SEBAGAI KONSUMEN</button>
-        </div>
-
-        <div id="consumer-register-box" class="space-y-3.5 hidden">
-          <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Nama Lengkap *</label><input type="text" id="reg-name" placeholder="Nama Anda" class="w-full bg-slate-50 rounded-2xl px-4 py-3.5 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium"></div>
-          <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Nomor WhatsApp *</label><input type="tel" id="reg-phone" placeholder="081234567890" class="w-full bg-slate-50 rounded-2xl px-4 py-3.5 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium"></div>
-          <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Alamat Lengkap *</label><textarea id="reg-address" rows="2" placeholder="Alamat rumah..." class="w-full bg-slate-50 rounded-2xl px-4 py-3 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium"></textarea></div>
-          <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Password *</label><input type="password" id="reg-password" placeholder="Password akun" class="w-full bg-slate-50 rounded-2xl px-4 py-3.5 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium"></div>
-          <button type="button" onclick="registerCustomer()" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-black py-4 rounded-2xl shadow-lg shadow-rose-600/25 transition-all text-xs tracking-wider flex items-center justify-center gap-2"><i class="fa-solid fa-user-plus text-base"></i> DAFTAR AKUN KONSUMEN</button>
-        </div>
-
-        <button type="button" onclick="loginAsGuest()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold py-3.5 rounded-2xl text-xs transition-all border border-slate-200 flex items-center justify-center gap-2 mt-2"><i class="fa-solid fa-eye text-rose-600"></i> LIHAT PRODUK DULU (PENGUNJUNG)</button>
+      <div class="flex bg-slate-100 p-1 rounded-2xl text-xs font-bold mb-4 border border-slate-200/60">
+        <button type="button" id="subtab-consumer-login" onclick="switchConsumerMode('login')" class="flex-1 py-2.5 rounded-xl bg-rose-600 text-white shadow-xs transition-all text-center">Masuk</button>
+        <button type="button" id="subtab-consumer-register" onclick="switchConsumerMode('register')" class="flex-1 py-2.5 rounded-xl text-slate-600 transition-all text-center">Daftar</button>
       </div>
 
-      <!-- 2. SECTION KURIR -->
-      <div id="section-courier" class="space-y-4 hidden">
-        <div class="flex bg-slate-100 p-1 rounded-2xl text-xs font-bold mb-3 border border-slate-200/60">
-          <button type="button" id="subtab-courier-login" onclick="switchCourierMode('login')" class="flex-1 py-2.5 rounded-xl bg-rose-600 text-white shadow-xs transition-all text-center">Masuk Kurir</button>
-          <button type="button" id="subtab-courier-register" onclick="switchCourierMode('register')" class="flex-1 py-2.5 rounded-xl text-slate-600 transition-all text-center">Daftar / Lamaran</button>
+      <div id="consumer-login-box" class="space-y-3.5">
+        <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Nomor WhatsApp *</label><input type="tel" id="login-phone" placeholder="081234567890" class="w-full bg-slate-50 rounded-2xl px-4 py-3.5 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium"></div>
+        <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Password *</label><input type="password" id="login-password" placeholder="••••••••" class="w-full bg-slate-50 rounded-2xl px-4 py-3.5 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium"></div>
+        <div class="flex justify-end text-[11px]"><button type="button" onclick="forgotPassword()" class="text-rose-600 font-bold hover:underline">Lupa Password?</button></div>
+        <button type="button" onclick="loginCustomer()" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-black py-4 rounded-2xl shadow-lg transition-all text-xs tracking-wider flex items-center justify-center gap-2">MASUK SEKARANG</button>
+      </div>
+
+      <div id="consumer-register-box" class="space-y-3.5 hidden">
+        <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Nama Lengkap *</label><input type="text" id="reg-name" placeholder="Nama Anda" class="w-full bg-slate-50 rounded-2xl px-4 py-3 text-xs border border-slate-200 focus:outline-none focus:border-rose-600"></div>
+        <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Nomor WhatsApp *</label><input type="tel" id="reg-phone" placeholder="081234567890" class="w-full bg-slate-50 rounded-2xl px-4 py-3 text-xs border border-slate-200 focus:outline-none focus:border-rose-600"></div>
+        <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Alamat Lengkap *</label><textarea id="reg-address" rows="2" placeholder="Alamat rumah..." class="w-full bg-slate-50 rounded-2xl px-4 py-3 text-xs border border-slate-200 focus:outline-none focus:border-rose-600"></textarea></div>
+        <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Password *</label><input type="password" id="reg-password" placeholder="Password akun" class="w-full bg-slate-50 rounded-2xl px-4 py-3 text-xs border border-slate-200 focus:outline-none focus:border-rose-600"></div>
+        <button type="button" onclick="registerCustomer()" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-black py-3.5 rounded-2xl shadow-lg transition-all text-xs tracking-wider">DAFTAR AKUN BARU</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL LOGIN / REGISTER MITRA & KURIR -->
+  <div id="staff-auth-modal" class="fixed inset-0 bg-slate-900/60 z-50 flex items-end justify-center hidden backdrop-blur-sm transition-all">
+    <div class="bg-white rounded-t-[32px] w-full p-6 max-h-[88vh] overflow-y-auto relative animate-slide-up shadow-2xl max-w-md mx-auto text-slate-800">
+      <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-4"></div>
+      <div class="flex justify-between items-center pb-3 border-b border-slate-100 mb-4">
+        <h3 class="text-sm font-black text-slate-900 flex items-center gap-2"><i class="fa-solid fa-store text-amber-600"></i> Portal Mitra Toko & Kurir</h3>
+        <button type="button" onclick="closeStaffAuthModal()" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 font-bold active:scale-90"><i class="fa-solid fa-xmark text-xs"></i></button>
+      </div>
+
+      <div class="grid grid-cols-2 gap-1 bg-slate-100 p-1 rounded-2xl text-xs font-bold mb-4 border border-slate-200/60">
+        <button type="button" id="staff-tab-courier" onclick="switchStaffRole('courier')" class="py-2.5 rounded-xl bg-amber-600 text-white shadow-xs transition-all text-center">Kurir</button>
+        <button type="button" id="staff-tab-merchant" onclick="switchStaffRole('merchant')" class="py-2.5 rounded-xl text-slate-600 transition-all text-center">Mitra Toko</button>
+      </div>
+
+      <!-- KURIR SUB-SECTION -->
+      <div id="staff-courier-box" class="space-y-4">
+        <div class="flex bg-slate-100 p-1 rounded-2xl text-[11px] font-bold mb-2">
+          <button type="button" id="subtab-c-login" onclick="switchCourierMode('login')" class="flex-1 py-2 rounded-lg bg-slate-900 text-white transition-all text-center">Masuk</button>
+          <button type="button" id="subtab-c-reg" onclick="switchCourierMode('register')" class="flex-1 py-2 rounded-lg text-slate-600 transition-all text-center">Daftar / Lamaran</button>
         </div>
 
-        <div id="courier-login-box" class="space-y-3.5">
-          <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">WhatsApp Kurir *</label><input type="tel" id="courier-login-phone" placeholder="081234567890" class="w-full bg-slate-50 rounded-2xl px-4 py-3.5 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium"></div>
-          <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Password *</label><input type="password" id="courier-login-password" placeholder="••••••••" class="w-full bg-slate-50 rounded-2xl px-4 py-3.5 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium"></div>
-          <button type="button" onclick="loginCourier()" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-black py-4 rounded-2xl shadow-lg shadow-rose-600/25 transition-all text-xs tracking-wider flex items-center justify-center gap-2"><i class="fa-solid fa-motorcycle text-base"></i> MASUK PANEL KURIR</button>
+        <div id="c-login-form" class="space-y-3">
+          <div><label class="text-[11px] font-extrabold text-slate-700 block mb-1">WhatsApp Kurir *</label><input type="tel" id="courier-login-phone" placeholder="081234567890" class="w-full bg-slate-50 rounded-2xl px-4 py-3 text-xs border border-slate-200"></div>
+          <div><label class="text-[11px] font-extrabold text-slate-700 block mb-1">Password *</label><input type="password" id="courier-login-password" placeholder="••••••••" class="w-full bg-slate-50 rounded-2xl px-4 py-3 text-xs border border-slate-200"></div>
+          <button type="button" onclick="loginCourier()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-black py-3.5 rounded-2xl text-xs transition-all shadow-md">MASUK PANEL KURIR</button>
         </div>
 
-        <div id="courier-register-box" class="space-y-3.5 hidden">
-          <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Nama Lengkap *</label><input type="text" id="c-reg-name" placeholder="Nama Kurir" class="w-full bg-slate-50 rounded-2xl px-4 py-3 text-xs border border-slate-200 focus:outline-none"></div>
-          <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">No. WhatsApp *</label><input type="tel" id="c-reg-phone" placeholder="081234567890" class="w-full bg-slate-50 rounded-2xl px-4 py-3 text-xs border border-slate-200 focus:outline-none"></div>
-          <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Kendaraan *</label><input type="text" id="c-reg-vehicle" placeholder="Contoh: Honda Beat / Hitam" class="w-full bg-slate-50 rounded-2xl px-4 py-3 text-xs border border-slate-200 focus:outline-none"></div>
-          <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Password *</label><input type="password" id="c-reg-password" placeholder="Buat password" class="w-full bg-slate-50 rounded-2xl px-4 py-3 text-xs border border-slate-200 focus:outline-none"></div>
-          
-          <div class="grid grid-cols-2 gap-2">
-            <div><label class="text-[9px] font-extrabold text-slate-600 block mb-1">Foto Kendaraan</label><input type="file" id="c-reg-vphoto" accept="image/*" class="w-full bg-slate-50 p-1 text-[10px] border rounded-xl"></div>
-            <div><label class="text-[9px] font-extrabold text-slate-600 block mb-1">Foto KTP</label><input type="file" id="c-reg-ktp" accept="image/*" class="w-full bg-slate-50 p-1 text-[10px] border rounded-xl"></div>
-          </div>
-          <div class="grid grid-cols-2 gap-2">
-            <div><label class="text-[9px] font-extrabold text-slate-600 block mb-1">Foto STNK</label><input type="file" id="c-reg-stnk" accept="image/*" class="w-full bg-slate-50 p-1 text-[10px] border rounded-xl"></div>
-            <div><label class="text-[9px] font-extrabold text-slate-600 block mb-1">Foto SIM</label><input type="file" id="c-reg-sim" accept="image/*" class="w-full bg-slate-50 p-1 text-[10px] border rounded-xl"></div>
-          </div>
-
-          <button type="button" onclick="registerCourier()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-3.5 rounded-2xl shadow-lg transition-all text-xs tracking-wider">KIRIM LAMARAN KURIR</button>
+        <div id="c-reg-form" class="space-y-3 hidden">
+          <div><label class="text-[10px] font-extrabold text-slate-700 block mb-1">Nama Lengkap *</label><input type="text" id="c-reg-name" placeholder="Nama Kurir" class="w-full bg-slate-50 rounded-xl px-3 py-2 text-xs border"></div>
+          <div><label class="text-[10px] font-extrabold text-slate-700 block mb-1">No. WhatsApp *</label><input type="tel" id="c-reg-phone" placeholder="081234567890" class="w-full bg-slate-50 rounded-xl px-3 py-2 text-xs border"></div>
+          <div><label class="text-[10px] font-extrabold text-slate-700 block mb-1">Kendaraan *</label><input type="text" id="c-reg-vehicle" placeholder="Honda Beat / Hitam" class="w-full bg-slate-50 rounded-xl px-3 py-2 text-xs border"></div>
+          <div><label class="text-[10px] font-extrabold text-slate-700 block mb-1">Password *</label><input type="password" id="c-reg-password" placeholder="Password akun" class="w-full bg-slate-50 rounded-xl px-3 py-2 text-xs border"></div>
+          <button type="button" onclick="registerCourier()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-3 rounded-xl text-xs transition-all shadow-md">KIRIM LAMARAN KURIR</button>
         </div>
       </div>
 
-      <!-- 3. SECTION MITRA TOKO -->
-      <div id="section-merchant" class="space-y-4 hidden">
-        <div class="bg-amber-50 border border-amber-200 rounded-2xl p-3 text-center mb-2">
-          <p class="text-[11px] font-bold text-amber-800">Khusus Pemilik Warung / Toko Mitra</p>
-        </div>
-        <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">WhatsApp Warung *</label><input type="tel" id="merchant-login-phone" placeholder="081234567891" class="w-full bg-slate-50 rounded-2xl px-4 py-3.5 text-xs border border-slate-200 focus:outline-none focus:border-amber-600 font-medium"></div>
-        <div><label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Password Warung *</label><input type="password" id="merchant-login-password" placeholder="••••••••" class="w-full bg-slate-50 rounded-2xl px-4 py-3.5 text-xs border border-slate-200 focus:outline-none focus:border-amber-600 font-medium"></div>
-        <button type="button" onclick="loginMerchant()" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-black py-4 rounded-2xl shadow-lg shadow-amber-600/25 transition-all text-xs tracking-wider flex items-center justify-center gap-2"><i class="fa-solid fa-store text-base"></i> MASUK PANEL MITRA WARUNG</button>
+      <!-- MITRA TOKO SUB-SECTION -->
+      <div id="staff-merchant-box" class="space-y-3.5 hidden">
+        <div><label class="text-[11px] font-extrabold text-slate-700 block mb-1">WhatsApp Warung *</label><input type="tel" id="merchant-login-phone" placeholder="081234567891" class="w-full bg-slate-50 rounded-2xl px-4 py-3.5 text-xs border border-slate-200"></div>
+        <div><label class="text-[11px] font-extrabold text-slate-700 block mb-1">Password Warung *</label><input type="password" id="merchant-login-password" placeholder="••••••••" class="w-full bg-slate-50 rounded-2xl px-4 py-3.5 text-xs border border-slate-200"></div>
+        <button type="button" onclick="loginMerchant()" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-black py-4 rounded-2xl shadow-lg transition-all text-xs tracking-wider">MASUK PANEL MITRA WARUNG</button>
       </div>
 
     </div>
-    <div class="text-center text-[10px] text-slate-400 pb-2">Beli Disini! © 2026 • Professional Logistics</div>
   </div>
 
   <!-- APLIKASI UTAMA -->
@@ -594,25 +613,24 @@
       }
     });
 
-    // FUNGSI GANTI TAB ROLE DI HALAMAN LOGIN (KONSUMEN / KURIR / MITRA)
-    function switchAuthRole(role) {
-      document.getElementById('section-consumer').classList.add('hidden');
-      document.getElementById('section-courier').classList.add('hidden');
-      document.getElementById('section-merchant').classList.add('hidden');
-      
-      document.getElementById('auth-role-consumer').className = "py-2.5 rounded-xl text-slate-600 transition-all text-center";
-      document.getElementById('auth-role-courier').className = "py-2.5 rounded-xl text-slate-600 transition-all text-center";
-      document.getElementById('auth-role-merchant').className = "py-2.5 rounded-xl text-slate-600 transition-all text-center";
+    // FUNGSI MODAL KONSUMEN & STAFF
+    function openConsumerAuthModal() { document.getElementById('consumer-auth-modal').classList.remove('hidden'); }
+    function closeConsumerAuthModal() { document.getElementById('consumer-auth-modal').classList.add('hidden'); }
 
-      if (role === 'consumer') {
-        document.getElementById('section-consumer').classList.remove('hidden');
-        document.getElementById('auth-role-consumer').className = "py-2.5 rounded-xl bg-rose-600 text-white shadow-sm transition-all text-center";
-      } else if (role === 'courier') {
-        document.getElementById('section-courier').classList.remove('hidden');
-        document.getElementById('auth-role-courier').className = "py-2.5 rounded-xl bg-rose-600 text-white shadow-sm transition-all text-center";
-      } else if (role === 'merchant') {
-        document.getElementById('section-merchant').classList.remove('hidden');
-        document.getElementById('auth-role-merchant').className = "py-2.5 rounded-xl bg-amber-600 text-white shadow-sm transition-all text-center";
+    function openStaffAuthModal() { document.getElementById('staff-auth-modal').classList.remove('hidden'); }
+    function closeStaffAuthModal() { document.getElementById('staff-auth-modal').classList.add('hidden'); }
+
+    function switchStaffRole(role) {
+      if (role === 'courier') {
+        document.getElementById('staff-tab-courier').className = "py-2.5 rounded-xl bg-amber-600 text-white shadow-xs transition-all text-center";
+        document.getElementById('staff-tab-merchant').className = "py-2.5 rounded-xl text-slate-600 transition-all text-center";
+        document.getElementById('staff-courier-box').classList.remove('hidden');
+        document.getElementById('staff-merchant-box').classList.add('hidden');
+      } else {
+        document.getElementById('staff-tab-merchant').className = "py-2.5 rounded-xl bg-amber-600 text-white shadow-xs transition-all text-center";
+        document.getElementById('staff-tab-courier').className = "py-2.5 rounded-xl text-slate-600 transition-all text-center";
+        document.getElementById('staff-merchant-box').classList.remove('hidden');
+        document.getElementById('staff-courier-box').classList.add('hidden');
       }
     }
 
@@ -632,15 +650,15 @@
 
     function switchCourierMode(mode) {
       if (mode === 'login') {
-        document.getElementById('subtab-courier-login').className = "flex-1 py-2.5 rounded-xl bg-rose-600 text-white shadow-xs transition-all text-center";
-        document.getElementById('subtab-courier-register').className = "flex-1 py-2.5 rounded-xl text-slate-600 transition-all text-center";
-        document.getElementById('courier-login-box').classList.remove('hidden');
-        document.getElementById('courier-register-box').classList.add('hidden');
+        document.getElementById('subtab-c-login').className = "flex-1 py-2 rounded-lg bg-slate-900 text-white transition-all text-center";
+        document.getElementById('subtab-c-reg').className = "flex-1 py-2 rounded-lg text-slate-600 transition-all text-center";
+        document.getElementById('c-login-form').classList.remove('hidden');
+        document.getElementById('c-reg-form').classList.add('hidden');
       } else {
-        document.getElementById('subtab-courier-register').className = "flex-1 py-2.5 rounded-xl bg-rose-600 text-white shadow-xs transition-all text-center";
-        document.getElementById('subtab-courier-login').className = "flex-1 py-2.5 rounded-xl text-slate-600 transition-all text-center";
-        document.getElementById('courier-register-box').classList.remove('hidden');
-        document.getElementById('courier-login-box').classList.add('hidden');
+        document.getElementById('subtab-c-reg').className = "flex-1 py-2 rounded-lg bg-slate-900 text-white transition-all text-center";
+        document.getElementById('subtab-c-login').className = "flex-1 py-2 rounded-lg text-slate-600 transition-all text-center";
+        document.getElementById('c-reg-form').classList.remove('hidden');
+        document.getElementById('c-login-form').classList.add('hidden');
       }
     }
 
@@ -796,6 +814,7 @@
           showToast("Pendaftaran akun berhasil!");
           currentUser = { name: name, phone: phone, address: address, role: 'customer' };
           safeStorage.setItem('app_active_session', JSON.stringify(currentUser));
+          closeConsumerAuthModal();
           openMainApp(currentUser.name);
         }
       });
@@ -808,7 +827,9 @@
         if (res && res.status === "Success") {
           currentUser = { name: res.name, phone: res.phone, address: res.address, role: 'customer' };
           safeStorage.setItem('app_active_session', JSON.stringify(currentUser));
-          showToast("Login Berhasil!"); openMainApp(currentUser.name);
+          showToast("Login Berhasil!"); 
+          closeConsumerAuthModal();
+          openMainApp(currentUser.name);
         } else { alert("❌ " + (res.message || "Nomor WhatsApp atau Password salah!")); }
       });
     }
@@ -820,7 +841,9 @@
         if (res && res.status === "Success") {
           currentUser = { name: res.name, phone: res.phone, vehicle: res.vehicle, role: 'courier' };
           safeStorage.setItem('app_active_session', JSON.stringify(currentUser));
-          showToast("Login Kurir Berhasil!"); openMainApp("Kurir: " + res.name);
+          showToast("Login Kurir Berhasil!"); 
+          closeStaffAuthModal();
+          openMainApp("Kurir: " + res.name);
         } else { alert("❌ " + (res.message || "Login gagal! Pastikan akun sudah di-ACC Admin.")); }
       });
     }
@@ -855,7 +878,9 @@
         if (res && res.status === "Success") {
           currentUser = { id: res.id, storeId: res.id, name: res.name, phone: res.phone, address: res.address, role: 'merchant' };
           safeStorage.setItem('app_active_session', JSON.stringify(currentUser));
-          showToast("Login Warung Berhasil!"); openMainApp("Mitra: " + res.name);
+          showToast("Login Warung Berhasil!"); 
+          closeStaffAuthModal();
+          openMainApp("Mitra: " + res.name);
         } else { alert("❌ " + (res.message || "Nomor atau password warung salah!")); }
       });
     }
@@ -866,6 +891,8 @@
 
     function openMainApp(greetingText) {
       document.getElementById('auth-screen').classList.add('hidden');
+      document.getElementById('consumer-auth-modal').classList.add('hidden');
+      document.getElementById('staff-auth-modal').classList.add('hidden');
       document.getElementById('main-app').classList.remove('hidden');
       document.getElementById('greeting-name-text').innerText = greetingText;
 
