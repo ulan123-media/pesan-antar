@@ -1398,6 +1398,15 @@
                                        '<div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100"><span class="text-[10px] text-slate-400 font-bold uppercase block mb-0.5">Nomor WhatsApp</span><span class="font-extrabold text-slate-900 text-sm">' + (c.phone || '-') + '</span></div>' +
                                        '<div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100"><span class="text-[10px] text-slate-400 font-bold uppercase block mb-0.5">Kendaraan</span><span class="font-extrabold text-slate-900 text-sm">' + (c.vehicle || '-') + '</span></div>' +
                                        '<div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100"><span class="text-[10px] text-slate-400 font-bold uppercase block mb-0.5">Status Akun</span><span class="font-extrabold text-emerald-600 text-sm">' + (c.status || 'Approved') + '</span></div>' +
+                                       '<div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100 space-y-2">' +
+                                         '<span class="text-[10px] text-slate-400 font-bold uppercase block">Berkas & Foto Syarat (Klik untuk memperbesar)</span>' +
+                                         '<div class="grid grid-cols-4 gap-1.5 pt-1">' +
+                                           (c.vehicle_photo ? '<div class="text-center"><span class="text-[8px] text-slate-500 font-bold block mb-1">Kendaraan</span><img src="' + c.vehicle_photo + '" onclick="openImageModal(\'' + c.vehicle_photo + '\', \'Foto Kendaraan\')" class="w-full h-12 object-cover rounded-xl cursor-pointer border border-slate-200"></div>' : '<span class="text-[8px] text-slate-400">No Vehicle</span>') +
+                                           (c.ktp_photo ? '<div class="text-center"><span class="text-[8px] text-slate-500 font-bold block mb-1">KTP</span><img src="' + c.ktp_photo + '" onclick="openImageModal(\'' + c.ktp_photo + '\', \'Foto KTP\')" class="w-full h-12 object-cover rounded-xl cursor-pointer border border-slate-200"></div>' : '<span class="text-[8px] text-slate-400">No KTP</span>') +
+                                           (c.stnk_photo ? '<div class="text-center"><span class="text-[8px] text-slate-500 font-bold block mb-1">STNK</span><img src="' + c.stnk_photo + '" onclick="openImageModal(\'' + c.stnk_photo + '\', \'Foto STNK\')" class="w-full h-12 object-cover rounded-xl cursor-pointer border border-slate-200"></div>' : '<span class="text-[8px] text-slate-400">No STNK</span>') +
+                                           (c.sim_photo ? '<div class="text-center"><span class="text-[8px] text-slate-500 font-bold block mb-1">SIM</span><img src="' + c.sim_photo + '" onclick="openImageModal(\'' + c.sim_photo + '\', \'Foto SIM\')" class="w-full h-12 object-cover rounded-xl cursor-pointer border border-slate-200"></div>' : '<span class="text-[8px] text-slate-400">No SIM</span>') +
+                                         '</div>' +
+                                       '</div>' +
                                      '</div>';
         });
       }
