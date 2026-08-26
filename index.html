@@ -2238,34 +2238,43 @@
       callApiPost('updateOrderStatus', { invoiceId: invoiceId, newStatus: newStatus }).then(() => { showToast("Status diperbarui!"); renderOrderStatus(); });
     }
 
-    function playNotificationSound() {
-      try {
-        var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        var now = audioCtx.currentTime;
-        
-        var osc1 = audioCtx.createOscillator();
-        var gain1 = audioCtx.createGain();
-        osc1.type = 'sine';
-        osc1.frequency.setValueAtTime(587.33, now);
-        gain1.gain.setValueAtTime(0.2, now);
-        osc1.connect(gain1);
-        gain1.connect(audioCtx.destination);
-        osc1.start(now);
-        osc1.stop(now + 0.15);
-
-        var osc2 = audioCtx.createOscillator();
-        var gain2 = audioCtx.createGain();
-        osc2.type = 'sine';
-        osc2.frequency.setValueAtTime(880, now + 0.2);
-        gain2.gain.setValueAtTime(0.2, now + 0.2);
-        osc2.connect(gain2);
-        gain2.connect(audioCtx.destination);
-        osc2.start(now + 0.2);
-        osc2.stop(now + 0.35);
-      } catch (e) {
-        console.log("Audio dibatasi:", e);
-      }
+ function playNotificationSound() {
+  try {
+    var AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!window.myAudioCtx) {
+      window.myAudioCtx = new AudioContext();
     }
+    var audioCtx = window.myAudioCtx;
+
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+
+    var now = audioCtx.currentTime;
+
+    var osc1 = audioCtx.createOscillator();
+    var gain1 = audioCtx.createGain();
+    osc1.type = 'sine';
+    osc1.frequency.setValueAtTime(587.33, now);
+    gain1.gain.setValueAtTime(0.2, now);
+    osc1.connect(gain1);
+    gain1.connect(audioCtx.destination);
+    osc1.start(now);
+    osc1.stop(now + 0.15);
+
+    var osc2 = audioCtx.createOscillator();
+    var gain2 = audioCtx.createGain();
+    osc2.type = 'sine';
+    osc2.frequency.setValueAtTime(880, now + 0.2);
+    gain2.gain.setValueAtTime(0.2, now + 0.2);
+    osc2.connect(gain2);
+    gain2.connect(audioCtx.destination);
+    osc2.start(now + 0.2);
+    osc2.stop(now + 0.35);
+  } catch (e) {
+    console.log("Audio dibatasi browser:", e);
+  }
+}
 
     function triggerRedRadarIndicator(show) {
       var radarContainer = document.getElementById('radar-alert-container');
