@@ -32,7 +32,7 @@
       #print-receipt-area { position: absolute; left: 0; top: 0; width: 58mm; margin: 0; padding: 5px; font-family: monospace; font-size: 10px; }
     }
 
-    /* Style Khusus Peta Ala Gojek */
+    /* Style Khusus Peta Ala Gojek & Radar */
     .courier-marker-icon {
       transition: all 1s linear;
     }
@@ -211,6 +211,15 @@
         </button>
       </div>
       <div class="flex items-center gap-2">
+        <!-- IKON RADAR MERAH BERDENYUT (REALTIME PUSH NOTIFICATION) -->
+        <div id="radar-alert-container" class="hidden flex items-center gap-2 bg-red-500/10 border border-red-500/30 px-3 py-1.5 rounded-full">
+          <span class="relative flex h-3 w-3">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-3 w-3 bg-red-600"></span>
+          </span>
+          <span class="text-[10px] font-black text-red-500 uppercase tracking-wider">Pesanan Baru!</span>
+        </div>
+
         <button type="button" onclick="logout()" title="Keluar" class="w-10 h-10 bg-slate-100 hover:bg-red-50 hover:text-red-500 rounded-2xl flex items-center justify-center shadow-xs text-slate-600 active:scale-90 transition-all"><i class="fa-solid fa-right-from-bracket text-xs"></i></button>
         <button type="button" id="header-cart-btn" onclick="toggleCartModal()" class="w-10 h-10 bg-rose-600 text-white rounded-2xl flex items-center justify-center shadow-md shadow-rose-600/20 active:scale-90 transition-all relative"><i class="fa-solid fa-cart-shopping text-sm"></i><span id="cart-badge" class="hidden absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow-xs">0</span></button>
       </div>
@@ -1801,7 +1810,11 @@
       document.getElementById('view-status').classList.toggle('hidden', t !== 'status');
       document.getElementById('nav-toko').className = t === 'toko' ? "flex flex-col items-center text-rose-600 font-bold transition-all px-4" : "flex flex-col items-center text-slate-400 hover:text-rose-600 font-bold transition-all px-4";
       document.getElementById('nav-status').className = t === 'status' ? "flex flex-col items-center text-rose-600 font-bold transition-all px-4 relative" : "flex flex-col items-center text-slate-400 hover:text-rose-600 font-bold transition-all px-4 relative";
-      if (t === 'status') { document.getElementById('nav-status-dot').classList.add('hidden'); renderOrderStatus(); }
+      if (t === 'status') { 
+        document.getElementById('nav-status-dot').classList.add('hidden'); 
+        triggerRedRadarIndicator(false); // Hilangkan radar merah saat tab status dibuka
+        renderOrderStatus(); 
+      }
     }
 
     function startCourierGPSBroadcaster(invId) {
@@ -2254,8 +2267,50 @@
       }
     }
 
+    function triggerRedRadarIndicator(show) {
+      var radarContainer = document.getElementById('radar-alert-container');
+      var navDot = document.getElementById('nav-status-dot');
+      var badgeCount = document.getElementById('admin-badge-count');
+
+      if (radarContainer) radarContainer.classList.toggle('hidden', !show);
+      if (navDot) navDot.classList.toggle('hidden', !show);
+      if (badgeCount) badgeCount.classList.toggle('hidden', !show);
+    }
+
+    // SUPABASE REALTIME PUSH NOTIFICATION + IKON RADAR MERAH
     function startBackgroundNotifier() {
+      if (!db) return;
       if (adminNotifierInterval) clearInterval(adminNotifierInterval);
+
+      var role = currentUser ? currentUser.role : null;
+      if (role === 'admin' || role === 'merchant' || role === 'courier') {
+        // Berlangganan Realtime Database Supabase secara instan tanpa jeda
+        db.channel('public:orders')
+          .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'orders' }, payload => {
+            var newOrder = payload.new;
+            var isValidForMe = false;
+
+            if (role === 'admin') {
+              isValidForMe = true;
+            } else if (role === 'merchant') {
+              var merchantName = String(currentUser.name || "").trim().toLowerCase();
+              var storeName = String(newOrder.store_name || "").trim().toLowerCase();
+              if (storeName === merchantName) isValidForMe = true;
+            } else if (role === 'courier') {
+              if (newOrder.status === 'Di-ACC (Diproses)' && (!newOrder.courier_phone)) isValidForMe = true;
+            }
+
+            if (isValidForMe) {
+              playNotificationSound();
+              showToast("🔔 Pesanan Baru Masuk Secara Real-Time!", false);
+              triggerRedRadarIndicator(true);
+              renderOrderStatus();
+            }
+          })
+          .subscribe();
+      }
+
+      // Polling Cadangan tiap 4 detik sebagai backup
       adminNotifierInterval = setInterval(function() {
         if (!currentUser) return;
         var role = currentUser.role;
@@ -2276,14 +2331,13 @@
                 badge.innerText = pending.length + " PESANAN BARU"; 
                 badge.classList.toggle('hidden', pending.length === 0); 
               }
-              var dot = document.getElementById('nav-status-dot');
-              if (dot) dot.classList.toggle('hidden', pending.length === 0);
 
               if (lastPendingCount === -1) {
                 lastPendingCount = pending.length; 
               } else if (pending.length > lastPendingCount) {
                 playNotificationSound();
                 showToast("🔔 Pesanan Baru Masuk!", false);
+                triggerRedRadarIndicator(true);
                 lastPendingCount = pending.length;
               } else {
                 lastPendingCount = pending.length;
@@ -2296,14 +2350,13 @@
                 badge.innerText = availableForDelivery.length + " ANTARAN BARU"; 
                 badge.classList.toggle('hidden', availableForDelivery.length === 0); 
               }
-              var dot = document.getElementById('nav-status-dot');
-              if (dot) dot.classList.toggle('hidden', availableForDelivery.length === 0);
 
               if (lastPendingCount === -1) {
                 lastPendingCount = availableForDelivery.length; 
               } else if (availableForDelivery.length > lastPendingCount) {
                 playNotificationSound();
                 showToast("🔔 Ada Antaran Pesanan Baru Siap Diantar!", false);
+                triggerRedRadarIndicator(true);
                 lastPendingCount = availableForDelivery.length;
               } else {
                 lastPendingCount = availableForDelivery.length;
@@ -2311,7 +2364,7 @@
             }
           }).catch(e => {});
         }
-      }, 3000);
+      }, 4000);
     }
 
     function startCustomerNotifier() {
