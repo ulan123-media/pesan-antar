@@ -651,8 +651,9 @@
   </div>
 
 <script>
-    const SUPABASE_URL = 'https://cbsucahvrowogxvtnerf.supabase.co';
-    const SUPABASE_ANON_KEY = 'sb_publishable_garUDUB_fs19RDXAsQzvog_tF2GS...'; // Sesuaikan API key publishable Anda
+    // URL PROJEK SUPABASE YANG BENAR (PROJEK: tokoku / zsutpgbychoctxszpmch)
+    const SUPABASE_URL = 'https://zsutpgbychoctxszpmch.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_garUDUB_fs19RDXAsQzvog_tF2GS...'; // Ganti dengan API Key Publishable projek tokoku Anda jika berbeda
 
     var db = null;
     try {
@@ -1661,7 +1662,7 @@
         
         var dragAttrs = isAdmin ? ' draggable="true" ondragstart="onStoreDragStart(event, ' + i + ')" ondragover="event.preventDefault()" ondrop="onStoreDrop(event, ' + i + ')" title="Tarik untuk mengubah urutan rekomendasi"' : '';
         var adminDragHandle = isAdmin ? '<div class="absolute top-2 right-2 bg-slate-900/80 text-amber-300 text-[9px] font-black px-1.5 py-0.5 rounded-md shadow-xs"><i class="fa-solid fa-grip-vertical"></i></div>' : '';
-        var adminPriorityBtn = isAdmin ? '<button type="button" onclick="event.stopPropagation(); setStorePriority(\'' + s.id + \')" class="mt-1 bg-amber-500 hover:bg-amber-600 text-white text-[9px] font-black py-1 px-2 rounded-lg shadow-xs w-full"><i class="fa-solid fa-star mr-0.5"></i> Jadikan Utama</button>' : '';
+        var adminPriorityBtn = isAdmin ? '<button type="button" onclick="event.stopPropagation(); setStorePriority(\'' + s.id + '\')" class="mt-1 bg-amber-500 hover:bg-amber-600 text-white text-[9px] font-black py-1 px-2 rounded-lg shadow-xs w-full"><i class="fa-solid fa-star mr-0.5"></i> Jadikan Utama</button>' : '';
 
         html += '<div ' + dragAttrs + ' class="relative shrink-0 w-36 cursor-grab active:cursor-grabbing">' +
                   '<button type="button" onclick="selectStore(\'' + s.id + '\')" class="w-full store-btn ' + (isActive ? 'active-store' : 'bg-white') + ' rounded-2xl p-2.5 flex flex-col items-center text-center shadow-xs border border-slate-200/80 transition-all">' +
@@ -1796,7 +1797,6 @@
           return;
         }
 
-        // Kelompokkan chat unik berdasarkan kombinasi produk & nomor telepon konsumen
         var grouped = {};
         for (var i = 0; i < data.length; i++) {
           var item = data[i];
