@@ -349,9 +349,20 @@
 
       <!-- Input Pesan -->
       <div class="pt-3 border-t border-slate-100 flex gap-2 items-center">
-        <input type="text" id="chat-input-field" placeholder="Tulis pertanyaan stok produk..." onkeypress="if(event.key==='Enter') sendInAppChatMessage()" class="flex-1 bg-slate-50 rounded-2xl px-4 py-3 text-xs border border-slate-200 focus:outline-none focus:border-emerald-600 font-medium">
+        <input type="text" id="chat-input-field" placeholder="Tulis balasan atau pertanyaan..." onkeypress="if(event.key==='Enter') sendInAppChatMessage()" class="flex-1 bg-slate-50 rounded-2xl px-4 py-3 text-xs border border-slate-200 focus:outline-none focus:border-emerald-600 font-medium">
         <button type="button" onclick="sendInAppChatMessage()" class="w-11 h-11 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center text-sm shadow-md active:scale-95 transition-all shrink-0"><i class="fa-solid fa-paper-plane"></i></button>
       </div>
+    </div>
+  </div>
+
+  <!-- MERCHANT CHAT LIST MODAL -->
+  <div id="merchant-chat-list-modal" class="fixed inset-0 bg-slate-900/70 z-50 flex items-center justify-center hidden backdrop-blur-sm p-4">
+    <div class="bg-white rounded-3xl w-full max-w-md p-6 shadow-2xl space-y-4 max-h-[85vh] overflow-y-auto animate-slide-up text-slate-800">
+      <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+        <h3 class="text-sm font-black text-slate-900 flex items-center gap-2"><i class="fa-solid fa-comments text-emerald-600"></i> Kotak Masuk Chat Pelanggan</h3>
+        <button type="button" onclick="closeMerchantChatListModal()" class="w-7 h-7 bg-slate-100 rounded-full text-slate-500 flex items-center justify-center text-xs font-bold"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div id="merchant-chat-threads-container" class="space-y-3"><p class="text-xs text-slate-400 text-center py-4">Memuat daftar chat...</p></div>
     </div>
   </div>
 
@@ -1311,7 +1322,7 @@
         callApiPost('courierHeartbeat', { phone: currentUser.phone });
       } else if (isMerchant) {
         document.getElementById('panel-title-text').innerText = "MITRA: " + currentUser.name;
-        document.getElementById('panel-subtitle-text').innerText = "Kelola Menu & Pendapatan Toko Anda";
+        document.getElementById('panel-subtitle-text').innerText = "Kelola Menu & Kotak Masuk Chat Pelanggan";
       } else if (isAdmin) {
         document.getElementById('panel-title-text').innerText = "PANEL ADMIN UTAMA";
         document.getElementById('panel-subtitle-text').innerText = "Kelola Toko & Verifikasi Pencairan";
@@ -1346,6 +1357,7 @@
       }
       initApp();
       startCustomerNotifier();
+      startMerchantChatNotifier();
     }
 
     function openProfileModal() {
@@ -1480,7 +1492,10 @@
                                   '</button>';
         } else {
           titleElem.innerHTML = '<i class="fa-solid fa-store text-amber-600"></i> Portal Mitra: ' + currentUser.name;
-          actionsElem.innerHTML = '<button type="button" onclick="toggleAdminMenuModal(); toggleAddProductModal();" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-black py-4 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-rose-600/20 active:scale-95 transition-all">' +
+          actionsElem.innerHTML = '<button type="button" onclick="toggleAdminMenuModal(); toggleMerchantChatListModal();" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-3.5 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20 active:scale-95 transition-all">' +
+                                    '<i class="fa-solid fa-comments text-base"></i> Kotak Masuk Chat Pelanggan' +
+                                  '</button>' +
+                                  '<button type="button" onclick="toggleAdminMenuModal(); toggleAddProductModal();" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-black py-4 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-rose-600/20 active:scale-95 transition-all">' +
                                     '<i class="fa-solid fa-plus-circle text-base"></i> Tambah Produk Baru ke Warung Saya' +
                                   '</button>';
         }
@@ -1721,7 +1736,6 @@
           }
         }
 
-        // Tombol Chat In-Web Database Supabase
         var btnInquire = !isStaff ? '<button type="button" onclick="openInAppChat(\'' + p.name.replace(/'/g, "\\'") + '\', \'' + storeName.replace(/'/g, "\\'") + '\')" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-black py-2 px-2 rounded-xl text-[10px] flex items-center justify-center gap-1.5 shadow-xs active:scale-95 transition-all mt-2"><i class="fa-solid fa-comments text-xs"></i> Tanya Stok</button>' : '';
         
         html += '<div class="bg-white rounded-3xl p-3.5 shadow-xs hover:shadow-md border border-slate-200/60 flex flex-col justify-between transition-all duration-300 ' + (!inStock ? 'opacity-75 bg-slate-50' : '') + '">' +
@@ -1740,13 +1754,16 @@
     }
 
     // Fungsi In-App Chat dengan Supabase Database & Real-time
-    function openInAppChat(productName, storeName) {
+    function openInAppChat(productName, storeName, customerPhone, customerName) {
       if (!currentUser || currentUser.role === 'guest') {
-        showToast("⚠️ Silakan login akun konsumen dulu untuk chat!", false);
+        showToast("⚠️ Silakan login dulu untuk chat!", false);
         return;
       }
-      activeChatProduct = { name: productName, storeName: storeName };
-      document.getElementById('chat-modal-product-name').innerText = productName;
+      
+      var targetPhone = customerPhone || (currentUser.role === 'customer' ? normalizePhone(currentUser.phone) : '');
+      activeChatProduct = { name: productName, storeName: storeName, customerPhone: targetPhone };
+      
+      document.getElementById('chat-modal-product-name').innerText = productName + (customerName ? ' (' + customerName + ')' : '');
       document.getElementById('chat-modal-store-name').innerText = "Warung: " + storeName;
       
       document.getElementById('inapp-chat-modal').classList.remove('hidden');
@@ -1761,25 +1778,73 @@
       document.getElementById('inapp-chat-modal').classList.add('hidden');
     }
 
+    // Modal Kotak Masuk Chat untuk Mitra (Merchant)
+    function toggleMerchantChatListModal() {
+      var modal = document.getElementById('merchant-chat-list-modal');
+      if (modal.classList.contains('hidden')) {
+        modal.classList.remove('hidden');
+        loadMerchantChatThreads();
+      } else {
+        modal.classList.add('hidden');
+      }
+    }
+
+    function closeMerchantChatListModal() {
+      document.getElementById('merchant-chat-list-modal').classList.add('hidden');
+    }
+
+    async function loadMerchantChatThreads() {
+      var container = document.getElementById('merchant-chat-threads-container');
+      container.innerHTML = '<p class="text-xs text-slate-400 text-center py-4">Memuat daftar chat...</p>';
+      if (!db || !currentUser) return;
+
+      var storeName = currentUser.name; 
+      let { data, error } = await db.from('product_chats').select('*').eq('store_name', storeName).order('created_at', { ascending: false });
+
+      if (error || !data || data.length === 0) {
+        container.innerHTML = '<div class="text-center py-6 text-slate-400 text-xs font-bold"><p>Belum ada chat dari pelanggan.</p></div>';
+        return;
+      }
+
+      var map = {};
+      for (var i = 0; i < data.length; i++) {
+        var item = data[i];
+        var key = item.customer_phone + '_' + item.product_name;
+        if (!map[key]) {
+          map[key] = item;
+        }
+      }
+
+      var threads = Object.values(map);
+      var html = '';
+      for (var j = 0; j < threads.length; j++) {
+        var t = threads[j];
+        html += '<div onclick="closeMerchantChatListModal(); openInAppChat(\'' + t.product_name.replace(/'/g, "\\'") + '\', \'' + t.store_name.replace(/'/g, "\\'") + '\', \'' + t.customer_phone + '\', \'' + t.customer_name.replace(/'/g, "\\'") + '\')" class="bg-slate-50 hover:bg-slate-100 p-4 rounded-2xl border border-slate-200 cursor-pointer transition-all space-y-1 shadow-xs">' +
+                  '<div class="flex justify-between items-center"><span class="font-black text-xs text-slate-900">' + t.customer_name + '</span><span class="text-[9px] bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-full font-bold">Aktif</span></div>' +
+                  '<p class="text-[11px] font-semibold text-rose-600">Produk: ' + t.product_name + '</p>' +
+                  '<p class="text-[10px] text-slate-500 truncate">Pesan Terakhir: ' + t.message + '</p>' +
+                '</div>';
+      }
+      container.innerHTML = html;
+    }
+
     async function fetchAndRenderChatMessages() {
       var container = document.getElementById('chat-messages-container');
       container.innerHTML = '<p class="text-xs text-slate-400 text-center py-4">Memuat pesan...</p>';
 
       if (!db || !activeChatProduct) return;
 
-      var userPhone = currentUser ? normalizePhone(currentUser.phone || '-') : '-';
-      
+      var targetPhone = activeChatProduct.customerPhone;
       let query = db.from('product_chats').select('*').eq('product_name', activeChatProduct.name);
       
-      // Jika konsumen, filter berdasarkan nomor hp-nya agar chat personal
-      if (currentUser.role === 'customer') {
-        query = query.eq('customer_phone', userPhone);
+      if (targetPhone) {
+        query = query.eq('customer_phone', targetPhone);
       }
 
       let { data, error } = await query.order('created_at', { ascending: true });
 
       if (error || !data || data.length === 0) {
-        container.innerHTML = '<div class="text-center text-[10px] text-slate-400 my-4">Belum ada percakapan. Silakan mulai tanyakan ketersediaan stok produk ini!</div>';
+        container.innerHTML = '<div class="text-center text-[10px] text-slate-400 my-4">Belum ada percakapan.</div>';
         return;
       }
 
@@ -1796,14 +1861,14 @@
         var isMe = false;
         if (currentUser.role === 'customer' && normalizePhone(msg.customer_phone) === userPhone && msg.sender_role === 'customer') {
           isMe = true;
-        } else if (currentUser.role !== 'customer' && msg.sender_role !== 'customer') {
+        } else if (currentUser.role === 'merchant' && msg.sender_role === 'merchant') {
           isMe = true;
         }
 
         if (isMe) {
           html += '<div class="flex justify-end"><div class="bg-rose-600 text-white p-3 rounded-2xl rounded-tr-none text-xs max-w-[80%] shadow-xs font-medium">' + msg.message + '</div></div>';
         } else {
-          html += '<div class="flex flex-col items-start"><span class="text-[9px] text-slate-400 ml-1 mb-0.5">' + (msg.sender_role === 'merchant' ? 'Penjual' : msg.customer_name) + '</span><div class="bg-slate-100 text-slate-800 p-3 rounded-2xl rounded-tl-none text-xs max-w-[80%] shadow-xs font-medium">' + msg.message + '</div></div>';
+          html += '<div class="flex flex-col items-start"><span class="text-[9px] text-slate-400 ml-1 mb-0.5">' + (msg.sender_role === 'merchant' ? 'Mitra Toko' : msg.customer_name) + '</span><div class="bg-slate-100 text-slate-800 p-3 rounded-2xl rounded-tl-none text-xs max-w-[80%] shadow-xs font-medium">' + msg.message + '</div></div>';
         }
       }
       container.innerHTML = html;
@@ -1816,8 +1881,8 @@
       if (!text || !activeChatProduct) return;
 
       var role = currentUser ? currentUser.role : 'customer';
-      var customerPhone = role === 'customer' ? normalizePhone(currentUser.phone) : (activeChatProduct.customerPhone || normalizePhone(currentUser.phone || 'admin'));
-      var customerName = role === 'customer' ? currentUser.name : (currentUser.name || 'Admin/Mitra');
+      var customerPhone = role === 'customer' ? normalizePhone(currentUser.phone) : activeChatProduct.customerPhone;
+      var customerName = role === 'customer' ? currentUser.name : (currentUser.name || 'Mitra Toko');
 
       var newMsg = {
         product_name: activeChatProduct.name,
@@ -1846,6 +1911,21 @@
           fetchAndRenderChatMessages();
         })
         .subscribe();
+    }
+
+    function startMerchantChatNotifier() {
+      if (!db) return;
+      var role = currentUser ? currentUser.role : null;
+      if (role === 'merchant') {
+        db.channel('merchant:product_chats')
+          .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'product_chats', filter: 'store_name=eq.' + currentUser.name }, payload => {
+            if (payload.new && payload.new.sender_role === 'customer') {
+              playNotificationSound();
+              showToast("💬 Ada Chat Baru dari Pelanggan: " + payload.new.customer_name, false);
+            }
+          })
+          .subscribe();
+      }
     }
 
     function openImageModal(imgUrl, prodName) {
@@ -2147,7 +2227,6 @@
         var isMerchant = currentUser && currentUser.role === 'merchant';
         var isAssignedToOther = isCourier && ord.courierPhone && normalizePhone(ord.courierPhone) !== normalizePhone(currentUser.phone);
 
-        // Foto bukti pengiriman (sudah disesuaikan agar adaptif & terang di halaman konsumen)[cite: 4]
         var proofHtml = '';
         if (!isMerchant && ord.deliveryProof) {
           var proofBorderColor = isStaff ? 'border-slate-700/50' : 'border-slate-100';
