@@ -650,11 +650,12 @@
             id: p.id, name: p.name, price: Number(p.price), storeId: p.store_id, image: p.image, desc: p.description, inStock: p.stock !== 'Habis', terlaris: p.terlaris
           }));
         }
-        else if (action === 'getOrders') {
+else if (action === 'getOrders') {
           let { data: ords } = await db.from('orders').select('*');
           return (ords || []).map(o => ({
             invoiceId: o.invoice_id, name: o.name, phone: o.phone, address: o.address, total: Number(o.total), itemsSummary: o.items_summary, status: o.status, location: o.location, lat: o.lat ? Number(o.lat) : null, lng: o.lng ? Number(o.lng) : null, date: o.date, ongkir: Number(o.ongkir || 0), notes: o.notes, courierLat: o.courier_lat ? Number(o.courier_lat) : null, courierLng: o.courier_lng ? Number(o.courier_lng) : null, courierName: o.courier_name, courierPhone: o.courier_phone, deliveryProof: o.delivery_proof, storeName: o.store_name,
-            timestamp: o.timestamp ? Number(o.timestamp) : 0
+            timestamp: o.timestamp ? Number(o.timestamp) : 0,
+            takenAt: o.taken_at ? Number(o.taken_at) : 0 // TAMBAHKAN INI
           }));
         }
         else if (action === 'getStoreStatus') {
