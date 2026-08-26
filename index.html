@@ -459,7 +459,7 @@
   </div>
 
   <div id="profile-modal" class="fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center hidden backdrop-blur-sm p-4">
-    <div class="bg-white rounded-3xl w-full max-w-xs p-6 shadow-2xl space-y-4 relative animate-slide-up max-h-[85vh] overflow-y-auto text-slate-800">
+    <div class="bg-white rounded-3xl w-full max-w-md p-6 shadow-2xl space-y-4 relative animate-slide-up max-h-[85vh] overflow-y-auto text-slate-800">
       <div class="flex justify-between items-center border-b border-slate-100 pb-3">
         <h3 id="profile-modal-title" class="text-sm font-black text-slate-900 flex items-center gap-2"><i class="fa-solid fa-id-card text-rose-600"></i> Profil Akun Saya</h3>
         <button type="button" onclick="closeProfileModal()" class="w-7 h-7 bg-slate-100 rounded-full text-slate-500 flex items-center justify-center text-xs font-bold active:scale-90"><i class="fa-solid fa-xmark"></i></button>
@@ -1373,7 +1373,7 @@
 
     function openProfileModal() {
       if (!currentUser || currentUser.role === 'guest' || currentUser.role === 'admin') { 
-        showToast("Fitur profil khusus konsumen & mitra toko.", false); 
+        showToast("Fitur profil khusus konsumen, mitra toko, & kurir.", false); 
         return; 
       }
       var modalTitle = document.getElementById('profile-modal-title');
@@ -1397,6 +1397,32 @@
                                        '<button type="button" onclick="updateMerchantStorePhoto()" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-black py-2.5 rounded-xl text-xs active:scale-95 transition-all">Simpan Foto Baru</button>' +
                                      '</div>';
         document.getElementById('profile-modal').classList.remove('hidden');
+      } else if (currentUser.role === 'courier') {
+        modalTitle.innerHTML = '<i class="fa-solid fa-motorcycle text-emerald-500"></i> Profil & Berkas Kurir Saya';
+        contentContainer.innerHTML = '<p class="text-xs text-slate-400 text-center py-4">Memuat data profil...</p>';
+        document.getElementById('profile-modal').classList.remove('hidden');
+
+        db.from('couriers').select('*').eq('phone', normalizePhone(currentUser.phone)).maybeSingle().then(({ data: c }) => {
+          if (!c) {
+            contentContainer.innerHTML = '<p class="text-xs text-red-500 text-center py-4">Data kurir tidak ditemukan.</p>';
+            return;
+          }
+          contentContainer.innerHTML = '<div class="space-y-3 text-xs">' +
+                                       '<div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100"><span class="text-[10px] text-slate-400 font-bold uppercase block mb-0.5">Nama Lengkap</span><span class="font-extrabold text-slate-900 text-sm">' + (c.name || '-') + '</span></div>' +
+                                       '<div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100"><span class="text-[10px] text-slate-400 font-bold uppercase block mb-0.5">Nomor WhatsApp</span><span class="font-extrabold text-slate-900 text-sm">' + (c.phone || '-') + '</span></div>' +
+                                       '<div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100"><span class="text-[10px] text-slate-400 font-bold uppercase block mb-0.5">Kendaraan</span><span class="font-extrabold text-slate-900 text-sm">' + (c.vehicle || '-') + '</span></div>' +
+                                       '<div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100"><span class="text-[10px] text-slate-400 font-bold uppercase block mb-0.5">Status Akun</span><span class="font-extrabold text-emerald-600 text-sm">' + (c.status || 'Approved') + '</span></div>' +
+                                       '<div class="border-t pt-3 border-slate-200">' +
+                                         '<span class="text-[11px] font-extrabold text-slate-700 block mb-2">Berkas Syarat Pendaftaran Anda:</span>' +
+                                         '<div class="grid grid-cols-2 gap-2">' +
+                                           (c.vehicle_photo ? '<div><span class="text-[9px] text-slate-500 font-bold block mb-1">Foto Kendaraan</span><img src="' + c.vehicle_photo + '" onclick="openImageModal(\'' + c.vehicle_photo.replace(/'/g, "\\'") + '\', \'Foto Kendaraan\')" class="w-full h-24 object-cover rounded-xl cursor-pointer border border-slate-200 shadow-sm"></div>' : '<div class="bg-slate-50 p-2 rounded-xl text-center"><span class="text-[9px] text-slate-400">Tidak ada Foto Kendaraan</span></div>') +
+                                           (c.ktp_photo ? '<div><span class="text-[9px] text-slate-500 font-bold block mb-1">Foto KTP</span><img src="' + c.ktp_photo + '" onclick="openImageModal(\'' + c.ktp_photo.replace(/'/g, "\\'") + '\', \'Foto KTP\')" class="w-full h-24 object-cover rounded-xl cursor-pointer border border-slate-200 shadow-sm"></div>' : '<div class="bg-slate-50 p-2 rounded-xl text-center"><span class="text-[9px] text-slate-400">Tidak ada Foto KTP</span></div>') +
+                                           (c.stnk_photo ? '<div><span class="text-[9px] text-slate-500 font-bold block mb-1">Foto STNK</span><img src="' + c.stnk_photo + '" onclick="openImageModal(\'' + c.stnk_photo.replace(/'/g, "\\'") + '\', \'Foto STNK\')" class="w-full h-24 object-cover rounded-xl cursor-pointer border border-slate-200 shadow-sm"></div>' : '<div class="bg-slate-50 p-2 rounded-xl text-center"><span class="text-[9px] text-slate-400">Tidak ada Foto STNK</span></div>') +
+                                           (c.sim_photo ? '<div><span class="text-[9px] text-slate-500 font-bold block mb-1">Foto SIM</span><img src="' + c.sim_photo + '" onclick="openImageModal(\'' + c.sim_photo.replace(/'/g, "\\'") + '\', \'Foto SIM\')" class="w-full h-24 object-cover rounded-xl cursor-pointer border border-slate-200 shadow-sm"></div>' : '<div class="bg-slate-50 p-2 rounded-xl text-center"><span class="text-[9px] text-slate-400">Tidak ada Foto SIM</span></div>') +
+                                         '</div>' +
+                                       '</div>' +
+                                     '</div>';
+        });
       }
     }
 
@@ -1909,7 +1935,6 @@
 
       if (!currentUser) return;
 
-      // Ambil riwayat penarikan (WD) untuk mengurangi saldo aktif secara otomatis
       let withdrawals = await callApiGet('getWithdrawalHistory', { phone: currentUser.phone }) || [];
       var totalWithdrawn = 0;
       for (var w = 0; w < withdrawals.length; w++) {
@@ -2033,7 +2058,7 @@
       callApiPost('requestWithdrawal', { request: reqData }).then(res => {
         showToast("Permintaan tarik saldo berhasil dikirim ke Admin!");
         closeWithdrawModal();
-        renderOrderStatus(); // Update saldo secara otomatis di halaman
+        renderOrderStatus(); 
         window.open("https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent("Halo Admin Utama, saya " + currentUser.name + " (" + currentUser.role + ") mengajukan Penarikan Saldo sebesar Rp " + formatRupiah(amount) + " via " + method + " (" + accountInfo + "). Mohon diproses."), '_blank');
       });
     }
