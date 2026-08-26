@@ -650,12 +650,12 @@
             id: p.id, name: p.name, price: Number(p.price), storeId: p.store_id, image: p.image, desc: p.description, inStock: p.stock !== 'Habis', terlaris: p.terlaris
           }));
         }
-else if (action === 'getOrders') {
+        else if (action === 'getOrders') {
           let { data: ords } = await db.from('orders').select('*');
           return (ords || []).map(o => ({
             invoiceId: o.invoice_id, name: o.name, phone: o.phone, address: o.address, total: Number(o.total), itemsSummary: o.items_summary, status: o.status, location: o.location, lat: o.lat ? Number(o.lat) : null, lng: o.lng ? Number(o.lng) : null, date: o.date, ongkir: Number(o.ongkir || 0), notes: o.notes, courierLat: o.courier_lat ? Number(o.courier_lat) : null, courierLng: o.courier_lng ? Number(o.courier_lng) : null, courierName: o.courier_name, courierPhone: o.courier_phone, deliveryProof: o.delivery_proof, storeName: o.store_name,
             timestamp: o.timestamp ? Number(o.timestamp) : 0,
-            takenAt: o.taken_at ? Number(o.taken_at) : 0 // TAMBAHKAN INI
+            takenAt: o.taken_at ? Number(o.taken_at) : 0
           }));
         }
         else if (action === 'getStoreStatus') {
@@ -752,12 +752,12 @@ else if (action === 'getOrders') {
           await db.from('orders').update({ status: data.newStatus, delivery_proof: data.deliveryProof }).eq('invoice_id', data.invoiceId);
           return { status: "Success" };
         }
-else if (action === 'assignAndDeliver') {
+        else if (action === 'assignAndDeliver') {
           await db.from('orders').update({ 
             status: 'Sedang Diantar', 
             courier_name: data.courierName, 
             courier_phone: data.courierPhone,
-            taken_at: Date.now() // TAMBAHKAN INI UNTUK MENCATAT WAKTU DIAMBIL
+            taken_at: Date.now()
           }).eq('invoice_id', data.invoiceId);
           return { status: "Success" };
         }
@@ -870,7 +870,6 @@ else if (action === 'assignAndDeliver') {
 
     var currentUser = null, currentLocation = null, currentCoords = null, currentInvoiceId = "", allProducts = [], allStores = [], currentStoreId = "Semua", cart = {}, storeStatus = "BUKA", recruitmentStatus = "TUTUP", currentDistance = 0, calculatedOngkir = 6000, rawOrdersList = [];
     
-    // VARIABEL MAP DILENGKAPI UNTUK REAL-TIME PRESISI
     var liveMap = null, customerMarker = null, courierMarker = null, routePolyline = null, liveTrackingInterval = null;
     var courierWatchId = null, adminNotifierInterval = null;
     var courierHeartbeatInterval = null, lastKnownCustomerOrderStatus = "", customerNotifierInterval = null;
@@ -1874,24 +1873,22 @@ else if (action === 'assignAndDeliver') {
           orders = orders.filter(function(o) {
             return String(o.storeName || "").trim().toLowerCase() === String(currentUser.name || "").trim().toLowerCase();
           });
-} else if (isCourier) {
-      var now = Date.now();
-      orders = orders.filter(function(o) {
-        var isReadyForDelivery = (o.status === 'Di-ACC (Diproses)' && (!o.courierPhone || o.courierPhone === ''));
-        var isAssignedToMe = (o.courierPhone && String(o.courierPhone).trim() === String(currentUser.phone).trim());
-        var isCompletedByMe = (o.status === 'Selesai' && o.courierPhone && String(o.courierPhone).trim() === String(currentUser.phone).trim());
-        
-        // ATURAN 2 MENIT UNTUK KURIR LAIN:
-        // Jika diambil kurir lain, tampilkan selama 2 menit (120.000 milidetik) sejak diambil, setelah itu sembunyikan.
-        var takenByOtherRecently = false;
-        if (o.status === 'Sedang Diantar' && o.courierPhone && String(o.courierPhone).trim() !== String(currentUser.phone).trim()) {
-          if (o.takenAt && (now - o.takenAt <= 120000)) {
-            takenByOtherRecently = true;
-          }
-        }
+        } else if (isCourier) {
+          var now = Date.now();
+          orders = orders.filter(function(o) {
+            var isReadyForDelivery = (o.status === 'Di-ACC (Diproses)' && (!o.courierPhone || o.courierPhone === ''));
+            var isAssignedToMe = (o.courierPhone && String(o.courierPhone).trim() === String(currentUser.phone).trim());
+            var isCompletedByMe = (o.status === 'Selesai' && o.courierPhone && String(o.courierPhone).trim() === String(currentUser.phone).trim());
+            
+            var takenByOtherRecently = false;
+            if (o.status === 'Sedang Diantar' && o.courierPhone && String(o.courierPhone).trim() !== String(currentUser.phone).trim()) {
+              if (o.takenAt && (now - o.takenAt <= 120000)) {
+                takenByOtherRecently = true;
+              }
+            }
 
-        return isReadyForDelivery || isAssignedToMe || isCompletedByMe || takenByOtherRecently;
-      });
+            return isReadyForDelivery || isAssignedToMe || isCompletedByMe || takenByOtherRecently;
+          });
         } else if (isAdmin) {
           // Admin
         } else if (currentUser && currentUser.role !== 'guest') {
@@ -1900,7 +1897,6 @@ else if (action === 'assignAndDeliver') {
           });
         } else if (currentUser && currentUser.role === 'guest') { orders = []; }
         
-        // URUTKAN PESANAN: Yang terbaru (timestamp terbesar) diletakkan di paling atas
         orders.sort(function(a, b) {
           return b.timestamp - a.timestamp;
         });
@@ -2205,7 +2201,7 @@ else if (action === 'assignAndDeliver') {
     }
 
     function assignAndDeliver(invoiceId) {
-      callApiPost('assignCourierAndDeliver', { invoiceId: invoiceId, courierName: currentUser.name, courierPhone: currentUser.phone || WA_NUMBER }).then(() => {
+      callApiPost('assignAndDeliver', { invoiceId: invoiceId, courierName: currentUser.name, courierPhone: currentUser.phone || WA_NUMBER }).then(() => {
         showToast("Tugas pengantaran diambil!");
         renderOrderStatus();
         if (currentUser.role === 'courier') startCourierGPSBroadcaster(invoiceId);
@@ -2324,7 +2320,6 @@ else if (action === 'assignAndDeliver') {
       if (badgeCount) badgeCount.classList.toggle('hidden', !show);
     }
 
-    // SUPABASE REALTIME PUSH NOTIFICATION + IKON RADAR MERAH
     function startBackgroundNotifier() {
       if (!db) return;
       if (adminNotifierInterval) clearInterval(adminNotifierInterval);
@@ -2501,7 +2496,6 @@ else if (action === 'assignAndDeliver') {
       window.open("https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(message), '_blank');
     }
 
-    // FUNGSI PETA LIVE TRACKING PRESISI ALA GOJEK
     function openLiveTracking(invId) {
       document.getElementById('tracking-modal').classList.remove('hidden');
       document.getElementById('tracking-invoice-id').innerText = invId;
