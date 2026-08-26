@@ -1945,7 +1945,10 @@
         var orders = ordersFromSheet || []; rawOrdersList = orders;
         if (isStaff) updateDashboardStats(orders);
 
-        if (isMerchant) {
+  if (isAdmin) {
+          // Jangan di-filter. Admin melihat semua pesanan yang masuk ke Supabase.
+          orders = orders; 
+        } else if (isMerchant) {
           orders = orders.filter(function(o) { return String(o.storeName || "").trim().toLowerCase() === String(currentUser.name || "").trim().toLowerCase(); });
         } else if (isCourier) {
           var now = Date.now();
@@ -1956,7 +1959,7 @@
             var takenByOtherRecently = (o.status === 'Sedang Diantar' && o.courierPhone && normalizePhone(o.courierPhone) !== normalizePhone(currentUser.phone) && o.takenAt && (now - o.takenAt <= 120000));
             return isReadyForDelivery || isAssignedToMe || isCompletedByMe || takenByOtherRecently;
           });
-        } else if (currentUser && currentUser.role !== 'guest') {
+        } else if (currentUser && currentUser.role === 'customer') {
           orders = orders.filter(function(o) {
             return currentUser.phone && o.phone ? normalizePhone(o.phone) === normalizePhone(currentUser.phone) : String(o.name).trim().toLowerCase() === String(currentUser.name).trim().toLowerCase();
           });
