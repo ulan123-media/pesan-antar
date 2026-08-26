@@ -2147,12 +2147,16 @@
         var isMerchant = currentUser && currentUser.role === 'merchant';
         var isAssignedToOther = isCourier && ord.courierPhone && normalizePhone(ord.courierPhone) !== normalizePhone(currentUser.phone);
 
-        // Foto bukti pengiriman terlihat oleh semua KECUALI mitra toko
+        // Foto bukti pengiriman (sudah disesuaikan agar adaptif & terang di halaman konsumen)[cite: 4]
         var proofHtml = '';
         if (!isMerchant && ord.deliveryProof) {
-          proofHtml = '<div class="mt-2 pt-2 border-t border-slate-700/50 flex items-center gap-3">' +
-                        '<span class="text-[10px] font-bold text-slate-400">Bukti Tiba:</span>' +
-                        '<img src="' + ord.deliveryProof + '" onclick="openImageModal(\'' + ord.deliveryProof + '\', \'Bukti Pengiriman ' + ord.invoiceId + '\')" class="w-12 h-12 object-cover rounded-xl cursor-pointer border border-slate-600 hover:scale-105 transition-transform">' +
+          var proofBorderColor = isStaff ? 'border-slate-700/50' : 'border-slate-100';
+          var proofTextColor = isStaff ? 'text-slate-400' : 'text-slate-500';
+          var proofImgBorder = isStaff ? 'border-slate-600' : 'border-slate-200';
+          
+          proofHtml = '<div class="mt-2 pt-2 border-t ' + proofBorderColor + ' flex items-center gap-3">' +
+                        '<span class="text-[10px] font-bold ' + proofTextColor + '">Bukti Tiba:</span>' +
+                        '<img src="' + ord.deliveryProof + '" onclick="openImageModal(\'' + ord.deliveryProof + '\', \'Bukti Pengiriman ' + ord.invoiceId + '\')" class="w-12 h-12 object-cover rounded-xl cursor-pointer border ' + proofImgBorder + ' hover:scale-105 transition-transform">' +
                       '</div>';
         }
 
@@ -2171,7 +2175,6 @@
             actionButtons = '<div class="pt-3 border-t border-slate-800 grid grid-cols-3 sm:grid-cols-4 gap-2">' + btnChatWa + btnAcc + btnKirim + btnGps + btnSelesai + btnCetak + btnPeta + '</div>';
           }
         } else {
-          // Tampilan Konsumen (Sudah ada menu/tombol Lacak Kurir)
           var btnLacak = (ordStatus === 'Sedang Diantar') ? '<button type="button" onclick="openLiveTracking(\'' + ord.invoiceId + '\')" class="bg-rose-600 hover:bg-rose-700 text-white font-black px-3.5 py-2 rounded-xl text-[10px] flex items-center gap-1.5 shadow-sm active:scale-95 transition-all"><i class="fa-solid fa-motorcycle text-xs"></i> Lacak Kurir</button>' : '<span class="text-[10px] font-bold text-slate-400 italic">Diproses</span>';
           actionButtons = '<div class="pt-3 border-t border-slate-100 flex justify-between items-center"><span class="text-xs font-black text-slate-900">Total: Rp ' + formatRupiah(ord.total) + '</span>' + btnLacak + '</div>';
         }
