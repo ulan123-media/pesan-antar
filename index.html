@@ -653,7 +653,8 @@
         else if (action === 'getOrders') {
           let { data: ords } = await db.from('orders').select('*');
           return (ords || []).map(o => ({
-            invoiceId: o.invoice_id, name: o.name, phone: o.phone, address: o.address, total: Number(o.total), itemsSummary: o.items_summary, status: o.status, location: o.location, lat: o.lat ? Number(o.lat) : null, lng: o.lng ? Number(o.lng) : null, date: o.date, ongkir: Number(o.ongkir || 0), notes: o.notes, courierLat: o.courier_lat ? Number(o.courier_lat) : null, courierLng: o.courier_lng ? Number(o.courier_lng) : null, courierName: o.courier_name, courierPhone: o.courier_phone, deliveryProof: o.delivery_proof, storeName: o.store_name
+            invoiceId: o.invoice_id, name: o.name, phone: o.phone, address: o.address, total: Number(o.total), itemsSummary: o.items_summary, status: o.status, location: o.location, lat: o.lat ? Number(o.lat) : null, lng: o.lng ? Number(o.lng) : null, date: o.date, ongkir: Number(o.ongkir || 0), notes: o.notes, courierLat: o.courier_lat ? Number(o.courier_lat) : null, courierLng: o.courier_lng ? Number(o.courier_lng) : null, courierName: o.courier_name, courierPhone: o.courier_phone, deliveryProof: o.delivery_proof, storeName: o.store_name,
+            timestamp: o.timestamp ? Number(o.timestamp) : 0
           }));
         }
         else if (action === 'getStoreStatus') {
@@ -723,7 +724,23 @@
         }
         else if (action === 'processOrder') {
           let o = data.order;
-          await db.from('orders').upsert({ invoice_id: o.invoiceId, name: o.name, phone: o.phone, address: o.address, total: o.total, items_summary: o.itemsSummary, status: o.status, location: o.location, lat: o.lat || null, lng: o.lng || null, date: o.date, ongkir: o.ongkir || 0, notes: o.notes || "", store_name: o.storeName || "Warung Mitra" });
+          await db.from('orders').upsert({ 
+            invoice_id: o.invoiceId, 
+            name: o.name, 
+            phone: o.phone, 
+            address: o.address, 
+            total: o.total, 
+            items_summary: o.itemsSummary, 
+            status: o.status, 
+            location: o.location, 
+            lat: o.lat || null, 
+            lng: o.lng || null, 
+            date: o.date, 
+            ongkir: o.ongkir || 0, 
+            notes: o.notes || "", 
+            store_name: o.storeName || "Warung Mitra",
+            timestamp: o.timestamp || Date.now()
+          });
           return { status: "Success" };
         }
         else if (action === 'updateOrderStatus') {
@@ -1812,7 +1829,7 @@
       document.getElementById('nav-status').className = t === 'status' ? "flex flex-col items-center text-rose-600 font-bold transition-all px-4 relative" : "flex flex-col items-center text-slate-400 hover:text-rose-600 font-bold transition-all px-4 relative";
       if (t === 'status') { 
         document.getElementById('nav-status-dot').classList.add('hidden'); 
-        triggerRedRadarIndicator(false); // Hilangkan radar merah saat tab status dibuka
+        triggerRedRadarIndicator(false); 
         renderOrderStatus(); 
       }
     }
@@ -1824,7 +1841,7 @@
       
       courierWatchId = navigator.geolocation.watchPosition(function(pos) {
         var now = Date.now();
-        if (now - lastSentTime >= 5000) { // Kirim tiap 5 detik untuk presisi tinggi
+        if (now - lastSentTime >= 5000) { 
           lastSentTime = now;
           callApiPost('updateCourierLocation', { invoiceId: invId, lat: pos.coords.latitude, lng: pos.coords.longitude, courierName: currentUser ? currentUser.name : "Kurir" });
         }
@@ -1866,7 +1883,11 @@
           });
         } else if (currentUser && currentUser.role === 'guest') { orders = []; }
         
-        orders.reverse();
+        // URUTKAN PESANAN: Yang terbaru (timestamp terbesar) diletakkan di paling atas
+        orders.sort(function(a, b) {
+          return b.timestamp - a.timestamp;
+        });
+
         displayOrderCards(container, orders, isStaff);
       });
     }
@@ -2238,43 +2259,43 @@
       callApiPost('updateOrderStatus', { invoiceId: invoiceId, newStatus: newStatus }).then(() => { showToast("Status diperbarui!"); renderOrderStatus(); });
     }
 
- function playNotificationSound() {
-  try {
-    var AudioContext = window.AudioContext || window.webkitAudioContext;
-    if (!window.myAudioCtx) {
-      window.myAudioCtx = new AudioContext();
+    function playNotificationSound() {
+      try {
+        var AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!window.myAudioCtx) {
+          window.myAudioCtx = new AudioContext();
+        }
+        var audioCtx = window.myAudioCtx;
+
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+
+        var now = audioCtx.currentTime;
+
+        var osc1 = audioCtx.createOscillator();
+        var gain1 = audioCtx.createGain();
+        osc1.type = 'sine';
+        osc1.frequency.setValueAtTime(587.33, now);
+        gain1.gain.setValueAtTime(0.2, now);
+        osc1.connect(gain1);
+        gain1.connect(audioCtx.destination);
+        osc1.start(now);
+        osc1.stop(now + 0.15);
+
+        var osc2 = audioCtx.createOscillator();
+        var gain2 = audioCtx.createGain();
+        osc2.type = 'sine';
+        osc2.frequency.setValueAtTime(880, now + 0.2);
+        gain2.gain.setValueAtTime(0.2, now + 0.2);
+        osc2.connect(gain2);
+        gain2.connect(audioCtx.destination);
+        osc2.start(now + 0.2);
+        osc2.stop(now + 0.35);
+      } catch (e) {
+        console.log("Audio dibatasi browser:", e);
+      }
     }
-    var audioCtx = window.myAudioCtx;
-
-    if (audioCtx.state === 'suspended') {
-      audioCtx.resume();
-    }
-
-    var now = audioCtx.currentTime;
-
-    var osc1 = audioCtx.createOscillator();
-    var gain1 = audioCtx.createGain();
-    osc1.type = 'sine';
-    osc1.frequency.setValueAtTime(587.33, now);
-    gain1.gain.setValueAtTime(0.2, now);
-    osc1.connect(gain1);
-    gain1.connect(audioCtx.destination);
-    osc1.start(now);
-    osc1.stop(now + 0.15);
-
-    var osc2 = audioCtx.createOscillator();
-    var gain2 = audioCtx.createGain();
-    osc2.type = 'sine';
-    osc2.frequency.setValueAtTime(880, now + 0.2);
-    gain2.gain.setValueAtTime(0.2, now + 0.2);
-    osc2.connect(gain2);
-    gain2.connect(audioCtx.destination);
-    osc2.start(now + 0.2);
-    osc2.stop(now + 0.35);
-  } catch (e) {
-    console.log("Audio dibatasi browser:", e);
-  }
-}
 
     function triggerRedRadarIndicator(show) {
       var radarContainer = document.getElementById('radar-alert-container');
@@ -2293,7 +2314,6 @@
 
       var role = currentUser ? currentUser.role : null;
       if (role === 'admin' || role === 'merchant' || role === 'courier') {
-        // Berlangganan Realtime Database Supabase secara instan tanpa jeda
         db.channel('public:orders')
           .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'orders' }, payload => {
             var newOrder = payload.new;
@@ -2319,7 +2339,6 @@
           .subscribe();
       }
 
-      // Polling Cadangan tiap 4 detik sebagai backup
       adminNotifierInterval = setInterval(function() {
         if (!currentUser) return;
         var role = currentUser.role;
@@ -2412,7 +2431,23 @@
       }
 
       var initialStatus = (selectedPaymentMethod === 'qris') ? "Menunggu Verifikasi QRIS (Belum Lunas)" : "Menunggu Pembayaran";
-      var newOrder = { invoiceId: currentInvoiceId, name: name, phone: currentUser ? currentUser.phone : "", address: address, total: subtotal + calculatedOngkir, itemsSummary: itemsArr.join(", "), status: initialStatus, location: currentLocation || "-", lat: currentCoords ? currentCoords.lat : "", lng: currentCoords ? currentCoords.lng : "", date: new Date().toLocaleDateString('id-ID'), ongkir: calculatedOngkir, notes: notes, storeName: targetStoreName };
+      var newOrder = { 
+        invoiceId: currentInvoiceId, 
+        name: name, 
+        phone: currentUser ? currentUser.phone : "", 
+        address: address, 
+        total: subtotal + calculatedOngkir, 
+        itemsSummary: itemsArr.join(", "), 
+        status: initialStatus, 
+        location: currentLocation || "-", 
+        lat: currentCoords ? currentCoords.lat : "", 
+        lng: currentCoords ? currentCoords.lng : "", 
+        date: new Date().toLocaleDateString('id-ID'), 
+        ongkir: calculatedOngkir, 
+        notes: notes, 
+        storeName: targetStoreName,
+        timestamp: Date.now() 
+      };
 
       callApiPost('processOrder', { order: newOrder });
 
@@ -2474,13 +2509,11 @@
 
           setTimeout(function() {
             if (!liveMap) {
-              // Dark Mode Tile Vector ala Gojek/Grab
               liveMap = L.map('map-container', { zoomControl: false }).setView([courierLat, courierLng], 16);
               L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(liveMap);
             }
             liveMap.invalidateSize();
 
-            // Custom Marker Rumah Konsumen
             var houseIcon = L.divIcon({
               className: 'custom-house-pin',
               html: '<div class="w-10 h-10 bg-rose-600 rounded-2xl text-white flex items-center justify-center text-lg shadow-xl border-2 border-white"><i class="fa-solid fa-house"></i></div>',
@@ -2491,7 +2524,6 @@
             if (customerMarker) liveMap.removeLayer(customerMarker);
             customerMarker = L.marker([custLat, custLng], { icon: houseIcon }).addTo(liveMap).bindPopup("<b style='color:#0f172a;'>Lokasi Pemesan</b>");
 
-            // Custom Marker Kurir (Motor Move Animasi)
             var bikeIcon = L.divIcon({
               className: 'courier-marker-icon',
               html: '<div class="w-11 h-11 bg-emerald-500 rounded-full text-white flex items-center justify-center text-xl shadow-2xl border-2 border-white marker-pulse"><i class="fa-solid fa-motorcycle"></i></div>',
@@ -2502,11 +2534,9 @@
             if (!courierMarker) {
               courierMarker = L.marker([courierLat, courierLng], { icon: bikeIcon }).addTo(liveMap);
             } else {
-              // Interpolasi Pergerakan Mulus
               courierMarker.setLatLng([courierLat, courierLng]);
             }
 
-            // Garis Rute Presisi
             if (routePolyline) liveMap.removeLayer(routePolyline);
             var routeUrl = "https://router.project-osrm.org/route/v1/driving/" + courierLng + "," + courierLat + ";" + custLng + "," + custLat + "?overview=full&geometries=geojson";
             
@@ -2521,7 +2551,6 @@
                 document.getElementById('track-distance').innerText = distKm + " km";
                 document.getElementById('track-eta').innerText = durationMin + " Menit";
 
-                // Auto Fit Layar Peta
                 var bounds = L.latLngBounds([courierLat, courierLng], [custLat, custLng]);
                 liveMap.fitBounds(bounds, { padding: [40, 40] });
               }
@@ -2533,7 +2562,7 @@
       };
 
       updateTrackingData();
-      liveTrackingInterval = setInterval(updateTrackingData, 4000); // Polling presisi tiap 4 detik
+      liveTrackingInterval = setInterval(updateTrackingData, 4000);
     }
 
     function closeTrackingModal() {
