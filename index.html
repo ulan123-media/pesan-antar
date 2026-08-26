@@ -1851,7 +1851,7 @@
       renderChatList(data);
     }
 
-    // Render Daftar Pesan Chat dengan Menu Titik Tiga (...)
+    // Render Daftar Pesan Chat dengan Menu Titik Tiga (...) - Posisi dropdown ke bawah (top-full mt-1)
     function renderChatList(messages) {
       var container = document.getElementById('chat-messages-container');
       var html = '';
@@ -1878,8 +1878,8 @@
                       // Tombol Titik Tiga (...) di pojok pesan
                       '<div class="relative shrink-0">' +
                         '<button type="button" onclick="toggleMessageMenu(\'menu-' + msgId + '\')" class="text-current opacity-70 hover:opacity-100 px-1 text-xs font-bold focus:outline-none"><i class="fa-solid fa-ellipsis-vertical"></i></button>' +
-                        // Dropdown Menu Pilihan
-                        '<div id="menu-' + msgId + '" class="hidden absolute right-0 bottom-full mb-1 w-36 bg-white rounded-2xl shadow-xl border border-slate-200 py-1.5 z-30 text-[11px] text-slate-800 font-semibold">' +
+                        // Dropdown Menu Pilihan (Dibuka ke bawah dengan top-full mt-1)
+                        '<div id="menu-' + msgId + '" class="hidden absolute right-0 top-full mt-1 w-36 bg-white rounded-2xl shadow-xl border border-slate-200 py-1.5 z-30 text-[11px] text-slate-800 font-semibold">' +
                           '<button type="button" onclick="copyChatMessage(\'' + escapeQuote(msg.message) + '\')" class="w-full text-left px-3 py-2 hover:bg-slate-50 flex items-center gap-2"><i class="fa-regular fa-copy text-slate-500"></i> Salin Teks</button>' +
                           (msg.id ? '<button type="button" onclick="deleteChatMessage(\'' + msg.id + '\')" class="w-full text-left px-3 py-2 hover:bg-red-50 text-red-600 flex items-center gap-2"><i class="fa-regular fa-trash-can"></i> Hapus Pesan</button>' : '') +
                         '</div>' +
