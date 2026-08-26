@@ -1945,7 +1945,7 @@
         var orders = ordersFromSheet || []; rawOrdersList = orders;
         if (isStaff) updateDashboardStats(orders);
 
-  if (isAdmin) {
+        if (isAdmin) {
           // Jangan di-filter. Admin melihat semua pesanan yang masuk ke Supabase.
           orders = orders; 
         } else if (isMerchant) {
@@ -2132,7 +2132,7 @@
 
       var html = '';
       for (var i = 0; i < orders.length; i++) {
-        var ord = orders[i], ordStatus = ord.status || 'Menunggu ACC', statusBadge = '';
+        var ord = orders[i], ordStatus = String(ord.status || 'Menunggu ACC'), statusBadge = '';
         
         if (ordStatus === 'Menunggu ACC') statusBadge = '<span class="bg-amber-500/20 text-amber-300 text-[9px] font-black px-2.5 py-1 rounded-full">Menunggu ACC</span>';
         else if (ordStatus.includes('Menunggu Verifikasi QRIS')) statusBadge = '<span class="bg-amber-500/20 text-amber-300 text-[9px] font-black px-2.5 py-1 rounded-full animate-pulse">Menunggu QRIS</span>';
