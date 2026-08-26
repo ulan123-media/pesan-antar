@@ -752,8 +752,13 @@ else if (action === 'getOrders') {
           await db.from('orders').update({ status: data.newStatus, delivery_proof: data.deliveryProof }).eq('invoice_id', data.invoiceId);
           return { status: "Success" };
         }
-        else if (action === 'assignCourierAndDeliver') {
-          await db.from('orders').update({ status: 'Sedang Diantar', courier_name: data.courierName, courier_phone: data.courierPhone }).eq('invoice_id', data.invoiceId);
+else if (action === 'assignAndDeliver') {
+          await db.from('orders').update({ 
+            status: 'Sedang Diantar', 
+            courier_name: data.courierName, 
+            courier_phone: data.courierPhone,
+            taken_at: Date.now() // TAMBAHKAN INI UNTUK MENCATAT WAKTU DIAMBIL
+          }).eq('invoice_id', data.invoiceId);
           return { status: "Success" };
         }
         else if (action === 'saveStoreStatus') {
@@ -1869,13 +1874,24 @@ else if (action === 'getOrders') {
           orders = orders.filter(function(o) {
             return String(o.storeName || "").trim().toLowerCase() === String(currentUser.name || "").trim().toLowerCase();
           });
-        } else if (isCourier) {
-          orders = orders.filter(function(o) {
-            var isReadyForDelivery = (o.status === 'Di-ACC (Diproses)' && (!o.courierPhone || o.courierPhone === ''));
-            var isAssignedToMe = (o.courierPhone && String(o.courierPhone).trim() === String(currentUser.phone).trim());
-            var isCompletedByMe = (o.status === 'Selesai' && o.courierPhone && String(o.courierPhone).trim() === String(currentUser.phone).trim());
-            return isReadyForDelivery || isAssignedToMe || isCompletedByMe;
-          });
+} else if (isCourier) {
+      var now = Date.now();
+      orders = orders.filter(function(o) {
+        var isReadyForDelivery = (o.status === 'Di-ACC (Diproses)' && (!o.courierPhone || o.courierPhone === ''));
+        var isAssignedToMe = (o.courierPhone && String(o.courierPhone).trim() === String(currentUser.phone).trim());
+        var isCompletedByMe = (o.status === 'Selesai' && o.courierPhone && String(o.courierPhone).trim() === String(currentUser.phone).trim());
+        
+        // ATURAN 2 MENIT UNTUK KURIR LAIN:
+        // Jika diambil kurir lain, tampilkan selama 2 menit (120.000 milidetik) sejak diambil, setelah itu sembunyikan.
+        var takenByOtherRecently = false;
+        if (o.status === 'Sedang Diantar' && o.courierPhone && String(o.courierPhone).trim() !== String(currentUser.phone).trim()) {
+          if (o.takenAt && (now - o.takenAt <= 120000)) {
+            takenByOtherRecently = true;
+          }
+        }
+
+        return isReadyForDelivery || isAssignedToMe || isCompletedByMe || takenByOtherRecently;
+      });
         } else if (isAdmin) {
           // Admin
         } else if (currentUser && currentUser.role !== 'guest') {
