@@ -26,11 +26,8 @@
     ::-webkit-scrollbar { display: none; }
     @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
     .animate-slide-up { animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-    @media print {
-      body * { visibility: hidden; }
-      #print-receipt-area, #print-receipt-area * { visibility: visible; }
-      #print-receipt-area { position: absolute; left: 0; top: 0; width: 58mm; margin: 0; padding: 5px; font-family: monospace; font-size: 10px; }
-    }
+    @keyframes pulseSkeleton { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
+    .skeleton { animation: pulseSkeleton 1.5s infinite; background-color: #e2e8f0; }
 
     .courier-marker-icon { transition: all 1s linear; }
     .marker-pulse {
@@ -671,7 +668,6 @@
       console.error("Gagal menginisialisasi Supabase:", e);
     }
 
-    // FUNGSI UTILITY: KOMPRESI GAMBAR OTOMATIS SEBELUM UNGGAH
     function compressImageFile(file, maxWidth = 600, maxHeight = 600, quality = 0.6) {
       return new Promise((resolve, reject) => {
         var reader = new FileReader();
@@ -732,7 +728,8 @@
           return formattedStores.length > 0 ? formattedStores : null;
         }
         else if (action === 'getProducts') {
-          let { data: prods } = await db.from('products').select('*');
+          // MEMBATASI KELUARAN AWAL HANYA 16 PRODUK AGAR LEBIH CEPAT (FAST RESPONS)
+          let { data: prods } = await db.from('products').select('*').limit(16);
           return (prods || []).map(p => ({
             id: p.id, name: p.name, price: Number(p.price), storeId: p.store_id, image: p.image, desc: p.description, inStock: p.stock !== 'Habis', terlaris: p.terlaris
           }));
@@ -954,7 +951,6 @@
     function normalizePhone(phone) { return formatWhatsAppNumber(phone); }
 
     document.addEventListener("DOMContentLoaded", function() {
-      // PERBAIKAN: MEMULIHKAN POSISI TAB LANGSUNG DI AWAL SEBELUM RENDER LAINNYA
       var savedTab = safeStorage.getItem('active_tab_position');
       if (savedTab === 'status') {
         switchTab('status');
@@ -1173,10 +1169,10 @@
                     '<p class="text-[11px] text-slate-600"><strong>WhatsApp:</strong> ' + c.phone + '</p>' +
                     '<p class="text-[11px] text-slate-600"><strong>Kendaraan:</strong> ' + c.vehicle + '</p>' +
                     '<div class="grid grid-cols-4 gap-1.5 pt-1">' +
-                      (c.vehiclePhoto ? '<img src="' + c.vehiclePhoto + '" onclick="openImageModal(\'' + c.vehiclePhoto + '\', \'Kendaraan\')" class="w-full h-12 object-cover rounded-xl cursor-pointer border border-slate-200">' : '<span class="text-[8px] text-slate-400">No Vehicle</span>') +
-                      (c.ktpPhoto ? '<img src="' + c.ktpPhoto + '" onclick="openImageModal(\'' + c.ktpPhoto + '\', \'KTP\')" class="w-full h-12 object-cover rounded-xl cursor-pointer border border-slate-200">' : '<span class="text-[8px] text-slate-400">No KTP</span>') +
-                      (c.stnkPhoto ? '<img src="' + c.stnkPhoto + '" onclick="openImageModal(\'' + c.stnkPhoto + '\', \'STNK\')" class="w-full h-12 object-cover rounded-xl cursor-pointer border border-slate-200">' : '<span class="text-[8px] text-slate-400">No STNK</span>') +
-                      (c.simPhoto ? '<img src="' + c.simPhoto + '" onclick="openImageModal(\'' + c.simPhoto + '\', \'SIM\')" class="w-full h-12 object-cover rounded-xl cursor-pointer border border-slate-200">' : '<span class="text-[8px] text-slate-400">No SIM</span>') +
+                      (c.vehiclePhoto ? '<img src="' + c.vehiclePhoto + '" loading="lazy" onclick="openImageModal(\'' + c.vehiclePhoto + '\', \'Kendaraan\')" class="w-full h-12 object-cover rounded-xl cursor-pointer border border-slate-200">' : '<span class="text-[8px] text-slate-400">No Vehicle</span>') +
+                      (c.ktpPhoto ? '<img src="' + c.ktpPhoto + '" loading="lazy" onclick="openImageModal(\'' + c.ktpPhoto + '\', \'KTP\')" class="w-full h-12 object-cover rounded-xl cursor-pointer border border-slate-200">' : '<span class="text-[8px] text-slate-400">No KTP</span>') +
+                      (c.stnkPhoto ? '<img src="' + c.stnkPhoto + '" loading="lazy" onclick="openImageModal(\'' + c.stnkPhoto + '\', \'STNK\')" class="w-full h-12 object-cover rounded-xl cursor-pointer border border-slate-200">' : '<span class="text-[8px] text-slate-400">No STNK</span>') +
+                      (c.simPhoto ? '<img src="' + c.simPhoto + '" loading="lazy" onclick="openImageModal(\'' + c.simPhoto + '\', \'SIM\')" class="w-full h-12 object-cover rounded-xl cursor-pointer border border-slate-200">' : '<span class="text-[8px] text-slate-400">No SIM</span>') +
                     '</div>' +
                     '<div class="pt-2 flex gap-2">' +
                       '<button type="button" onclick="approveCourier(\'' + c.phone + '\', \'' + c.name + '\')" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-black py-2.5 rounded-xl text-xs active:scale-95 shadow-xs"><i class="fa-solid fa-check mr-1"></i> ACC & Luluskan</button>' +
@@ -1521,10 +1517,10 @@
                                        '<div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100 space-y-2">' +
                                          '<span class="text-[10px] text-slate-400 font-bold uppercase block">Berkas & Foto Syarat (Klik untuk memperbesar)</span>' +
                                          '<div class="grid grid-cols-4 gap-1.5 pt-1">' +
-                                           (c.vehicle_photo ? '<div class="text-center"><span class="text-[8px] text-slate-500 font-bold block mb-1">Kendaraan</span><img src="' + c.vehicle_photo + '" onclick="openImageModal(\'' + c.vehicle_photo + '\', \'Foto Kendaraan\')" class="w-full h-12 object-cover rounded-xl cursor-pointer border border-slate-200"></div>' : '<span class="text-[8px] text-slate-400">No Vehicle</span>') +
-                                           (c.ktp_photo ? '<div class="text-center"><span class="text-[8px] text-slate-500 font-bold block mb-1">KTP</span><img src="' + c.ktp_photo + '" onclick="openImageModal(\'' + c.ktp_photo + '\', \'Foto KTP\')" class="w-full h-12 object-cover rounded-xl cursor-pointer border border-slate-200"></div>' : '<span class="text-[8px] text-slate-400">No KTP</span>') +
-                                           (c.stnk_photo ? '<div class="text-center"><span class="text-[8px] text-slate-500 font-bold block mb-1">STNK</span><img src="' + c.stnk_photo + '" onclick="openImageModal(\'' + c.stnk_photo + '\', \'Foto STNK\')" class="w-full h-12 object-cover rounded-xl cursor-pointer border border-slate-200"></div>' : '<span class="text-[8px] text-slate-400">No STNK</span>') +
-                                           (c.sim_photo ? '<div class="text-center"><span class="text-[8px] text-slate-500 font-bold block mb-1">SIM</span><img src="' + c.sim_photo + '" onclick="openImageModal(\'' + c.sim_photo + '\', \'Foto SIM\')" class="w-full h-12 object-cover rounded-xl cursor-pointer border border-slate-200"></div>' : '<span class="text-[8px] text-slate-400">No SIM</span>') +
+                                           (c.vehicle_photo ? '<div class="text-center"><span class="text-[8px] text-slate-500 font-bold block mb-1">Kendaraan</span><img src="' + c.vehicle_photo + '" loading="lazy" onclick="openImageModal(\'' + c.vehicle_photo + '\', \'Foto Kendaraan\')" class="w-full h-12 object-cover rounded-xl cursor-pointer border border-slate-200"></div>' : '<span class="text-[8px] text-slate-400">No Vehicle</span>') +
+                                           (c.ktp_photo ? '<div class="text-center"><span class="text-[8px] text-slate-500 font-bold block mb-1">KTP</span><img src="' + c.ktp_photo + '" loading="lazy" onclick="openImageModal(\'' + c.ktp_photo + '\', \'Foto KTP\')" class="w-full h-12 object-cover rounded-xl cursor-pointer border border-slate-200"></div>' : '<span class="text-[8px] text-slate-400">No KTP</span>') +
+                                           (c.stnk_photo ? '<div class="text-center"><span class="text-[8px] text-slate-500 font-bold block mb-1">STNK</span><img src="' + c.stnk_photo + '" loading="lazy" onclick="openImageModal(\'' + c.stnk_photo + '\', \'Foto STNK\')" class="w-full h-12 object-cover rounded-xl cursor-pointer border border-slate-200"></div>' : '<span class="text-[8px] text-slate-400">No STNK</span>') +
+                                           (c.sim_photo ? '<div class="text-center"><span class="text-[8px] text-slate-500 font-bold block mb-1">SIM</span><img src="' + c.sim_photo + '" loading="lazy" onclick="openImageModal(\'' + c.sim_photo + '\', \'Foto SIM\')" class="w-full h-12 object-cover rounded-xl cursor-pointer border border-slate-200"></div>' : '<span class="text-[8px] text-slate-400">No SIM</span>') +
                                          '</div>' +
                                        '</div>' +
                                      '</div>';
@@ -1674,8 +1670,10 @@
       }
     }
 
-    // FUNGSI INIZIALISASI DENGAN CACHING LOCALSTORAGE AGAR TAMPIL INSTAN
     function initApp() {
+      // 1. TAMPILKAN SKELETON LOADING INSTAN PADA KONTEN
+      renderSkeletonLoaders();
+
       var cachedStores = safeStorage.getItem('cached_stores');
       var cachedProducts = safeStorage.getItem('cached_products');
       
@@ -1710,6 +1708,22 @@
         renderProducts();
         updateAdminStoreDropdown();
       });
+    }
+
+    function renderSkeletonLoaders() {
+      var prodContainer = document.getElementById('product-container');
+      if (prodContainer && prodContainer.children.length === 0) {
+        var skelHtml = '';
+        for (var i = 0; i < 4; i++) {
+          skelHtml += '<div class="bg-white rounded-3xl p-3.5 border border-slate-200 shadow-xs space-y-3">' +
+                        '<div class="w-full aspect-square skeleton rounded-2xl"></div>' +
+                        '<div class="h-3 skeleton rounded w-3/4"></div>' +
+                        '<div class="h-2 skeleton rounded w-1/2"></div>' +
+                        '<div class="h-8 skeleton rounded-xl w-full"></div>' +
+                      '</div>';
+        }
+        prodContainer.innerHTML = skelHtml;
+      }
     }
 
     var mockStoresDefault = [
@@ -1866,7 +1880,7 @@
           if (String(allStores[s].id) === String(p.storeId)) { storeName = allStores[s].name; break; }
         }
 
-        var storeBadgeTag = (currentStoreId === "Semua") ? '<span class="absolute top-2 left-2 bg-slate-900/80 backdrop-blur-md text-amber-300 text-[9px] font-black px-2 py-1 rounded-lg z-10 shadow-md border border-white/10"><i class="fa-solid fa-store mr-1"></i> ' + storeName + '</span>' : '';
+        var storeBadgeTag = (currentStoreId === "Semua") ? '<span class="absolute top-2 left-2 bg-slate-900/85 text-amber-300 text-[9px] font-black px-2 py-1 rounded-lg z-10 shadow-md"><i class="fa-solid fa-store mr-1"></i> ' + storeName + '</span>' : '';
 
         var actionUI = "";
         if (isStaff) {
@@ -2204,7 +2218,6 @@
       document.getElementById('nav-toko').className = t === 'toko' ? "flex flex-col items-center text-rose-600 font-bold transition-all px-4" : "flex flex-col items-center text-slate-400 hover:text-rose-600 font-bold transition-all px-4";
       document.getElementById('nav-status').className = t === 'status' ? "flex flex-col items-center text-rose-600 font-bold transition-all px-4 relative" : "flex flex-col items-center text-slate-400 hover:text-rose-600 font-bold transition-all px-4 relative";
       
-      // MENYIMPAN POSISI TAB AKTIF KE LOCALSTORAGE
       safeStorage.setItem('active_tab_position', t);
 
       if (t === 'status') { 
