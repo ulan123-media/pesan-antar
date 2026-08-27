@@ -701,7 +701,7 @@
         else if (action === 'getOrders') {
           let { data: ords } = await db.from('orders').select('*');
           return (ords || []).map(o => ({
-            invoiceId: o.invoice_id, name: o.name, phone: o.phone, address: o.address, total: Number(o.total), itemsSummary: o.items_summary, status: o.status, location: o.location, lat: o.lat ? Number(o.lat) : null, lng: o.lng ? Number(o.lng) : null, date: o.date, ongkir: Number(o.ongkir || 0), notes: o.notes, courierLat: o.courier_lat ? Number(o.courier_lat) : null, courierLng: o.courier_lng ? Number(o.courier_lng) : null, courierName: o.courier_name, courierPhone: o.courier_phone, deliveryProof: o.delivery_proof, storeName: o.store_name,
+            invoiceId: o.invoice_id, name: o.name, phone: o.phone, address: o.address, total: Number(o.total), itemsSummary: o.items_summary, status: o.status, location: o.location, lat: o.lat ? Number(o.lat) : null, lng: o.lng ? Number(o.lng) : null, date: o.date, ongkir: Number(o.ongkir || 0), notes: o.notes, courierLat: o.courier_lat ? Number(o.courier_lat) : null, courierLng: o.courier_lng ? Number(o.courier_lng) : null, courierName: o.courier_name, courierPhone: o.courier_phone, courierVehicle: o.courier_vehicle, deliveryProof: o.delivery_proof, storeName: o.store_name,
             timestamp: o.timestamp ? Number(o.timestamp) : 0,
             takenAt: o.taken_at ? Number(o.taken_at) : 0
           }));
@@ -783,7 +783,7 @@
           return { status: "Success" };
         }
         else if (action === 'assignAndDeliver') {
-          await db.from('orders').update({ status: 'Sedang Diantar', courier_name: data.courierName, courier_phone: data.courierPhone, taken_at: Date.now() }).eq('invoice_id', data.invoiceId);
+          await db.from('orders').update({ status: 'Sedang Diantar', courier_name: data.courierName, courier_phone: data.courierPhone, courier_vehicle: data.courierVehicle, taken_at: Date.now() }).eq('invoice_id', data.invoiceId);
           return { status: "Success" };
         }
         else if (action === 'saveStoreStatus') {
@@ -2386,8 +2386,21 @@
         var isMerchant = currentUser && currentUser.role === 'merchant';
         var isAssignedToOther = isCourier && ord.courierPhone && normalizePhone(ord.courierPhone) !== normalizePhone(currentUser.phone);
 
+        // Keterangan Kurir Pengantar (Nama & Kendaraan)
+        var courierInfoHtml = '';
+        if (ord.courierName && (ordStatus === 'Sedang Diantar' || ordStatus === 'Selesai')) {
+          var courierTextColor = isStaff ? 'text-slate-300' : 'text-slate-700';
+          var courierBgColor = isStaff ? 'bg-slate-800 border-slate-700' : 'bg-emerald-50 border-emerald-100';
+          courierInfoHtml = '<div class="mt-2 p-2.5 rounded-2xl border ' + courierBgColor + ' flex items-center gap-2.5">' +
+                              '<div class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-500 flex items-center justify-center text-xs font-bold shrink-0"><i class="fa-solid fa-motorcycle"></i></div>' +
+                              '<div class="text-[11px] ' + courierTextColor + '">' +
+                                '<span class="font-bold block text-[10px] text-emerald-600 uppercase">Kurir Pengantar</span>' +
+                                '<span class="font-extrabold">' + ord.courierName + '</span>' + (ord.courierVehicle ? ' <span class="text-slate-500 font-medium">(' + ord.courierVehicle + ')</span>' : '') +
+                              '</div>' +
+                            '</div>';
+        }
+
         var proofHtml = '';
-        // DIPERBAIKI: Foto Bukti Tiba HANYA MUNCUL JIKA status pesanan SUDAH 'Selesai'
         if (!isMerchant && ord.deliveryProof && ordStatus === 'Selesai') {
           var proofBorderColor = isStaff ? 'border-slate-700/50' : 'border-slate-100';
           var proofTextColor = isStaff ? 'text-slate-400' : 'text-slate-500';
@@ -2428,6 +2441,7 @@
                     '<p class="truncate"><span class="font-bold">Detail:</span> ' + ord.itemsSummary + '</p>' +
                     '<p class="text-[11px]"><span class="font-bold">Alamat:</span> ' + ord.address + '</p>' +
                   '</div>' +
+                  courierInfoHtml +
                   proofHtml +
                   actionButtons +
                 '</div>';
@@ -2436,7 +2450,7 @@
     }
 
     function assignAndDeliver(invoiceId) {
-      callApiPost('assignAndDeliver', { invoiceId: invoiceId, courierName: currentUser.name, courierPhone: currentUser.phone || WA_NUMBER }).then(() => {
+      callApiPost('assignAndDeliver', { invoiceId: invoiceId, courierName: currentUser.name, courierPhone: currentUser.phone || WA_NUMBER, courierVehicle: currentUser.vehicle || "Motor" }).then(() => {
         showToast("Tugas pengantaran diambil!");
         renderOrderStatus();
         if (currentUser.role === 'courier') startCourierGPSBroadcaster(invoiceId);
@@ -2531,7 +2545,6 @@
 
     function startBackgroundNotifier() {
       if (!db) return;
-      if (adminNotifierInterval) clearInterval(adminNotifierInterval);
       var role = currentUser ? currentUser.role : null;
       if (role === 'admin' || role === 'merchant' || role === 'courier') {
         db.channel('public:orders')
