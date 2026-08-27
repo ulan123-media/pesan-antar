@@ -2181,7 +2181,22 @@
 
       callApiGet('getOrders').then(ordersFromSheet => {
         var orders = ordersFromSheet || []; rawOrdersList = orders;
-        if (isStaff) updateDashboardStats(orders);
+        if (isStaff) {
+          updateDashboardStats(orders);
+          
+          var pendingOrdersCount = orders.filter(function(o) {
+            var st = String(o.status || '').toLowerCase();
+            return st.includes('menunggu') || st.includes('belum lunas') || st.includes('qris') || st === 'menunggu acc';
+          }).length;
+
+          if (lastPendingCount === -1) {
+            lastPendingCount = pendingOrdersCount;
+          } else if (pendingOrdersCount > lastPendingCount) {
+            triggerRedRadarIndicator(true);
+            playNotificationSound();
+          }
+          lastPendingCount = pendingOrdersCount;
+        }
 
         if (isAdmin) {
           orders = orders; 
@@ -2386,7 +2401,6 @@
         var isMerchant = currentUser && currentUser.role === 'merchant';
         var isAssignedToOther = isCourier && ord.courierPhone && normalizePhone(ord.courierPhone) !== normalizePhone(currentUser.phone);
 
-        // Keterangan Kurir Pengantar (Nama & Kendaraan)
         var courierInfoHtml = '';
         if (ord.courierName && (ordStatus === 'Sedang Diantar' || ordStatus === 'Selesai')) {
           var courierTextColor = isStaff ? 'text-slate-300' : 'text-slate-700';
@@ -2547,10 +2561,10 @@
       if (!db) return;
       var role = currentUser ? currentUser.role : null;
       if (role === 'admin' || role === 'merchant' || role === 'courier') {
-        db.channel('public:orders')
-          .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'orders' }, payload => {
+        db.channel('public:orders-radar')
+          .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, payload => {
             playNotificationSound();
-            showToast("🔔 Pesanan Baru Masuk!", false);
+            showToast("🔔 Pembaruan Pesanan Masuk!", false);
             triggerRedRadarIndicator(true);
             renderOrderStatus();
           })
