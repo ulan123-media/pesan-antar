@@ -987,6 +987,12 @@
       startBackgroundNotifier();
       checkPendingCouriersCount();
 
+      // MEMPERTAHANKAN TAB TERAKHIR SAAT REFRESH
+      var savedTab = safeStorage.getItem('active_tab_position');
+      if (savedTab === 'status') {
+        switchTab('status');
+      }
+
       var proofInput = document.getElementById('proof-file-input');
       if (proofInput) {
         proofInput.addEventListener('change', function(e) {
@@ -1352,7 +1358,6 @@
       var fStnk = document.getElementById('c-reg-stnk-file').files[0];
       var fSim = document.getElementById('c-reg-sim-file').files[0];
 
-      // Kompres otomatis semua dokumen kurir agar ringan di database
       var cVehiclePhoto = fVehicle ? await compressImageFile(fVehicle, 600, 600, 0.6) : "";
       var cKtpPhoto = fKtp ? await compressImageFile(fKtp, 600, 600, 0.6) : "";
       var cStnkPhoto = fStnk ? await compressImageFile(fStnk, 600, 600, 0.6) : "";
@@ -1552,6 +1557,7 @@
       if (customerNotifierInterval) clearInterval(customerNotifierInterval);
       if (liveTrackingInterval) clearInterval(liveTrackingInterval);
       safeStorage.removeItem('app_active_session');
+      safeStorage.removeItem('active_tab_position');
       currentUser = null;
       document.getElementById('main-app').classList.add('hidden');
       document.getElementById('profile-modal').classList.add('hidden');
@@ -2177,6 +2183,10 @@
       document.getElementById('view-status').classList.toggle('hidden', t !== 'status');
       document.getElementById('nav-toko').className = t === 'toko' ? "flex flex-col items-center text-rose-600 font-bold transition-all px-4" : "flex flex-col items-center text-slate-400 hover:text-rose-600 font-bold transition-all px-4";
       document.getElementById('nav-status').className = t === 'status' ? "flex flex-col items-center text-rose-600 font-bold transition-all px-4 relative" : "flex flex-col items-center text-slate-400 hover:text-rose-600 font-bold transition-all px-4 relative";
+      
+      // MENYIMPAN POSISI TAB AKTIF KE LOCALSTORAGE
+      safeStorage.setItem('active_tab_position', t);
+
       if (t === 'status') { 
         document.getElementById('nav-status-dot').classList.add('hidden'); 
         triggerRedRadarIndicator(false); 
