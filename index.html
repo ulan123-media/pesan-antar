@@ -2251,6 +2251,11 @@
       document.getElementById('status-tab-title').innerText = isStaff ? (isAdmin ? "PANEL ADMIN UTAMA: SEMUA PESANAN" : (isMerchant ? "PESANAN MASUK WARUNG SAYA" : "PANEL TUGAS KURIR (AKTIF)")) : "RIWAYAT & STATUS PESANAN SAYA";
 
       callApiGet('getOrders').then(ordersFromSheet => {
+        if (!currentUser) {
+          container.innerHTML = '<div class="bg-white/5 rounded-3xl p-8 text-center text-slate-400 font-bold text-xs shadow-xs border border-slate-800"><p>Sesi anda telah berakhir. Silakan masuk kembali.</p></div>';
+          return;
+        }
+
         var orders = ordersFromSheet || []; rawOrdersList = orders;
         
         if (isStaff) {
@@ -2314,10 +2319,16 @@
           orders = orders.filter(function(o) {
             return currentUser.phone && o.phone ? normalizePhone(o.phone) === normalizePhone(currentUser.phone) : String(o.name).trim().toLowerCase() === String(currentUser.name).trim().toLowerCase();
           });
-        } else if (currentUser && currentUser.role === 'guest') { orders = []; }
+        } else if (currentUser && currentUser.role === 'guest') { 
+          orders = []; 
+        } else {
+          orders = [];
+        }
         
         orders.sort(function(a, b) { return b.timestamp - a.timestamp; });
         displayOrderCards(container, orders, isStaff);
+      }).catch(err => {
+        container.innerHTML = '<div class="bg-white/5 rounded-3xl p-8 text-center text-rose-400 font-bold text-xs shadow-xs border border-slate-800"><p>Gagal memuat data pesanan.</p></div>';
       });
     }
 
@@ -2869,7 +2880,7 @@
       var name = document.getElementById('new-prod-name').value.trim();
       var price = parseInt(document.getElementById('new-prod-price').value.trim());
       var storeId = document.getElementById('new-prod-store').value;
-      var fileInput = document.getElementById('new-prod-image-file').files[0];
+      fileInput = document.getElementById('new-prod-image-file').files[0];
       var desc = document.getElementById('new-prod-desc').value.trim();
       if (!name || isNaN(price) || !storeId) { alert("Lengkapi data produk dengan benar!"); return; }
 
