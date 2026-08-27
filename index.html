@@ -1674,7 +1674,24 @@
       }
     }
 
+    // FUNGSI INIZIALISASI DENGAN CACHING LOCALSTORAGE AGAR TAMPIL INSTAN
     function initApp() {
+      var cachedStores = safeStorage.getItem('cached_stores');
+      var cachedProducts = safeStorage.getItem('cached_products');
+      
+      if (cachedStores && cachedProducts) {
+        try {
+          allStores = JSON.parse(cachedStores);
+          allProducts = JSON.parse(cachedProducts);
+          if (currentUser && currentUser.role === 'merchant') {
+            currentStoreId = currentUser.storeId;
+          }
+          renderStores();
+          renderProducts();
+          updateAdminStoreDropdown();
+        } catch(e) {}
+      }
+
       Promise.all([
         callApiGet('getStores').catch(() => null),
         callApiGet('getProducts').catch(() => null)
@@ -1682,6 +1699,9 @@
         allStores = (storesData && storesData.length > 0) ? storesData : mockStoresDefault;
         allProducts = (productsData && productsData.length > 0) ? productsData : mockProductsDefault;
         
+        safeStorage.setItem('cached_stores', JSON.stringify(allStores));
+        safeStorage.setItem('cached_products', JSON.stringify(allProducts));
+
         if (currentUser && currentUser.role === 'merchant') {
           currentStoreId = currentUser.storeId;
         }
@@ -1755,7 +1775,7 @@
 
         container.innerHTML = '<div class="bg-amber-500/10 border border-amber-500/30 text-amber-300 px-5 py-4 rounded-2xl text-xs font-bold w-full flex items-center justify-between">' +
                                 '<div class="flex items-center gap-3">' +
-                                  '<img src="' + storeImg + '" class="w-12 h-12 rounded-xl object-cover border border-amber-500/30 shadow-sm">' +
+                                  '<img src="' + storeImg + '" loading="lazy" class="w-12 h-12 rounded-xl object-cover border border-amber-500/30 shadow-sm">' +
                                   '<div>' +
                                     '<span class="text-[9px] text-amber-400 uppercase tracking-wider block">Kelola Toko Anda</span>' +
                                     '<span class="text-sm font-black text-white">' + currentUser.name + '</span>' +
@@ -1786,7 +1806,7 @@
         html += '<div ' + dragAttrs + ' class="relative shrink-0 w-36 cursor-grab active:cursor-grabbing">' +
                   '<button type="button" onclick="selectStore(\'' + s.id + '\')" class="w-full store-btn ' + (isActive ? 'active-store' : 'bg-white') + ' rounded-2xl p-2.5 flex flex-col items-center text-center shadow-xs border border-slate-200/80 transition-all">' +
                     adminDragHandle +
-                    '<div class="w-full h-14 rounded-xl overflow-hidden bg-slate-100 mb-2 shadow-inner border border-slate-200"><img src="' + s.image + '" class="w-full h-full object-cover pointer-events-none"></div>' +
+                    '<div class="w-full h-14 rounded-xl overflow-hidden bg-slate-100 mb-2 shadow-inner border border-slate-200"><img src="' + s.image + '" loading="lazy" class="w-full h-full object-cover pointer-events-none"></div>' +
                     '<span class="text-[11px] font-black text-slate-800 truncate w-full">' + s.name + '</span>' +
                     '<span class="text-[9px] text-slate-400 truncate w-full">' + (s.address || 'Mitra') + '</span>' +
                   '</button>' +
@@ -1869,7 +1889,7 @@
                   '<div>' +
                     '<div class="relative overflow-hidden rounded-2xl mb-2.5 bg-slate-100 aspect-square">' +
                       storeBadgeTag +
-                      '<img src="' + p.image + '" onclick="openImageModal(\'' + p.image.replace(/'/g, "\\'") + '\', \'' + p.name.replace(/'/g, "\\'") + '\')" class="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300">' +
+                      '<img src="' + p.image + '" loading="lazy" onclick="openImageModal(\'' + p.image.replace(/'/g, "\\'") + '\', \'' + p.name.replace(/'/g, "\\'") + '\')" class="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-300">' +
                     '</div>' +
                     '<h4 class="font-extrabold text-slate-900 text-xs mb-1 truncate">' + p.name + '</h4>' +
                     '<p class="text-[10px] text-slate-400 line-clamp-2 mb-3 font-medium">' + p.desc + '</p>' +
@@ -2488,7 +2508,7 @@
           
           proofHtml = '<div class="mt-2 pt-2 border-t ' + proofBorderColor + ' flex items-center gap-3">' +
                         '<span class="text-[10px] font-bold ' + proofTextColor + '">Bukti Tiba:</span>' +
-                        '<img src="' + ord.deliveryProof + '" onclick="openImageModal(\'' + ord.deliveryProof + '\', \'Bukti Pengiriman ' + ord.invoiceId + '\')" class="w-12 h-12 object-cover rounded-xl cursor-pointer border ' + proofImgBorder + ' hover:scale-105 transition-transform">' +
+                        '<img src="' + ord.deliveryProof + '" loading="lazy" onclick="openImageModal(\'' + ord.deliveryProof + '\', \'Bukti Pengiriman ' + ord.invoiceId + '\')" class="w-12 h-12 object-cover rounded-xl cursor-pointer border ' + proofImgBorder + ' hover:scale-105 transition-transform">' +
                       '</div>';
         }
 
