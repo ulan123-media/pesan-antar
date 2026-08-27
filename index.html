@@ -2241,6 +2241,8 @@
 
     function renderOrderStatus() {
       var container = document.getElementById('order-history-container');
+      container.innerHTML = '<div class="text-center py-8 text-slate-400 text-xs font-bold"><i class="fa-solid fa-spinner fa-spin text-lg mb-2"></i><p>Memuat data pesanan...</p></div>';
+
       var isAdmin = currentUser && currentUser.role === 'admin';
       var isCourier = currentUser && currentUser.role === 'courier';
       var isMerchant = currentUser && currentUser.role === 'merchant';
