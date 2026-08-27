@@ -954,6 +954,12 @@
     function normalizePhone(phone) { return formatWhatsAppNumber(phone); }
 
     document.addEventListener("DOMContentLoaded", function() {
+      // PERBAIKAN: MEMULIHKAN POSISI TAB LANGSUNG DI AWAL SEBELUM RENDER LAINNYA
+      var savedTab = safeStorage.getItem('active_tab_position');
+      if (savedTab === 'status') {
+        switchTab('status');
+      }
+
       var urlParams = new URLSearchParams(window.location.search);
       var isAdminUrl = (urlParams.get('role') === 'admin');
 
@@ -986,12 +992,6 @@
       checkRecruitmentStatus();
       startBackgroundNotifier();
       checkPendingCouriersCount();
-
-      // MEMPERTAHANKAN TAB TERAKHIR SAAT REFRESH
-      var savedTab = safeStorage.getItem('active_tab_position');
-      if (savedTab === 'status') {
-        switchTab('status');
-      }
 
       var proofInput = document.getElementById('proof-file-input');
       if (proofInput) {
