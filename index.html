@@ -2189,11 +2189,17 @@
             return st.includes('menunggu') || st.includes('belum lunas') || st.includes('qris') || st === 'menunggu acc';
           }).length;
 
+          if (pendingOrdersCount > 0) {
+            triggerRedRadarIndicator(true);
+          } else {
+            triggerRedRadarIndicator(false);
+          }
+
           if (lastPendingCount === -1) {
             lastPendingCount = pendingOrdersCount;
           } else if (pendingOrdersCount > lastPendingCount) {
-            triggerRedRadarIndicator(true);
             playNotificationSound();
+            showToast("🔔 Pesanan Baru Masuk!", false);
           }
           lastPendingCount = pendingOrdersCount;
         }
