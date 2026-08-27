@@ -988,6 +988,65 @@
       startBackgroundNotifier();
       checkPendingCouriersCount();
 
+      // Pengecekan latar belakang setiap 1 detik agar notifikasi dan suara langsung berbunyi instan secara global
+      setInterval(function() {
+        var isStaff = currentUser && (currentUser.role === 'admin' || currentUser.role === 'merchant' || currentUser.role === 'courier');
+        if (isStaff) {
+          callApiGet('getOrders').then(orders => {
+            if (!orders) return;
+            var isAdmin = currentUser.role === 'admin';
+            var isMerchant = currentUser.role === 'merchant';
+            var isCourier = currentUser.role === 'courier';
+
+            if (isAdmin || isMerchant) {
+              var pendingOrdersCount = orders.filter(function(o) {
+                var st = String(o.status || '').toLowerCase();
+                return st.includes('menunggu') || st.includes('belum lunas') || st.includes('qris') || st === 'menunggu acc';
+              }).length;
+
+              if (pendingOrdersCount > 0) {
+                triggerRedRadarIndicator(true, "Pesanan Baru!");
+              } else {
+                triggerRedRadarIndicator(false);
+              }
+
+              if (lastPendingCount === -1) {
+                lastPendingCount = pendingOrdersCount;
+              } else if (pendingOrdersCount > lastPendingCount) {
+                playNotificationSound();
+                showToast("🔔 Pesanan Baru Masuk!", false);
+                if (document.getElementById('view-status') && !document.getElementById('view-status').classList.contains('hidden')) {
+                  renderOrderStatus();
+                }
+              }
+              lastPendingCount = pendingOrdersCount;
+            } 
+            else if (isCourier) {
+              var readyOrdersCount = orders.filter(function(o) {
+                return o.status === 'Di-ACC (Diproses)' && (!o.courierPhone || o.courierPhone === '');
+              }).length;
+
+              if (readyOrdersCount > 0) {
+                triggerRedRadarIndicator(true, "Pesanan Siap Diantar!");
+              } else {
+                triggerRedRadarIndicator(false);
+              }
+
+              if (lastCourierReadyCount === -1) {
+                lastCourierReadyCount = readyOrdersCount;
+              } else if (readyOrdersCount > lastCourierReadyCount) {
+                playNotificationSound();
+                showToast("🔔 Ada Pesanan Siap Diantar Kurir!", false);
+                if (document.getElementById('view-status') && !document.getElementById('view-status').classList.contains('hidden')) {
+                  renderOrderStatus();
+                }
+              }
+              lastCourierReadyCount = readyOrdersCount;
+            }
+          }).catch(err => {});
+        }
+      }, 1000);
+
       var proofInput = document.getElementById('proof-file-input');
       if (proofInput) {
         proofInput.addEventListener('change', function(e) {
@@ -2428,7 +2487,6 @@
         closeWithdrawModal();
         renderOrderStatus(); 
 
-        // Otomatis mengarahkan ke WhatsApp Admin untuk informasi penarikan dana
         var waMessage = "Halo Admin, saya *[" + currentUser.name + "]* (" + currentUser.role.toUpperCase() + ") ingin mengajukan *Penarikan Saldo*:\n\n" +
                         "💰 *Nominal:* Rp " + formatRupiah(amount) + "\n" +
                         "🏦 *Metode:* " + method + "\n" +
