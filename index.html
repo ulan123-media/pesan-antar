@@ -98,26 +98,48 @@
         </button>
       </div>
 
+      <!-- KOTAK PENDAFTARAN DENGAN PROTEKSI OTP WHATSAPP -->
       <div id="consumer-register-box" class="space-y-3 hidden">
-        <div>
-          <label class="text-[10px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Nama Lengkap *</label>
-          <input type="text" id="reg-name" placeholder="Nama Anda" class="w-full bg-slate-50 rounded-2xl px-4 py-3 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium">
+        <!-- Langkah 1: Input Data Diri -->
+        <div id="reg-step-1" class="space-y-3">
+          <div>
+            <label class="text-[10px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Nama Lengkap *</label>
+            <input type="text" id="reg-name" placeholder="Nama Anda" class="w-full bg-slate-50 rounded-2xl px-4 py-3 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium">
+          </div>
+          <div>
+            <label class="text-[10px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Nomor WhatsApp *</label>
+            <input type="tel" id="reg-phone" placeholder="081234567890" class="w-full bg-slate-50 rounded-2xl px-4 py-3 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium">
+          </div>
+          <div>
+            <label class="text-[10px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Alamat Lengkap *</label>
+            <textarea id="reg-address" rows="2" placeholder="Alamat rumah..." class="w-full bg-slate-50 rounded-2xl px-4 py-2.5 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium"></textarea>
+          </div>
+          <div>
+            <label class="text-[10px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Password *</label>
+            <input type="password" id="reg-password" placeholder="Password akun" class="w-full bg-slate-50 rounded-2xl px-4 py-3 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium">
+          </div>
+          <button type="button" onclick="sendCustomerOtp()" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-black py-3.5 rounded-2xl shadow-lg shadow-rose-600/25 transition-all text-xs tracking-wider flex items-center justify-center gap-2 mt-1">
+            <i class="fa-solid fa-paper-plane text-base"></i> KIRIM KODE OTP WHATSAPP
+          </button>
         </div>
-        <div>
-          <label class="text-[10px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Nomor WhatsApp *</label>
-          <input type="tel" id="reg-phone" placeholder="081234567890" class="w-full bg-slate-50 rounded-2xl px-4 py-3 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium">
+
+        <!-- Langkah 2: Verifikasi Kode OTP -->
+        <div id="reg-step-2" class="space-y-3 hidden">
+          <div class="bg-emerald-50 border border-emerald-200 p-3.5 rounded-2xl text-center">
+            <p class="text-[11px] font-bold text-emerald-800">Kode OTP Telah Dibuat!</p>
+            <p class="text-[10px] text-emerald-600 mt-0.5">Kirimkan pesan verifikasi melalui WhatsApp yang terbuka otomatis untuk mendapatkan kode, lalu masukkan di bawah ini.</p>
+          </div>
+          <div>
+            <label class="text-[10px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Masukkan Kode OTP (4 Digit) *</label>
+            <input type="text" id="reg-otp-input" placeholder="Contoh: 4829" maxlength="4" class="w-full bg-slate-50 rounded-2xl px-4 py-3 text-center tracking-widest text-lg font-black border border-slate-200 focus:outline-none focus:border-rose-600">
+          </div>
+          <button type="button" onclick="verifyAndRegisterCustomer()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-3.5 rounded-2xl shadow-lg shadow-emerald-600/25 transition-all text-xs tracking-wider flex items-center justify-center gap-2">
+            <i class="fa-solid fa-check-circle text-base"></i> VERIFIKASI & DAFTAR AKUN
+          </button>
+          <button type="button" onclick="resetRegStep()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold py-2.5 rounded-2xl text-xs transition-all">
+            Kembali / Ubah Nomor WhatsApp
+          </button>
         </div>
-        <div>
-          <label class="text-[10px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Alamat Lengkap *</label>
-          <textarea id="reg-address" rows="2" placeholder="Alamat rumah..." class="w-full bg-slate-50 rounded-2xl px-4 py-2.5 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium"></textarea>
-        </div>
-        <div>
-          <label class="text-[10px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Password *</label>
-          <input type="password" id="reg-password" placeholder="Password akun" class="w-full bg-slate-50 rounded-2xl px-4 py-3 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium">
-        </div>
-        <button type="button" onclick="registerCustomer()" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-black py-3.5 rounded-2xl shadow-lg shadow-rose-600/25 transition-all text-xs tracking-wider flex items-center justify-center gap-2 mt-1">
-          <i class="fa-solid fa-user-plus text-base"></i> DAFTAR AKUN KONSUMEN
-        </button>
       </div>
 
       <button type="button" onclick="loginAsGuest()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold py-3.5 rounded-2xl text-xs transition-all border border-slate-200 flex items-center justify-center gap-2 mt-3">
@@ -884,6 +906,10 @@
     var activeChatProduct = null;
     var chatSubscription = null;
 
+    // Variabel untuk Proteksi OTP Pendaftaran
+    var generatedOtp = "";
+    var pendingCustomerData = null;
+
     function formatWhatsAppNumber(phone) {
       var cleaned = String(phone || '').replace(/\D/g, '');
       if (cleaned.startsWith('0')) cleaned = '62' + cleaned.substring(1);
@@ -1157,24 +1183,66 @@
       openMainApp("Jelajah Produk");
     }
 
-    function registerCustomer() {
+    // FUNGSI OTP WHATSAPP UNTUK PENDAFTARAN KONSUMEN
+    function sendCustomerOtp() {
       var name = document.getElementById('reg-name').value.trim();
       var phone = document.getElementById('reg-phone').value.trim();
       var address = document.getElementById('reg-address').value.trim();
       var password = document.getElementById('reg-password').value.trim();
       
-      if (!name || !phone || !address || !password) { alert("Lengkapi seluruh kolom pendaftaran."); return; }
+      if (!name || !phone || !address || !password) { 
+        alert("Lengkapi seluruh kolom pendaftaran."); 
+        return; 
+      }
+
+      // Generate 4-digit OTP
+      generatedOtp = Math.floor(1000 + Math.random() * 9000).toString();
+      pendingCustomerData = { name: name, phone: phone, address: address, password: password };
+
+      // Switch ke Step 2 (Input OTP)
+      document.getElementById('reg-step-1').classList.add('hidden');
+      document.getElementById('reg-step-2').classList.remove('hidden');
+
+      var cleanPhone = formatWhatsAppNumber(phone);
+      var otpMessage = "Halo " + name + ", kode OTP verifikasi pendaftaran akun Beli Disini! Anda adalah: *" + generatedOtp + "*. Jangan berikan kode ini kepada siapa pun.";
       
-      callApiPost('registerCustomer', { customer: { name: name, phone: phone, address: address, password: password } }).then(res => { 
+      showToast("Kode OTP dibuat: " + generatedOtp);
+      // Buka WhatsApp untuk mengirimkan pesan OTP ke nomor konsumen
+      window.open("https://wa.me/" + cleanPhone + "?text=" + encodeURIComponent(otpMessage), '_blank');
+    }
+
+    function resetRegStep() {
+      document.getElementById('reg-step-2').classList.add('hidden');
+      document.getElementById('reg-step-1').classList.remove('hidden');
+      generatedOtp = "";
+      pendingCustomerData = null;
+    }
+
+    function verifyAndRegisterCustomer() {
+      var inputOtp = document.getElementById('reg-otp-input').value.trim();
+      if (!inputOtp || inputOtp !== generatedOtp) {
+        alert("❌ Kode OTP salah! Periksa kembali pesan WhatsApp yang telah dikirim.");
+        return;
+      }
+
+      if (!pendingCustomerData) {
+        alert("Sesi pendaftaran habis, silakan isi ulang data.");
+        resetRegStep();
+        return;
+      }
+
+      var c = pendingCustomerData;
+      callApiPost('registerCustomer', { customer: c }).then(res => { 
         if (!res || res.status === "Error") {
           alert("❌ Gagal simpan ke database: " + (res ? res.message : "Kesalahan koneksi"));
         } else if (res.status === "Exists") { 
           alert("⚠️ Akun Anda sudah pernah terdaftar!"); 
           switchConsumerMode('login'); 
-          document.getElementById('login-phone').value = phone; 
+          document.getElementById('login-phone').value = c.phone; 
+          resetRegStep();
         } else if (res.status === "Created") {
-          showToast("Pendaftaran akun berhasil!");
-          currentUser = { name: name, phone: phone, address: address, role: 'customer' };
+          showToast("Verifikasi OTP & Pendaftaran Berhasil!");
+          currentUser = { name: c.name, phone: c.phone, address: c.address, role: 'customer' };
           safeStorage.setItem('app_active_session', JSON.stringify(currentUser));
           openMainApp(currentUser.name);
         }
