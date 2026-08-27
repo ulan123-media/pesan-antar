@@ -2427,6 +2427,15 @@
         showToast("Permintaan tarik saldo berhasil dikirim!");
         closeWithdrawModal();
         renderOrderStatus(); 
+
+        // Otomatis mengarahkan ke WhatsApp Admin untuk informasi penarikan dana
+        var waMessage = "Halo Admin, saya *[" + currentUser.name + "]* (" + currentUser.role.toUpperCase() + ") ingin mengajukan *Penarikan Saldo*:\n\n" +
+                        "💰 *Nominal:* Rp " + formatRupiah(amount) + "\n" +
+                        "🏦 *Metode:* " + method + "\n" +
+                        "📋 *Tujuan:* " + accountInfo + "\n\n" +
+                        "Mohon segera diproses ya Admin, terima kasih!";
+
+        window.open("https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(waMessage), '_blank');
       });
     }
 
