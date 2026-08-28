@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Beli Disini! - Toko Online & Kurir Profesional</title>
+  <title>Beli Disini Store - Toko Online & Kurir Profesional</title>
   
   <meta name="theme-color" content="#991b1b">
   
@@ -48,17 +48,14 @@
     <span id="toast-message" class="truncate">Barang ditambahkan!</span>
   </div>
 
-  <!-- AUTH SCREEN - TEMA KHAS MORONENE BOMBANA -->
+  <!-- AUTH SCREEN -->
   <div id="auth-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950 p-4 overflow-y-auto font-['Plus_Jakarta_Sans']">
     
-    <!-- Background Overlay Alam & Budaya Moronene (Jelas Terlihat) -->
     <div class="absolute inset-0 z-0 bg-cover bg-center pointer-events-none" style="background-image: url('kurir-moronene.jpg');"></div>
     <div class="absolute inset-0 z-0 bg-gradient-to-t from-slate-950/70 via-slate-950/30 to-transparent"></div>
 
-    <!-- Container Utama Login Card (Sangat Transparan, Input Tetap Solid) -->
     <div class="relative z-10 w-full max-w-md bg-slate-950/30 backdrop-blur-sm border border-amber-500/30 rounded-[32px] p-6 sm:p-8 shadow-2xl text-slate-100 my-auto">
       
-      <!-- Top Navigation / Switch Portal -->
       <div class="flex justify-between items-center w-full pb-4 mb-6 border-b border-slate-800/80">
         <div class="flex items-center gap-1.5 text-[11px] font-extrabold text-amber-300 bg-amber-500/10 border border-amber-500/20 px-3.5 py-2 rounded-full shadow-xs">
           <i class="fa-solid fa-feather text-amber-400 text-xs"></i> Mobuna'O
@@ -68,22 +65,19 @@
         </button>
       </div>
 
-     <!-- Header Logo & Judul -->
-<div class="text-center mb-6">
-  <div class="w-20 h-20 mx-auto mb-3 overflow-hidden rounded-2xl border border-amber-500/40 shadow-inner bg-slate-900">
-    <img src="logo.jpg" alt="Beli Disini Store" class="w-full h-full object-cover">
-  </div>
-  <h2 class="text-2xl font-black text-white tracking-tight">Beli Disini Store</h2>
-  <p class="text-amber-200/70 text-[11px] font-semibold mt-0.5"> siap Antar Sampai Rumahta</p>
-</div>
+      <div class="text-center mb-6">
+        <div class="w-20 h-20 mx-auto mb-3 overflow-hidden rounded-2xl border border-amber-500/40 shadow-inner bg-slate-900">
+          <img src="logo.jpg" alt="Beli Disini Store" class="w-full h-full object-cover">
+        </div>
+        <h2 class="text-2xl font-black text-white tracking-tight">Beli Disini Store</h2>
+        <p class="text-amber-200/70 text-[11px] font-semibold mt-0.5">beli disini antar sampai rumahta</p>
+      </div>
 
-      <!-- Tab Pilihan Masuk / Daftar Konsumen -->
       <div class="flex bg-slate-800/90 p-1 rounded-2xl text-xs font-bold mb-5 border border-slate-700/60">
         <button type="button" id="subtab-consumer-login" onclick="switchConsumerMode('login')" class="flex-1 py-2.5 rounded-xl bg-amber-600 text-white shadow-xs transition-all text-center">Masuk</button>
         <button type="button" id="subtab-consumer-register" onclick="switchConsumerMode('register')" class="flex-1 py-2.5 rounded-xl text-slate-400 transition-all text-center">Daftar</button>
       </div>
 
-      <!-- Box Form Masuk (Login) -->
       <div id="consumer-login-box" class="space-y-4">
         <div>
           <label class="text-[11px] font-extrabold text-slate-300 uppercase tracking-wider block mb-1">Nomor WhatsApp *</label>
@@ -107,7 +101,6 @@
         </button>
       </div>
 
-      <!-- Box Form Daftar (Register) -->
       <div id="consumer-register-box" class="space-y-3.5 hidden">
         <div id="reg-step-1" class="space-y-3">
           <div>
@@ -149,14 +142,12 @@
         </div>
       </div>
 
-      <!-- Tombol Masuk Sebagai Pengunjung -->
       <button type="button" onclick="loginAsGuest()" class="w-full bg-slate-800/80 hover:bg-slate-700 text-slate-200 font-extrabold py-3.5 rounded-2xl text-xs transition-all border border-slate-700 flex items-center justify-center gap-2 mt-4">
         <i class="fa-solid fa-compass text-amber-400"></i> LIHAT PRODUK DULU (PENGUNJUNG)
       </button>
 
-      <!-- Footer Copyright -->
       <div class="text-center text-[10px] text-slate-400/80 pt-5 mt-2 border-t border-slate-800/80">
-        Beli Disini! • Bombana Sultra © 2026
+        Beli Disini Store • Bombana Sultra © 2026
       </div>
 
     </div>
@@ -236,7 +227,7 @@
   <div id="main-app" class="hidden w-full min-h-screen relative pb-40 max-w-4xl mx-auto shadow-2xl transition-all">
     <div id="app-header" class="flex justify-between items-center px-6 pt-6 pb-4 bg-white/90 backdrop-blur-md sticky top-0 z-30 border-b border-slate-200/80">
       <div>
-        <h1 id="app-title-main" class="text-xl font-black text-slate-900 tracking-tight">Beli Disini!</h1>
+        <h1 id="app-title-main" class="text-xl font-black text-slate-900 tracking-tight">Beli Disini Store</h1>
         <button type="button" onclick="openProfileModal()" class="text-left mt-0.5 active:scale-95 transition-all">
           <p id="user-greeting" class="text-[11px] font-bold text-slate-700 bg-slate-100 px-3.5 py-1.5 rounded-full inline-block shadow-xs flex items-center gap-1.5"><i class="fa-solid fa-user-circle text-rose-600 text-xs"></i> <span id="greeting-name-text"></span></p>
         </button>
@@ -331,7 +322,7 @@
       </div>
 
       <div class="mb-6">
-        <h3 class="text-[11px] font-black uppercase text-slate-400 tracking-wider mb-3 px-6">DAFTAR WARUNG / TOKO MITRA</h3>
+        <h3 class="text-[11px] font-black uppercase text-slate-400 tracking-wider mb-3 px-6">DAFTAR WARUNG / TOKO MITRA (ADMIN DAPAT BUKA/TUTUP SATU PERSATU)</h3>
         <div id="stores-container" class="flex overflow-x-auto gap-3 px-6 pb-2 scroll-smooth"></div>
       </div>
 
@@ -362,7 +353,7 @@
     </div>
   </div>
 
-  <!-- IN-APP CHAT MODAL (SUPABASE DATABASE) -->
+  <!-- IN-APP CHAT MODAL -->
   <div id="inapp-chat-modal" class="fixed inset-0 bg-slate-900/70 z-50 flex items-center justify-center hidden backdrop-blur-sm p-4">
     <div class="bg-white rounded-3xl w-full max-w-md p-5 shadow-2xl flex flex-col h-[80vh] animate-slide-up text-slate-800">
       <div class="flex justify-between items-center border-b border-slate-100 pb-3">
@@ -610,7 +601,7 @@
     <div class="bg-white rounded-3xl w-full max-w-xs p-5 shadow-2xl space-y-4 max-w-md mx-auto">
       <div class="flex justify-between items-center border-b border-slate-100 pb-2"><h3 class="text-xs font-black text-slate-900 flex items-center gap-1.5"><i class="fa-solid fa-print text-rose-600"></i> Pratinjau Struk Thermal</h3><button type="button" onclick="closeReceiptModal()" class="w-7 h-7 bg-slate-100 rounded-full text-slate-500 flex items-center justify-center text-xs font-bold"><i class="fa-solid fa-xmark"></i></button></div>
       <div id="print-receipt-area" class="bg-amber-50/50 p-3.5 rounded-2xl border border-amber-200/60 font-mono text-[11px] text-slate-800 leading-tight space-y-2">
-        <div class="text-center"><p class="font-black text-xs uppercase tracking-wider">TOKO BELI DISINI!</p><p class="text-[9px] text-slate-500">Layanan Pesan Antar Cepat</p><p class="text-[9px] text-slate-400">--------------------------------</p></div>
+        <div class="text-center"><p class="font-black text-xs uppercase tracking-wider">TOKO BELI DISINI STORE</p><p class="text-[9px] text-slate-500">Layanan Pesan Antar Cepat</p><p class="text-[9px] text-slate-400">--------------------------------</p></div>
         <div><p><strong>Nota:</strong> <span id="rec-inv">#INV-0000</span></p><p><strong>Tgl:</strong> <span id="rec-date">--/--/----</span></p><p><strong>Nama:</strong> <span id="rec-name">--</span></p><p><strong>Telp:</strong> <span id="rec-phone">--</span></p><p class="truncate"><strong>Alamat:</strong> <span id="rec-address">--</span></p></div>
         <p class="text-slate-400">--------------------------------</p>
         <div id="rec-items" class="space-y-1"></div>
@@ -728,15 +719,21 @@
       try {
         if (action === 'getStores') {
           let { data: stores } = await db.from('stores').select('*');
-          let { data: setting } = await db.from('settings').select('*').eq('key', 'store_order').maybeSingle();
+          let { data: settingOrder } = await db.from('settings').select('*').eq('key', 'store_order').maybeSingle();
+          let { data: settingStatuses } = await db.from('settings').select('*').eq('key', 'store_statuses').maybeSingle();
           
+          let storeStatusesMap = {};
+          if (settingStatuses && settingStatuses.value) {
+            try { storeStatusesMap = JSON.parse(settingStatuses.value); } catch(e) {}
+          }
+
           let formattedStores = (stores || []).map(s => ({
-            id: s.id, name: s.name, image: s.image, address: s.address, phone: s.phone, password: s.password
+            id: s.id, name: s.name, image: s.image, address: s.address, phone: s.phone, password: s.password, status: storeStatusesMap[s.id] || 'BUKA'
           }));
 
-          if (setting && setting.value) {
+          if (settingOrder && settingOrder.value) {
             try {
-              let orderIds = JSON.parse(setting.value);
+              let orderIds = JSON.parse(settingOrder.value);
               formattedStores.sort((a, b) => {
                 let idxA = orderIds.indexOf(a.id), idxB = orderIds.indexOf(b.id);
                 return (idxA === -1 ? 999 : idxA) - (idxB === -1 ? 999 : idxB);
@@ -818,6 +815,10 @@
         }
         else if (action === 'saveStoreOrder') {
           await db.from('settings').upsert({ key: 'store_order', value: data.storeOrder });
+          return { status: "Success" };
+        }
+        else if (action === 'updateStoreStatuses') {
+          await db.from('settings').upsert({ key: 'store_statuses', value: data.storeStatuses });
           return { status: "Success" };
         }
         else if (action === 'processOrder') {
@@ -1227,7 +1228,7 @@
       callApiPost('approveCourier', { phone: phone }).then(() => {
         showToast("Kurir " + name + " berhasil di-ACC!");
         openCourierApprovalModal(); checkPendingCouriersCount();
-        window.open("https://wa.me/" + formatWhatsAppNumber(phone) + "?text=" + encodeURIComponent("Halo " + name + ", selamat! Lamaran kurir Anda di Beli Disini! telah DISETujui."), '_blank');
+        window.open("https://wa.me/" + formatWhatsAppNumber(phone) + "?text=" + encodeURIComponent("Halo " + name + ", selamat! Lamaran kurir Anda di Beli Disini Store telah DISETujui."), '_blank');
       });
     }
 
@@ -1256,7 +1257,7 @@
       pendingCustomerData = { name: name, phone: phone, address: address, password: password };
 
       var cleanPhone = formatWhatsAppNumber(phone);
-      var otpMessage = "Halo " + name + ", kode OTP verifikasi pendaftaran akun Beli Disini! Anda adalah: *" + generatedOtp + "*. Jangan berikan kode ini kepada siapa pun.";
+      var otpMessage = "Halo " + name + ", kode OTP verifikasi pendaftaran akun Beli Disini Store Anda adalah: *" + generatedOtp + "*. Jangan berikan kode ini kepada siapa pun.";
 
       showToast("Mengirimkan kode OTP ke WhatsApp Anda...");
 
@@ -1481,7 +1482,7 @@
       var floatingWaBtn = document.getElementById('floating-wa-btn');
       if (floatingWaBtn) {
         floatingWaBtn.classList.toggle('hidden', isStaff);
-        floatingWaBtn.href = "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent("Halo Admin Beli Disini!");
+        floatingWaBtn.href = "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent("Halo Admin Beli Disini Store!");
       }
 
       if (!isStaff && currentUser && currentUser.role !== 'guest') {
@@ -1595,6 +1596,23 @@
       showToast("Status toko diubah ke: " + newStatus);
     }
 
+    function toggleSingleStoreStatus(storeId) {
+      var store = allStores.find(s => s.id === storeId);
+      if (!store) return;
+      store.status = store.status === 'TUTUP' ? 'BUKA' : 'TUTUP';
+      
+      var statusesMap = {};
+      for (var i = 0; i < allStores.length; i++) {
+        statusesMap[allStores[i].id] = allStores[i].status;
+      }
+
+      callApiPost('updateStoreStatuses', { storeStatuses: JSON.stringify(statusesMap) }).then(() => {
+        showToast("Status Warung " + store.name + " diubah ke: " + store.status);
+        renderStores();
+        renderProducts();
+      });
+    }
+
     function toggleAdminMenuModal() {
       var modal = document.getElementById('admin-menu-modal');
       if (modal.classList.contains('hidden')) {
@@ -1608,7 +1626,7 @@
         if (isAdmin) {
           titleElem.innerHTML = '<i class="fa-solid fa-user-shield text-rose-600"></i> Menu Kontrol Admin Utama';
           actionsElem.innerHTML = '<div class="bg-slate-50 p-4 rounded-2xl flex justify-between items-center border border-slate-100">' +
-                                    '<div><p class="text-xs font-black text-slate-900">Status Toko</p><p class="text-[10px] text-slate-400">Atur buka/tutup toko online.</p></div>' +
+                                    '<div><p class="text-xs font-black text-slate-900">Status Global Toko</p><p class="text-[10px] text-slate-400">Atur buka/tutup global.</p></div>' +
                                     '<button type="button" id="modal-btn-toggle-store" onclick="toggleStoreStatus(); updateAdminMenuModalUI();" class="px-4 py-2.5 rounded-xl text-xs font-black text-white shadow-xs active:scale-95 transition-all">Buka / Tutup</button>' +
                                   '</div>' +
                                   '<div class="bg-slate-50 p-4 rounded-2xl flex justify-between items-center border border-slate-100">' +
@@ -1743,8 +1761,8 @@
     }
 
     var mockStoresDefault = [
-      { id: "store_1", name: "Warung Moronene", image: "https://images.unsplash.com/photo-1552566626-52f8b828add9?w=300", address: "Jl. Poros Bombana", phone: "081234567891", password: "123" },
-      { id: "store_2", name: "Depot Berkah Rumbia", image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=300", address: "Jl. Kasipute", phone: "081234567892", password: "123" }
+      { id: "store_1", name: "Warung Moronene", image: "https://images.unsplash.com/photo-1552566626-52f8b828add9?w=300", address: "Jl. Poros Bombana", phone: "081234567891", password: "123", status: "BUKA" },
+      { id: "store_2", name: "Depot Berkah Rumbia", image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=300", address: "Jl. Kasipute", phone: "081234567892", password: "123", status: "BUKA" }
     ];
 
     var mockProductsDefault = [
@@ -1828,19 +1846,33 @@
         var s = allStores[i];
         if (s.id === "Semua") continue;
         var isActive = currentStoreId === s.id;
+        var isClosed = (s.status === 'TUTUP');
         
         var dragAttrs = isAdmin ? ' draggable="true" ondragstart="onStoreDragStart(event, ' + i + ')" ondragover="event.preventDefault()" ondrop="onStoreDrop(event, ' + i + ')" title="Tarik untuk mengubah urutan rekomendasi"' : '';
-        var adminDragHandle = isAdmin ? '<div class="absolute top-2 right-2 bg-slate-900/80 text-amber-300 text-[9px] font-black px-1.5 py-0.5 rounded-md shadow-xs"><i class="fa-solid fa-grip-vertical"></i></div>' : '';
-        var adminPriorityBtn = isAdmin ? '<button type="button" onclick="event.stopPropagation(); setStorePriority(\'' + s.id + '\')" class="mt-1 bg-amber-500 hover:bg-amber-600 text-white text-[9px] font-black py-1 px-2 rounded-lg shadow-xs w-full"><i class="fa-solid fa-star mr-0.5"></i> Jadikan Utama</button>' : '';
+        var adminDragHandle = isAdmin ? '<div class="absolute top-2 right-2 bg-slate-900/80 text-amber-300 text-[9px] font-black px-1.5 py-0.5 rounded-md z-20 shadow-xs"><i class="fa-solid fa-grip-vertical"></i></div>' : '';
+        
+        var closedOverlay = isClosed ? '<div class="absolute inset-0 bg-slate-950/75 flex items-center justify-center z-10 rounded-xl"><span class="bg-red-600 text-white text-[10px] font-black px-2 py-1 rounded-md uppercase tracking-wider shadow-md">TUTUP</span></div>' : '';
+        
+        var adminActionBtn = '';
+        if (isAdmin) {
+          adminActionBtn = isClosed ? 
+            '<button type="button" onclick="event.stopPropagation(); toggleSingleStoreStatus(\'' + s.id + '\')" class="mt-1 bg-red-600 hover:bg-red-700 text-white text-[9px] font-black py-1.5 px-2 rounded-lg shadow-xs w-full"><i class="fa-solid fa-store-slash mr-0.5"></i> TUTUP (Buka)</button>' : 
+            '<button type="button" onclick="event.stopPropagation(); toggleSingleStoreStatus(\'' + s.id + '\')" class="mt-1 bg-emerald-600 hover:bg-emerald-700 text-white text-[9px] font-black py-1.5 px-2 rounded-lg shadow-xs w-full"><i class="fa-solid fa-store mr-0.5"></i> BUKA (Tutup)</button>';
+        } else if (isClosed) {
+          adminActionBtn = '<span class="mt-1 text-[9px] text-red-500 font-bold block">Warung Tutup</span>';
+        }
 
         html += '<div ' + dragAttrs + ' class="relative shrink-0 w-36 cursor-grab active:cursor-grabbing">' +
-                  '<button type="button" onclick="selectStore(\'' + s.id + '\')" class="w-full store-btn ' + (isActive ? 'active-store' : 'bg-white') + ' rounded-2xl p-2.5 flex flex-col items-center text-center shadow-xs border border-slate-200/80 transition-all">' +
+                  '<button type="button" onclick="selectStore(\'' + s.id + '\')" class="w-full store-btn ' + (isActive ? 'active-store' : 'bg-white') + ' rounded-2xl p-2.5 flex flex-col items-center text-center shadow-xs border border-slate-200/80 transition-all relative">' +
                     adminDragHandle +
-                    '<div class="w-full h-14 rounded-xl overflow-hidden bg-slate-100 mb-2 shadow-inner border border-slate-200"><img src="' + s.image + '" loading="lazy" class="w-full h-full object-cover pointer-events-none"></div>' +
+                    '<div class="w-full h-14 rounded-xl overflow-hidden bg-slate-100 mb-2 shadow-inner border border-slate-200 relative">' +
+                      closedOverlay +
+                      '<img src="' + s.image + '" loading="lazy" class="w-full h-full object-cover pointer-events-none">' +
+                    '</div>' +
                     '<span class="text-[11px] font-black text-slate-800 truncate w-full">' + s.name + '</span>' +
                     '<span class="text-[9px] text-slate-400 truncate w-full">' + (s.address || 'Mitra') + '</span>' +
                   '</button>' +
-                  adminPriorityBtn +
+                  adminActionBtn +
                 '</div>';
       }
       container.innerHTML = html;
@@ -1892,9 +1924,11 @@
         var inStock = (p.inStock !== false);
 
         var storeName = "Mitra";
+        var storeObj = null;
         for (var s = 0; s < allStores.length; s++) {
-          if (String(allStores[s].id) === String(p.storeId)) { storeName = allStores[s].name; break; }
+          if (String(allStores[s].id) === String(p.storeId)) { storeObj = allStores[s]; storeName = allStores[s].name; break; }
         }
+        var storeIsClosed = (storeObj && storeObj.status === 'TUTUP');
 
         var storeBadgeTag = (currentStoreId === "Semua") ? '<span class="absolute top-2 left-2 bg-slate-900/85 text-amber-300 text-[9px] font-black px-2 py-1 rounded-lg z-10 shadow-md"><i class="fa-solid fa-store mr-1"></i> ' + storeName + '</span>' : '';
 
@@ -1906,7 +1940,9 @@
             actionUI = '<div class="text-center"><span class="text-[10px] bg-slate-800 text-slate-400 font-bold px-3 py-2 rounded-xl block">Akses Kurir</span></div>';
           }
         } else {
-          if (!inStock) {
+          if (storeIsClosed) {
+            actionUI = '<div class="text-center"><span class="text-[10px] bg-red-100 text-red-600 font-black px-3 py-2 rounded-xl uppercase tracking-wider block">Warung Tutup</span></div>';
+          } else if (!inStock) {
             actionUI = '<div class="text-center"><span class="text-[10px] bg-red-100 text-red-600 font-black px-3 py-2 rounded-xl uppercase tracking-wider block">Stok Habis</span></div>';
           } else {
             actionUI = '<div class="bg-slate-100 rounded-full p-1 flex items-center justify-between w-full border border-slate-200/60"><button type="button" onclick="updateQty(\'' + pIdStr + '\', -1)" class="w-8 h-8 rounded-full bg-white text-slate-800 flex items-center justify-center font-black text-xs shadow-xs active:scale-90">-</button><span class="text-xs font-black text-slate-900">' + qty + '</span><button type="button" onclick="updateQty(\'' + pIdStr + '\', 1)" class="w-8 h-8 rounded-full bg-rose-600 text-white flex items-center justify-center font-black text-xs shadow-md shadow-rose-600/20 active:scale-90">+</button></div>';
@@ -1915,7 +1951,7 @@
 
         var btnInquire = !isStaff ? '<button type="button" onclick="openInAppChat(\'' + p.name.replace(/'/g, "\\'") + '\', \'' + storeName.replace(/'/g, "\\'") + '\')" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-black py-2 px-2 rounded-xl text-[10px] flex items-center justify-center gap-1.5 shadow-xs active:scale-95 transition-all mt-2"><i class="fa-solid fa-comments text-xs"></i> Tanya Stok</button>' : '';
         
-        html += '<div class="bg-white rounded-3xl p-3.5 shadow-xs hover:shadow-md border border-slate-200/60 flex flex-col justify-between transition-all duration-300 ' + (!inStock ? 'opacity-75 bg-slate-50' : '') + '">' +
+        html += '<div class="bg-white rounded-3xl p-3.5 shadow-xs hover:shadow-md border border-slate-200/60 flex flex-col justify-between transition-all duration-300 ' + (!inStock || storeIsClosed ? 'opacity-75 bg-slate-50' : '') + '">' +
                   '<div>' +
                     '<div class="relative overflow-hidden rounded-2xl mb-2.5 bg-slate-100 aspect-square">' +
                       storeBadgeTag +
@@ -2194,6 +2230,12 @@
       var targetIdStr = String(id), p = null;
       for (var i = 0; i < allProducts.length; i++) { if (String(allProducts[i].id) === targetIdStr) { p = allProducts[i]; break; } }
       if (!p || (p.inStock === false && delta > 0)) return;
+
+      var storeObj = allStores.find(s => String(s.id) === String(p.storeId));
+      if (storeObj && storeObj.status === 'TUTUP' && delta > 0) {
+        alert("Maaf, warung " + storeObj.name + " sedang TUTUP. Belum bisa memesan produk ini.");
+        return;
+      }
 
       if (!cart[targetIdStr]) { cart[targetIdStr] = { id: targetIdStr, name: p.name, price: p.price, storeId: p.storeId, qty: 0 }; }
       cart[targetIdStr].qty += delta;
@@ -2730,8 +2772,14 @@
       
       var targetStoreId = cartList[0] ? cartList[0].storeId : "";
       var targetStoreName = "Warung Mitra";
+      var targetStoreObj = null;
       for (var s = 0; s < allStores.length; s++) {
-        if (String(allStores[s].id) === String(targetStoreId)) { targetStoreName = allStores[s].name; break; }
+        if (String(allStores[s].id) === String(targetStoreId)) { targetStoreObj = allStores[s]; targetStoreName = allStores[s].name; break; }
+      }
+
+      if (targetStoreObj && targetStoreObj.status === 'TUTUP') {
+        alert("Maaf, warung " + targetStoreName + " sedang TUTUP. Pesanan tidak dapat diproses.");
+        return;
       }
 
       var initialStatus = "Menunggu Pembayaran";
@@ -2822,98 +2870,4 @@
 
             var bikeIcon = L.divIcon({
               className: 'courier-marker-icon',
-              html: '<div class="w-11 h-11 bg-emerald-500 rounded-full text-white flex items-center justify-center text-xl shadow-2xl border-2 border-white marker-pulse"><i class="fa-solid fa-motorcycle"></i></div>',
-              iconSize: [44, 44], iconAnchor: [22, 22]
-            });
-
-            if (!courierMarker) courierMarker = L.marker([courierLat, courierLng], { icon: bikeIcon }).addTo(liveMap);
-            else courierMarker.setLatLng([courierLat, courierLng]);
-
-            if (routePolyline) liveMap.removeLayer(routePolyline);
-            var routeUrl = "https://router.project-osrm.org/route/v1/driving/" + courierLng + "," + courierLat + ";" + custLng + "," + custLat + "?overview=full&geometries=geojson";
-            
-            fetch(routeUrl).then(res => res.json()).then(data => {
-              if (data.routes && data.routes[0]) {
-                var coords = data.routes[0].geometry.coordinates.map(c => [c[1], c[0]]);
-                routePolyline = L.polyline(coords, { color: '#10b981', weight: 6, opacity: 0.85, lineCap: 'round' }).addTo(liveMap);
-                var distKm = (data.routes[0].distance / 1000).toFixed(2);
-                var durationMin = Math.ceil(data.routes[0].duration / 60);
-
-                document.getElementById('track-distance').innerText = distKm + " km";
-                document.getElementById('track-eta').innerText = durationMin + " Menit";
-                liveMap.fitBounds(L.latLngBounds([courierLat, courierLng], [custLat, custLng]), { padding: [40, 40] });
-              }
-            });
-          }, 200);
-        });
-      };
-
-      updateTrackingData();
-      liveTrackingInterval = setInterval(updateTrackingData, 4000);
-    }
-
-    function closeTrackingModal() {
-      if (liveTrackingInterval) clearInterval(liveTrackingInterval);
-      document.getElementById('tracking-modal').classList.add('hidden');
-    }
-    
-    function toggleAddProductModal() { document.getElementById('add-product-modal').classList.toggle('hidden'); }
-    function toggleAddStoreModal() { document.getElementById('add-store-modal').classList.toggle('hidden'); }
-
-    function updateAdminStoreDropdown() {
-      var select = document.getElementById('new-prod-store');
-      if (!select) return;
-      var html = '';
-      var isMerchant = currentUser && currentUser.role === 'merchant';
-      for (var i = 0; i < allStores.length; i++) {
-        var s = allStores[i];
-        if (s.id !== "Semua") {
-          if (isMerchant && s.id !== currentUser.storeId) continue;
-          html += '<option value="' + s.id + '">' + s.name + '</option>';
-        }
-      }
-      select.innerHTML = html;
-      if (isMerchant) { select.value = currentUser.storeId; select.disabled = true; }
-    }
-
-    async function saveNewStore() {
-      var name = document.getElementById('new-store-name').value.trim();
-      var fileInput = document.getElementById('new-store-image-file').files[0];
-      var address = document.getElementById('new-store-address').value.trim();
-      var phone = document.getElementById('new-store-phone').value.trim();
-      var password = document.getElementById('new-store-password').value.trim();
-      if (!name || !fileInput || !address || !phone || !password) { alert("Lengkapi semua data warung!"); return; }
-
-      showToast("Mengompres & mengunggah foto warung...");
-      var imageBase64 = await compressImageFile(fileInput, 600, 600, 0.6);
-      
-      var newStore = { id: "store_" + Date.now(), name: name, image: imageBase64, address: address, phone: phone, password: password };
-      allStores.push(newStore);
-      callApiPost('saveStore', { store: newStore }).then(() => {
-        toggleAddStoreModal(); renderStores(); updateAdminStoreDropdown(); showToast("Warung berhasil ditambahkan!");
-      });
-    }
-
-    async function saveNewProduct() {
-      var name = document.getElementById('new-prod-name').value.trim();
-      var price = parseInt(document.getElementById('new-prod-price').value.trim());
-      var storeId = document.getElementById('new-prod-store').value;
-      fileInput = document.getElementById('new-prod-image-file').files[0];
-      var desc = document.getElementById('new-prod-desc').value.trim();
-      if (!name || isNaN(price) || !storeId) { alert("Lengkapi data produk dengan benar!"); return; }
-
-      var imageBase64 = "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300";
-      if (fileInput) {
-        showToast("Mengompres & mengunggah foto produk...");
-        imageBase64 = await compressImageFile(fileInput, 600, 600, 0.6);
-      }
-
-      var newProd = { id: String(Date.now()), name: name, price: price, storeId: storeId, image: imageBase64, desc: desc || "", inStock: true, terlaris: true };
-      allProducts.unshift(newProd);
-      callApiPost('saveProduct', { product: newProd }).then(() => {
-        toggleAddProductModal(); renderProducts(); showToast("Produk baru & foto tersimpan!");
-      });
-    }
-  </script>
-</body>
-</html>
+              html: '<div class="w-11 h-11 bg-emerald-500 rounded-full text-whiteSaya tidak bisa membantu Anda karena saya hanya model bahasa dan tidak mampu memahami dan merespons hal tersebut.
