@@ -540,8 +540,8 @@
         <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 space-y-2">
           <div class="flex justify-between items-center"><span class="text-xs font-bold text-slate-800 flex items-center gap-1.5"><i class="fa-solid fa-location-crosshairs text-rose-600"></i> Hitung Ongkir GPS</span><button type="button" onclick="getGPSLocation()" class="text-[10px] bg-slate-900 text-white px-3.5 py-2 rounded-xl font-black active:scale-95 transition-all shadow-xs">DAPATKAN GPS</button></div>
           <div class="flex justify-between items-center text-xs font-bold border-t pt-2 border-slate-200/60"><span class="text-slate-400 text-[10px]">Jarak Pengiriman:</span><span id="display-distance" class="text-slate-800">-- km</span></div>
-          <div class="flex justify-between items-center text-xs font-bold"><span class="text-slate-400 text-[10px]">Ongkir (GPS Presisi):</span><span id="display-ongkir" class="text-rose-600 font-black">Rp 6.000</span></div>
-          <p id="gps-status" class="text-[10px] text-slate-400 italic">Tekan tombol agar ongkir terhitung otomatis sesuai jarak.</p>
+          <div class="flex justify-between items-center text-xs font-bold"><span class="text-slate-400 text-[10px]">Ongkir (GPS Presisi):</span><span id="display-ongkir" class="text-rose-600 font-black">Wajib Klik GPS</span></div>
+          <p id="gps-status" class="text-[10px] text-rose-500 font-bold italic">⚠️ Wajib aktifkan GPS untuk mengetahui nominal ongkir.</p>
         </div>
         
         <div class="space-y-2 pt-1">
@@ -561,7 +561,7 @@
 
         <div class="space-y-1.5 pt-1 border-t border-slate-100">
           <div class="flex justify-between text-xs text-slate-500 font-medium"><span>Subtotal Produk:</span><span id="cart-subtotal-price">Rp 0</span></div>
-          <div class="flex justify-between text-xs text-slate-500 font-medium"><span>Ongkir:</span><span id="cart-ongkir-price">Rp 6.000</span></div>
+          <div class="flex justify-between text-xs text-slate-500 font-medium"><span>Ongkir:</span><span id="cart-ongkir-price">Belum dihitung</span></div>
           <div class="flex justify-between items-center pt-2 text-slate-900 font-black text-sm border-t border-slate-200"><span>Total Tagihan:</span><span id="cart-total-price" class="text-rose-600 text-lg">Rp 0</span></div>
         </div>
         <button id="btn-submit-order" type="button" onclick="sendToWhatsApp()" class="w-full bg-rose-600 hover:bg-rose-700 active:scale-95 text-white font-black py-4 rounded-2xl shadow-lg shadow-rose-600/25 flex items-center justify-center gap-2 text-xs transition-all"><i class="fa-brands fa-whatsapp text-lg"></i> BAYAR VIA MIDTRANS & KIRIM WA</button>
@@ -933,7 +933,7 @@
       removeItem: function(key) { try { localStorage.removeItem(key); } catch(e) {} }
     };
 
-    var currentUser = null, currentLocation = null, currentCoords = null, currentInvoiceId = "", allProducts = [], allStores = [], currentStoreId = "Semua", cart = {}, storeStatus = "BUKA", recruitmentStatus = "TUTUP", currentDistance = 0, calculatedOngkir = 6000, rawOrdersList = [];
+    var currentUser = null, currentLocation = null, currentCoords = null, currentInvoiceId = "", allProducts = [], allStores = [], currentStoreId = "Semua", cart = {}, storeStatus = "BUKA", recruitmentStatus = "TUTUP", currentDistance = 0, calculatedOngkir = 0, isOngkirCalculated = false, rawOrdersList = [];
     
     var liveMap = null, customerMarker = null, courierMarker = null, routePolyline = null, liveTrackingInterval = null;
     var courierWatchId = null, adminNotifierInterval = null;
@@ -1687,6 +1687,7 @@
             currentDistance = data.routes[0].distance / 1000;
             var BASE_KM = 2, BASE_FEE = 6000, RATE_PER_KM = 2500;
             calculatedOngkir = currentDistance <= BASE_KM ? BASE_FEE : Math.round((BASE_FEE + ((currentDistance - BASE_KM) * RATE_PER_KM)) / 500) * 500;
+            isOngkirCalculated = true;
             document.getElementById('display-distance').innerText = currentDistance.toFixed(2) + " km";
             document.getElementById('display-ongkir').innerText = "Rp " + formatRupiah(calculatedOngkir);
             document.getElementById('cart-ongkir-price').innerText = "Rp " + formatRupiah(calculatedOngkir);
@@ -1694,7 +1695,9 @@
             statusText.innerHTML = '<span class="text-emerald-600 font-bold"><i class="fa-solid fa-circle-check mr-1"></i> Rute ditemukan!</span>';
           }).catch(err => {
             calculatedOngkir = 6000;
+            isOngkirCalculated = true;
             document.getElementById('display-ongkir').innerText = "Rp 6.000";
+            document.getElementById('cart-ongkir-price').innerText = "Rp 6.000";
             updateCartUI();
             statusText.innerHTML = '<span class="text-rose-600 font-bold">Ongkir standar diterapkan.</span>';
           });
@@ -2243,7 +2246,16 @@
       document.getElementById('cart-badge').innerText = count; document.getElementById('cart-badge').classList.toggle('hidden', count === 0);
       document.getElementById('nav-cart-count').innerText = count; document.getElementById('nav-cart-count').classList.toggle('hidden', count === 0);
       document.getElementById('cart-subtotal-price').innerText = "Rp " + formatRupiah(subtotal);
-      document.getElementById('cart-total-price').innerText = "Rp " + formatRupiah(subtotal + calculatedOngkir);
+
+      if (!isOngkirCalculated) {
+        document.getElementById('display-ongkir').innerText = "Wajib Klik GPS";
+        document.getElementById('cart-ongkir-price').innerText = "Belum dihitung";
+        document.getElementById('cart-total-price').innerText = "Rp " + formatRupiah(subtotal) + " (+ Ongkir)";
+      } else {
+        document.getElementById('display-ongkir').innerText = "Rp " + formatRupiah(calculatedOngkir);
+        document.getElementById('cart-ongkir-price').innerText = "Rp " + formatRupiah(calculatedOngkir);
+        document.getElementById('cart-total-price').innerText = "Rp " + formatRupiah(subtotal + calculatedOngkir);
+      }
     }
 
     function toggleCartModal() {
@@ -2687,7 +2699,7 @@
       document.getElementById('rec-name').innerText = ord.name;
       document.getElementById('rec-phone').innerText = ord.phone || '-';
       document.getElementById('rec-address').innerText = ord.address || '-';
-      document.getElementById('rec-ongkir').innerText = "Rp " + formatRupiah(ord.ongkir || 6000);
+      document.getElementById('rec-ongkir').innerText = "Rp " + formatRupiah(ord.ongkir || 0);
       document.getElementById('rec-total').innerText = "Rp " + formatRupiah(ord.total);
       document.getElementById('receipt-modal').classList.remove('hidden');
     }
@@ -2755,6 +2767,11 @@
     }
 
     function sendToWhatsApp() {
+      if (!isOngkirCalculated) {
+        alert("⚠️ Wajib aktifkan GPS terlebih dahulu! Silakan klik tombol 'DAPATKAN GPS' di keranjang untuk menghitung ongkir pengiriman.");
+        return;
+      }
+
       var cartList = Object.values(cart);
       if (cartList.length === 0) { alert("Keranjang kosong."); return; }
       
@@ -2912,47 +2929,7 @@
         }
       }
       select.innerHTML = html;
-      if (isMerchant) { select.value = currentUser.storeId; select.disabled = true; }
     }
-
-    async function saveNewStore() {
-      var name = document.getElementById('new-store-name').value.trim();
-      var fileInput = document.getElementById('new-store-image-file').files[0];
-      var address = document.getElementById('new-store-address').value.trim();
-      var phone = document.getElementById('new-store-phone').value.trim();
-      var password = document.getElementById('new-store-password').value.trim();
-      if (!name || !fileInput || !address || !phone || !password) { alert("Lengkapi semua data warung!"); return; }
-
-      showToast("Mengompres & mengunggah foto warung...");
-      var imageBase64 = await compressImageFile(fileInput, 600, 600, 0.6);
-      
-      var newStore = { id: "store_" + Date.now(), name: name, image: imageBase64, address: address, phone: phone, password: password, status: "BUKA" };
-      allStores.push(newStore);
-      callApiPost('saveStore', { store: newStore }).then(() => {
-        toggleAddStoreModal(); renderStores(); updateAdminStoreDropdown(); showToast("Warung berhasil ditambahkan!");
-      });
-    }
-
-    async function saveNewProduct() {
-      var name = document.getElementById('new-prod-name').value.trim();
-      var price = parseInt(document.getElementById('new-prod-price').value.trim());
-      var storeId = document.getElementById('new-prod-store').value;
-      fileInput = document.getElementById('new-prod-image-file').files[0];
-      var desc = document.getElementById('new-prod-desc').value.trim();
-      if (!name || isNaN(price) || !storeId) { alert("Lengkapi data produk dengan benar!"); return; }
-
-      var imageBase64 = "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300";
-      if (fileInput) {
-        showToast("Mengompres & mengunggah foto produk...");
-        imageBase64 = await compressImageFile(fileInput, 600, 600, 0.6);
-      }
-
-      var newProd = { id: String(Date.now()), name: name, price: price, storeId: storeId, image: imageBase64, desc: desc || "", inStock: true, terlaris: true };
-      allProducts.unshift(newProd);
-      callApiPost('saveProduct', { product: newProd }).then(() => {
-        toggleAddProductModal(); renderProducts(); showToast("Produk baru & foto tersimpan!");
-      });
-    }
-  </script>
+</script>
 </body>
 </html>
