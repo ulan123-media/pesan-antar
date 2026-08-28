@@ -51,12 +51,12 @@
   <!-- AUTH SCREEN - TEMA KHAS MORONENE BOMBANA -->
   <div id="auth-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950 p-4 overflow-y-auto font-['Plus_Jakarta_Sans']">
     
-    <!-- Background Overlay Alam & Budaya Moronene -->
-    <div class="absolute inset-0 z-0 opacity-40 bg-cover bg-center pointer-events-none" style="background-image: url('kurir-moronene.jpg');"></div>
-    <div class="absolute inset-0 z-0 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent"></div>
+    <!-- Background Overlay Alam & Budaya Moronene (Jelas Terlihat) -->
+    <div class="absolute inset-0 z-0 bg-cover bg-center pointer-events-none" style="background-image: url('kurir-moronene.jpg');"></div>
+    <div class="absolute inset-0 z-0 bg-gradient-to-t from-slate-950/70 via-slate-950/30 to-transparent"></div>
 
-    <!-- Container Utama Login Card (Dibuat Transparan & Input Tetap Solid) -->
-    <div class="relative z-10 w-full max-w-md bg-slate-900/40 backdrop-blur-md border border-amber-500/30 rounded-[32px] p-6 sm:p-8 shadow-2xl text-slate-100 my-auto">
+    <!-- Container Utama Login Card (Sangat Transparan, Input Tetap Solid) -->
+    <div class="relative z-10 w-full max-w-md bg-slate-950/30 backdrop-blur-sm border border-amber-500/30 rounded-[32px] p-6 sm:p-8 shadow-2xl text-slate-100 my-auto">
       
       <!-- Top Navigation / Switch Portal -->
       <div class="flex justify-between items-center w-full pb-4 mb-6 border-b border-slate-800/80">
@@ -89,14 +89,14 @@
           <label class="text-[11px] font-extrabold text-slate-300 uppercase tracking-wider block mb-1">Nomor WhatsApp *</label>
           <div class="relative flex items-center">
             <i class="fa-brands fa-whatsapp absolute left-4 text-amber-400 text-base"></i>
-            <input type="tel" id="login-phone" placeholder="081234567890" class="w-full bg-slate-950/60 rounded-2xl pl-11 pr-4 py-3.5 text-xs border border-slate-700 focus:outline-none focus:border-amber-500 font-medium text-white placeholder-slate-500">
+            <input type="tel" id="login-phone" placeholder="081234567890" class="w-full bg-slate-950/80 rounded-2xl pl-11 pr-4 py-3.5 text-xs border border-slate-700 focus:outline-none focus:border-amber-500 font-medium text-white placeholder-slate-500">
           </div>
         </div>
         <div>
           <label class="text-[11px] font-extrabold text-slate-300 uppercase tracking-wider block mb-1">Password *</label>
           <div class="relative flex items-center">
             <i class="fa-solid fa-lock absolute left-4 text-amber-400 text-sm"></i>
-            <input type="password" id="login-password" placeholder="••••••••" class="w-full bg-slate-950/60 rounded-2xl pl-11 pr-4 py-3.5 text-xs border border-slate-700 focus:outline-none focus:border-amber-500 font-medium text-white placeholder-slate-500">
+            <input type="password" id="login-password" placeholder="••••••••" class="w-full bg-slate-950/80 rounded-2xl pl-11 pr-4 py-3.5 text-xs border border-slate-700 focus:outline-none focus:border-amber-500 font-medium text-white placeholder-slate-500">
           </div>
         </div>
         <div class="flex justify-end text-[11px]">
@@ -112,19 +112,19 @@
         <div id="reg-step-1" class="space-y-3">
           <div>
             <label class="text-[10px] font-extrabold text-slate-300 uppercase tracking-wider block mb-1">Nama Lengkap *</label>
-            <input type="text" id="reg-name" placeholder="Nama Anda" class="w-full bg-slate-950/60 rounded-2xl px-4 py-3 text-xs border border-slate-700 focus:outline-none focus:border-amber-500 font-medium text-white placeholder-slate-500">
+            <input type="text" id="reg-name" placeholder="Nama Anda" class="w-full bg-slate-950/80 rounded-2xl px-4 py-3 text-xs border border-slate-700 focus:outline-none focus:border-amber-500 font-medium text-white placeholder-slate-500">
           </div>
           <div>
             <label class="text-[10px] font-extrabold text-slate-300 uppercase tracking-wider block mb-1">Nomor WhatsApp *</label>
-            <input type="tel" id="reg-phone" placeholder="081234567890" class="w-full bg-slate-950/60 rounded-2xl px-4 py-3 text-xs border border-slate-700 focus:outline-none focus:border-amber-500 font-medium text-white placeholder-slate-500">
+            <input type="tel" id="reg-phone" placeholder="081234567890" class="w-full bg-slate-950/80 rounded-2xl px-4 py-3 text-xs border border-slate-700 focus:outline-none focus:border-amber-500 font-medium text-white placeholder-slate-500">
           </div>
           <div>
             <label class="text-[10px] font-extrabold text-slate-300 uppercase tracking-wider block mb-1">Alamat Lengkap *</label>
-            <textarea id="reg-address" rows="2" placeholder="Alamat rumah..." class="w-full bg-slate-950/60 rounded-2xl px-4 py-2.5 text-xs border border-slate-700 focus:outline-none focus:border-amber-500 font-medium text-white placeholder-slate-500"></textarea>
+            <textarea id="reg-address" rows="2" placeholder="Alamat rumah..." class="w-full bg-slate-950/80 rounded-2xl px-4 py-2.5 text-xs border border-slate-700 focus:outline-none focus:border-amber-500 font-medium text-white placeholder-slate-500"></textarea>
           </div>
           <div>
             <label class="text-[10px] font-extrabold text-slate-300 uppercase tracking-wider block mb-1">Password *</label>
-            <input type="password" id="reg-password" placeholder="Password akun" class="w-full bg-slate-950/60 rounded-2xl px-4 py-3 text-xs border border-slate-700 focus:outline-none focus:border-amber-500 font-medium text-white placeholder-slate-500">
+            <input type="password" id="reg-password" placeholder="Password akun" class="w-full bg-slate-950/80 rounded-2xl px-4 py-3 text-xs border border-slate-700 focus:outline-none focus:border-amber-500 font-medium text-white placeholder-slate-500">
           </div>
           <button type="button" onclick="sendCustomerOtp()" class="w-full bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600 text-white font-black py-3.5 rounded-2xl shadow-lg shadow-amber-600/25 transition-all text-xs tracking-wider flex items-center justify-center gap-2 mt-1 border border-amber-500/40">
             <i class="fa-solid fa-paper-plane text-base"></i> KIRIM KODE OTP WHATSAPP
@@ -138,7 +138,7 @@
           </div>
           <div>
             <label class="text-[10px] font-extrabold text-slate-300 uppercase tracking-wider block mb-1">Masukkan Kode OTP (4 Digit) *</label>
-            <input type="text" id="reg-otp-input" placeholder="Contoh: 4829" maxlength="4" class="w-full bg-slate-950/60 rounded-2xl px-4 py-3 text-center tracking-widest text-lg font-black border border-slate-700 focus:outline-none focus:border-emerald-500 text-white">
+            <input type="text" id="reg-otp-input" placeholder="Contoh: 4829" maxlength="4" class="w-full bg-slate-950/80 rounded-2xl px-4 py-3 text-center tracking-widest text-lg font-black border border-slate-700 focus:outline-none focus:border-emerald-500 text-white">
           </div>
           <button type="button" onclick="verifyAndRegisterCustomer()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black py-3.5 rounded-2xl shadow-lg shadow-emerald-600/25 transition-all text-xs tracking-wider flex items-center justify-center gap-2">
             <i class="fa-solid fa-check-circle text-base"></i> VERIFIKASI & DAFTAR AKUN
