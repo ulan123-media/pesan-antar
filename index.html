@@ -48,100 +48,118 @@
     <span id="toast-message" class="truncate">Barang ditambahkan!</span>
   </div>
 
-  <div id="auth-screen" class="fixed inset-0 z-50 flex flex-col justify-between bg-white p-6 overflow-y-auto max-w-md mx-auto shadow-2xl">
-    <div class="flex justify-between items-center w-full pt-2">
-      <div class="flex items-center gap-1.5 text-[11px] font-extrabold text-slate-700 bg-slate-100 px-3.5 py-2 rounded-full shadow-xs">
-        <i class="fa-solid fa-user text-rose-600 text-xs"></i> Portal Konsumen
-      </div>
-      <button type="button" onclick="openStaffAuthModal()" class="flex items-center gap-1.5 text-[11px] font-extrabold text-slate-600 bg-slate-100 hover:bg-slate-200 px-3.5 py-2 rounded-full transition-all shadow-xs active:scale-95">
-        <i class="fa-solid fa-store text-amber-600 text-xs"></i> Mitra & Kurir
-      </button>
-    </div>
+  <!-- AUTH SCREEN - TEMA KHAS MORONENE BOMBANA -->
+  <div id="auth-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950 p-4 overflow-y-auto font-['Plus_Jakarta_Sans']">
+    
+    <!-- Background Overlay Alam & Budaya Moronene -->
+    <div class="absolute inset-0 z-0 opacity-40 bg-cover bg-center pointer-events-none" style="background-image: url('https://images.unsplash.com/photo-15902728370372547717?w=1200');"></div>
+    <div class="absolute inset-0 z-0 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent"></div>
 
-    <div class="w-full my-auto py-6">
-      <div class="text-center mb-5">
-        <div class="w-16 h-16 bg-rose-50 border border-rose-100 rounded-3xl flex items-center justify-center mx-auto mb-3 text-rose-600 shadow-inner">
-          <i class="fa-solid fa-store text-2xl"></i>
+    <!-- Container Utama Login Card (Glassmorphism Style) -->
+    <div class="relative z-10 w-full max-w-md bg-slate-900/85 backdrop-blur-xl border border-amber-500/30 rounded-[32px] p-6 sm:p-8 shadow-2xl text-slate-100 my-auto">
+      
+      <!-- Top Navigation / Switch Portal -->
+      <div class="flex justify-between items-center w-full pb-4 mb-6 border-b border-slate-800">
+        <div class="flex items-center gap-1.5 text-[11px] font-extrabold text-amber-300 bg-amber-500/10 border border-amber-500/20 px-3.5 py-2 rounded-full shadow-xs">
+          <i class="fa-solid fa-feather text-amber-400 text-xs"></i> Budaya Moronene
         </div>
-        <h2 class="text-2xl font-black text-slate-900 tracking-tight">Beli Disini!</h2>
-        <p class="text-slate-400 text-[11px] font-semibold mt-0.5">Silakan masuk atau daftar untuk mulai belanja</p>
+        <button type="button" onclick="openStaffAuthModal()" class="flex items-center gap-1.5 text-[11px] font-extrabold text-slate-300 bg-slate-800/80 hover:bg-slate-700 px-3.5 py-2 rounded-full transition-all shadow-xs active:scale-95 border border-slate-700">
+          <i class="fa-solid fa-store text-amber-400 text-xs"></i> Mitra & Kurir
+        </button>
       </div>
 
-      <div class="flex bg-slate-100 p-1 rounded-2xl text-xs font-bold mb-4 border border-slate-200/60">
-        <button type="button" id="subtab-consumer-login" onclick="switchConsumerMode('login')" class="flex-1 py-2.5 rounded-xl bg-rose-600 text-white shadow-xs transition-all text-center">Masuk</button>
-        <button type="button" id="subtab-consumer-register" onclick="switchConsumerMode('register')" class="flex-1 py-2.5 rounded-xl text-slate-600 transition-all text-center">Daftar</button>
+      <!-- Header Logo & Judul -->
+      <div class="text-center mb-6">
+        <div class="w-16 h-16 bg-gradient-to-br from-amber-500/20 to-rose-500/20 border border-amber-500/40 rounded-3xl flex items-center justify-center mx-auto mb-3 text-amber-400 shadow-inner">
+          <i class="fa-solid fa-landmark text-2xl"></i>
+        </div>
+        <h2 class="text-2xl font-black text-white tracking-tight">Beli Disini!</h2>
+        <p class="text-amber-200/70 text-[11px] font-semibold mt-0.5">Portal Resmi Belanja & Kurir Khas Bombana Sultra</p>
       </div>
 
-      <div id="consumer-login-box" class="space-y-3.5">
+      <!-- Tab Pilihan Masuk / Daftar Konsumen -->
+      <div class="flex bg-slate-800/90 p-1 rounded-2xl text-xs font-bold mb-5 border border-slate-700/60">
+        <button type="button" id="subtab-consumer-login" onclick="switchConsumerMode('login')" class="flex-1 py-2.5 rounded-xl bg-amber-600 text-white shadow-xs transition-all text-center">Masuk</button>
+        <button type="button" id="subtab-consumer-register" onclick="switchConsumerMode('register')" class="flex-1 py-2.5 rounded-xl text-slate-400 transition-all text-center">Daftar</button>
+      </div>
+
+      <!-- Box Form Masuk (Login) -->
+      <div id="consumer-login-box" class="space-y-4">
         <div>
-          <label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Nomor WhatsApp *</label>
+          <label class="text-[11px] font-extrabold text-slate-300 uppercase tracking-wider block mb-1">Nomor WhatsApp *</label>
           <div class="relative flex items-center">
-            <i class="fa-brands fa-whatsapp absolute left-4 text-slate-400 text-base"></i>
-            <input type="tel" id="login-phone" placeholder="081234567890" class="w-full bg-slate-50 rounded-2xl pl-11 pr-4 py-3.5 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium">
+            <i class="fa-brands fa-whatsapp absolute left-4 text-amber-400 text-base"></i>
+            <input type="tel" id="login-phone" placeholder="081234567890" class="w-full bg-slate-950/60 rounded-2xl pl-11 pr-4 py-3.5 text-xs border border-slate-700 focus:outline-none focus:border-amber-500 font-medium text-white placeholder-slate-500">
           </div>
         </div>
         <div>
-          <label class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Password *</label>
+          <label class="text-[11px] font-extrabold text-slate-300 uppercase tracking-wider block mb-1">Password *</label>
           <div class="relative flex items-center">
-            <i class="fa-solid fa-lock absolute left-4 text-slate-400 text-sm"></i>
-            <input type="password" id="login-password" placeholder="••••••••" class="w-full bg-slate-50 rounded-2xl pl-11 pr-4 py-3.5 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium">
+            <i class="fa-solid fa-lock absolute left-4 text-amber-400 text-sm"></i>
+            <input type="password" id="login-password" placeholder="••••••••" class="w-full bg-slate-950/60 rounded-2xl pl-11 pr-4 py-3.5 text-xs border border-slate-700 focus:outline-none focus:border-amber-500 font-medium text-white placeholder-slate-500">
           </div>
         </div>
         <div class="flex justify-end text-[11px]">
-          <button type="button" onclick="forgotPassword()" class="text-rose-600 font-bold hover:underline">Lupa Password?</button>
+          <button type="button" onclick="forgotPassword()" class="text-amber-400 font-bold hover:underline">Lupa Password?</button>
         </div>
-        <button type="button" onclick="loginCustomer()" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-black py-4 rounded-2xl shadow-lg shadow-rose-600/25 transition-all text-xs tracking-wider flex items-center justify-center gap-2">
+        <button type="button" onclick="loginCustomer()" class="w-full bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600 text-white font-black py-4 rounded-2xl shadow-lg shadow-amber-600/25 transition-all text-xs tracking-wider flex items-center justify-center gap-2 border border-amber-500/40">
           <i class="fa-solid fa-right-to-bracket text-base"></i> MASUK SEBAGAI KONSUMEN
         </button>
       </div>
 
-      <div id="consumer-register-box" class="space-y-3 hidden">
+      <!-- Box Form Daftar (Register) -->
+      <div id="consumer-register-box" class="space-y-3.5 hidden">
         <div id="reg-step-1" class="space-y-3">
           <div>
-            <label class="text-[10px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Nama Lengkap *</label>
-            <input type="text" id="reg-name" placeholder="Nama Anda" class="w-full bg-slate-50 rounded-2xl px-4 py-3 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium">
+            <label class="text-[10px] font-extrabold text-slate-300 uppercase tracking-wider block mb-1">Nama Lengkap *</label>
+            <input type="text" id="reg-name" placeholder="Nama Anda" class="w-full bg-slate-950/60 rounded-2xl px-4 py-3 text-xs border border-slate-700 focus:outline-none focus:border-amber-500 font-medium text-white placeholder-slate-500">
           </div>
           <div>
-            <label class="text-[10px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Nomor WhatsApp *</label>
-            <input type="tel" id="reg-phone" placeholder="081234567890" class="w-full bg-slate-50 rounded-2xl px-4 py-3 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium">
+            <label class="text-[10px] font-extrabold text-slate-300 uppercase tracking-wider block mb-1">Nomor WhatsApp *</label>
+            <input type="tel" id="reg-phone" placeholder="081234567890" class="w-full bg-slate-950/60 rounded-2xl px-4 py-3 text-xs border border-slate-700 focus:outline-none focus:border-amber-500 font-medium text-white placeholder-slate-500">
           </div>
           <div>
-            <label class="text-[10px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Alamat Lengkap *</label>
-            <textarea id="reg-address" rows="2" placeholder="Alamat rumah..." class="w-full bg-slate-50 rounded-2xl px-4 py-2.5 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium"></textarea>
+            <label class="text-[10px] font-extrabold text-slate-300 uppercase tracking-wider block mb-1">Alamat Lengkap *</label>
+            <textarea id="reg-address" rows="2" placeholder="Alamat rumah..." class="w-full bg-slate-950/60 rounded-2xl px-4 py-2.5 text-xs border border-slate-700 focus:outline-none focus:border-amber-500 font-medium text-white placeholder-slate-500"></textarea>
           </div>
           <div>
-            <label class="text-[10px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Password *</label>
-            <input type="password" id="reg-password" placeholder="Password akun" class="w-full bg-slate-50 rounded-2xl px-4 py-3 text-xs border border-slate-200 focus:outline-none focus:border-rose-600 font-medium">
+            <label class="text-[10px] font-extrabold text-slate-300 uppercase tracking-wider block mb-1">Password *</label>
+            <input type="password" id="reg-password" placeholder="Password akun" class="w-full bg-slate-950/60 rounded-2xl px-4 py-3 text-xs border border-slate-700 focus:outline-none focus:border-amber-500 font-medium text-white placeholder-slate-500">
           </div>
-          <button type="button" onclick="sendCustomerOtp()" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-black py-3.5 rounded-2xl shadow-lg shadow-rose-600/25 transition-all text-xs tracking-wider flex items-center justify-center gap-2 mt-1">
+          <button type="button" onclick="sendCustomerOtp()" class="w-full bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600 text-white font-black py-3.5 rounded-2xl shadow-lg shadow-amber-600/25 transition-all text-xs tracking-wider flex items-center justify-center gap-2 mt-1 border border-amber-500/40">
             <i class="fa-solid fa-paper-plane text-base"></i> KIRIM KODE OTP WHATSAPP
           </button>
         </div>
 
         <div id="reg-step-2" class="space-y-3 hidden">
-          <div class="bg-emerald-50 border border-emerald-200 p-3.5 rounded-2xl text-center">
-            <p class="text-[11px] font-bold text-emerald-800">Kode OTP Telah Dikirim ke WhatsApp Anda!</p>
-            <p class="text-[10px] text-emerald-600 mt-0.5">Silakan cek pesan masuk WhatsApp Anda, lalu masukkan 4 digit kode di bawah ini.</p>
+          <div class="bg-emerald-950/50 border border-emerald-500/30 p-3.5 rounded-2xl text-center">
+            <p class="text-[11px] font-bold text-emerald-300">Kode OTP Telah Dikirim ke WhatsApp Anda!</p>
+            <p class="text-[10px] text-emerald-400/80 mt-0.5">Masukkan 4 digit kode verifikasi di bawah ini.</p>
           </div>
           <div>
-            <label class="text-[10px] font-extrabold text-slate-700 uppercase tracking-wider block mb-1">Masukkan Kode OTP (4 Digit) *</label>
-            <input type="text" id="reg-otp-input" placeholder="Contoh: 4829" maxlength="4" class="w-full bg-slate-50 rounded-2xl px-4 py-3 text-center tracking-widest text-lg font-black border border-slate-200 focus:outline-none focus:border-rose-600">
+            <label class="text-[10px] font-extrabold text-slate-300 uppercase tracking-wider block mb-1">Masukkan Kode OTP (4 Digit) *</label>
+            <input type="text" id="reg-otp-input" placeholder="Contoh: 4829" maxlength="4" class="w-full bg-slate-950/60 rounded-2xl px-4 py-3 text-center tracking-widest text-lg font-black border border-slate-700 focus:outline-none focus:border-emerald-500 text-white">
           </div>
-          <button type="button" onclick="verifyAndRegisterCustomer()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-3.5 rounded-2xl shadow-lg shadow-emerald-600/25 transition-all text-xs tracking-wider flex items-center justify-center gap-2">
+          <button type="button" onclick="verifyAndRegisterCustomer()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black py-3.5 rounded-2xl shadow-lg shadow-emerald-600/25 transition-all text-xs tracking-wider flex items-center justify-center gap-2">
             <i class="fa-solid fa-check-circle text-base"></i> VERIFIKASI & DAFTAR AKUN
           </button>
-          <button type="button" onclick="resetRegStep()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold py-2.5 rounded-2xl text-xs transition-all">
+          <button type="button" onclick="resetRegStep()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 rounded-2xl text-xs transition-all">
             Kembali / Ubah Nomor WhatsApp
           </button>
         </div>
       </div>
 
-      <button type="button" onclick="loginAsGuest()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold py-3.5 rounded-2xl text-xs transition-all border border-slate-200 flex items-center justify-center gap-2 mt-3">
-        <i class="fa-solid fa-eye text-rose-600"></i> LIHAT PRODUK DULU (PENGUNJUNG)
+      <!-- Tombol Masuk Sebagai Pengunjung -->
+      <button type="button" onclick="loginAsGuest()" class="w-full bg-slate-800/80 hover:bg-slate-700 text-slate-200 font-extrabold py-3.5 rounded-2xl text-xs transition-all border border-slate-700 flex items-center justify-center gap-2 mt-4">
+        <i class="fa-solid fa-compass text-amber-400"></i> LIHAT PRODUK DULU (PENGUNJUNG)
       </button>
-    </div>
 
-    <div class="text-center text-[10px] text-slate-400 pb-1">Beli Disini! © 2026 • Powered by Supabase[cite: 1]</div>
+      <!-- Footer Copyright -->
+      <div class="text-center text-[10px] text-slate-500 pt-5 mt-2 border-t border-slate-800">
+        Beli Disini! • Budaya Moronene Bombana Sultra © 2026
+      </div>
+
+    </div>
   </div>
 
   <div id="staff-auth-modal" class="fixed inset-0 bg-slate-900/60 z-50 flex items-end justify-center hidden backdrop-blur-sm transition-all">
@@ -988,65 +1006,6 @@
       startBackgroundNotifier();
       checkPendingCouriersCount();
 
-      // Pengecekan latar belakang setiap 1 detik agar notifikasi dan suara langsung berbunyi instan secara global
-      setInterval(function() {
-        var isStaff = currentUser && (currentUser.role === 'admin' || currentUser.role === 'merchant' || currentUser.role === 'courier');
-        if (isStaff) {
-          callApiGet('getOrders').then(orders => {
-            if (!orders) return;
-            var isAdmin = currentUser.role === 'admin';
-            var isMerchant = currentUser.role === 'merchant';
-            var isCourier = currentUser.role === 'courier';
-
-            if (isAdmin || isMerchant) {
-              var pendingOrdersCount = orders.filter(function(o) {
-                var st = String(o.status || '').toLowerCase();
-                return st.includes('menunggu') || st.includes('belum lunas') || st.includes('qris') || st === 'menunggu acc';
-              }).length;
-
-              if (pendingOrdersCount > 0) {
-                triggerRedRadarIndicator(true, "Pesanan Baru!");
-              } else {
-                triggerRedRadarIndicator(false);
-              }
-
-              if (lastPendingCount === -1) {
-                lastPendingCount = pendingOrdersCount;
-              } else if (pendingOrdersCount > lastPendingCount) {
-                playNotificationSound();
-                showToast("🔔 Pesanan Baru Masuk!", false);
-                if (document.getElementById('view-status') && !document.getElementById('view-status').classList.contains('hidden')) {
-                  renderOrderStatus();
-                }
-              }
-              lastPendingCount = pendingOrdersCount;
-            } 
-            else if (isCourier) {
-              var readyOrdersCount = orders.filter(function(o) {
-                return o.status === 'Di-ACC (Diproses)' && (!o.courierPhone || o.courierPhone === '');
-              }).length;
-
-              if (readyOrdersCount > 0) {
-                triggerRedRadarIndicator(true, "Pesanan Siap Diantar!");
-              } else {
-                triggerRedRadarIndicator(false);
-              }
-
-              if (lastCourierReadyCount === -1) {
-                lastCourierReadyCount = readyOrdersCount;
-              } else if (readyOrdersCount > lastCourierReadyCount) {
-                playNotificationSound();
-                showToast("🔔 Ada Pesanan Siap Diantar Kurir!", false);
-                if (document.getElementById('view-status') && !document.getElementById('view-status').classList.contains('hidden')) {
-                  renderOrderStatus();
-                }
-              }
-              lastCourierReadyCount = readyOrdersCount;
-            }
-          }).catch(err => {});
-        }
-      }, 1000);
-
       var proofInput = document.getElementById('proof-file-input');
       if (proofInput) {
         proofInput.addEventListener('change', function(e) {
@@ -1082,13 +1041,13 @@
 
     function switchConsumerMode(mode) {
       if (mode === 'login') {
-        document.getElementById('subtab-consumer-login').className = "flex-1 py-2.5 rounded-xl bg-rose-600 text-white shadow-xs transition-all text-center";
-        document.getElementById('subtab-consumer-register').className = "flex-1 py-2.5 rounded-xl text-slate-600 transition-all text-center";
+        document.getElementById('subtab-consumer-login').className = "flex-1 py-2.5 rounded-xl bg-amber-600 text-white shadow-xs transition-all text-center";
+        document.getElementById('subtab-consumer-register').className = "flex-1 py-2.5 rounded-xl text-slate-400 transition-all text-center";
         document.getElementById('consumer-login-box').classList.remove('hidden');
         document.getElementById('consumer-register-box').classList.add('hidden');
       } else {
-        document.getElementById('subtab-consumer-register').className = "flex-1 py-2.5 rounded-xl bg-rose-600 text-white shadow-xs transition-all text-center";
-        document.getElementById('subtab-consumer-login').className = "flex-1 py-2.5 rounded-xl text-slate-600 transition-all text-center";
+        document.getElementById('subtab-consumer-register').className = "flex-1 py-2.5 rounded-xl bg-amber-600 text-white shadow-xs transition-all text-center";
+        document.getElementById('subtab-consumer-login').className = "flex-1 py-2.5 rounded-xl text-slate-400 transition-all text-center";
         document.getElementById('consumer-register-box').classList.remove('hidden');
         document.getElementById('consumer-login-box').classList.add('hidden');
       }
@@ -2486,14 +2445,6 @@
         showToast("Permintaan tarik saldo berhasil dikirim!");
         closeWithdrawModal();
         renderOrderStatus(); 
-
-        var waMessage = "Halo Admin, saya *[" + currentUser.name + "]* (" + currentUser.role.toUpperCase() + ") ingin mengajukan *Penarikan Saldo*:\n\n" +
-                        "💰 *Nominal:* Rp " + formatRupiah(amount) + "\n" +
-                        "🏦 *Metode:* " + method + "\n" +
-                        "📋 *Tujuan:* " + accountInfo + "\n\n" +
-                        "Mohon segera diproses ya Admin, terima kasih!";
-
-        window.open("https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(waMessage), '_blank');
       });
     }
 
