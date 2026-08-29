@@ -1539,6 +1539,41 @@
         });
       }
     }
+  async function saveNewStore() {
+  var name = document.getElementById('new-store-name').value.trim();
+  var address = document.getElementById('new-store-address').value.trim();
+  var phone = document.getElementById('new-store-phone').value.trim();
+  var password = document.getElementById('new-store-password').value.trim();
+  var fileInput = document.getElementById('new-store-image-file').files[0];
+
+  if (!name || !address || !phone || !password) {
+    alert("Lengkapi seluruh kolom formulir warung baru!");
+    return;
+  }
+
+  showToast("Mengunggah foto warung...");
+  var imageBase64 = fileInput ? await compressImageFile(fileInput, 600, 600, 0.6) : "https://images.unsplash.com/photo-1552566626-52f8b828add9?w=300";
+  
+  var newStoreId = "store_" + Date.now();
+  var storeData = {
+    id: newStoreId,
+    name: name,
+    image: imageBase64,
+    address: address,
+    phone: phone,
+    password: password
+  };
+
+  callApiPost('saveStore', { store: storeData }).then(res => {
+    if (res && res.status === "Success") {
+      showToast("Warung baru berhasil disimpan!");
+      toggleAddStoreModal();
+      initApp(); // Memuat ulang data toko
+    } else {
+      alert("Gagal menyimpan warung ke database.");
+    }
+  });
+}
 
     async function updateMerchantStorePhoto() {
       var fileInput = document.getElementById('merchant-new-store-photo').files[0];
