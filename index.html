@@ -1574,6 +1574,50 @@
     }
   });
 }
+  async function saveNewProduct() {
+  var name = document.getElementById('new-prod-name').value.trim();
+  var price = parseFloat(document.getElementById('new-prod-price').value);
+  var storeId = document.getElementById('new-prod-store').value;
+  var desc = document.getElementById('new-prod-desc').value.trim();
+  var fileInput = document.getElementById('new-prod-image-file').files[0];
+
+  if (!name || isNaN(price) || !storeId) {
+    alert("Lengkapi Nama Produk, Harga, dan Pilih Warung Mitra!");
+    return;
+  }
+
+  showToast("Mengunggah foto produk...");
+  var imageBase64 = fileInput ? await compressImageFile(fileInput, 600, 600, 0.6) : "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300";
+  
+  var newProdId = "prod_" + Date.now();
+  var productData = {
+    id: newProdId,
+    name: name,
+    price: price,
+    storeId: storeId,
+    image: imageBase64,
+    desc: desc,
+    inStock: true,
+    terlaris: true
+  };
+
+  callApiPost('saveProduct', { product: productData }).then(res => {
+    if (res && res.status === "Success") {
+      showToast("Produk baru berhasil disimpan & disinkronkan!");
+      toggleAddProductModal();
+      
+      // Reset form
+      document.getElementById('new-prod-name').value = '';
+      document.getElementById('new-prod-price').value = '';
+      document.getElementById('new-prod-desc').value = '';
+      document.getElementById('new-prod-image-file').value = '';
+      
+      initApp(); // Memuat ulang daftar produk
+    } else {
+      alert("Gagal menyimpan produk ke database Supabase.");
+    }
+  });
+}
 
     async function updateMerchantStorePhoto() {
       var fileInput = document.getElementById('merchant-new-store-photo').files[0];
