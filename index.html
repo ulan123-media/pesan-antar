@@ -48,14 +48,12 @@
     <span id="toast-message" class="truncate">Barang ditambahkan!</span>
   </div>
 
-  <!-- AUTH SCREEN - TEMA KHAS MORONENE BOMBANA -->
+  <!-- AUTH SCREEN -->
   <div id="auth-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950 p-4 overflow-y-auto font-['Plus_Jakarta_Sans']">
-    
     <div class="absolute inset-0 z-0 bg-cover bg-center pointer-events-none" style="background-image: url('kurir-moronene.jpg');"></div>
     <div class="absolute inset-0 z-0 bg-gradient-to-t from-slate-950/70 via-slate-950/30 to-transparent"></div>
 
     <div class="relative z-10 w-full max-w-md bg-slate-950/30 backdrop-blur-sm border border-amber-500/30 rounded-[32px] p-6 sm:p-8 shadow-2xl text-slate-100 my-auto">
-      
       <div class="flex justify-between items-center w-full pb-4 mb-6 border-b border-slate-800/80">
         <div class="flex items-center gap-1.5 text-[11px] font-extrabold text-amber-300 bg-amber-500/10 border border-amber-500/20 px-3.5 py-2 rounded-full shadow-xs">
           <i class="fa-solid fa-feather text-amber-400 text-xs"></i> Mobuna'O
@@ -70,7 +68,7 @@
           <img src="logo.jpg" alt="Beli Disini Store" class="w-full h-full object-cover">
         </div>
         <h2 class="text-2xl font-black text-white tracking-tight">Beli Disini Store</h2>
-        <p class="text-amber-200/70 text-[11px] font-semibold mt-0.5"> Siap Antar Sampai Rumahta</p>
+        <p class="text-amber-200/70 text-[11px] font-semibold mt-0.5">Siap Antar Sampai Rumahta</p>
       </div>
 
       <div class="flex bg-slate-800/90 p-1 rounded-2xl text-xs font-bold mb-5 border border-slate-700/60">
@@ -149,10 +147,10 @@
       <div class="text-center text-[10px] text-slate-400/80 pt-5 mt-2 border-t border-slate-800/80">
         Beli Disini! • Bombana Sultra © 2026
       </div>
-
     </div>
   </div>
 
+  <!-- MODAL STAFF / MITRA AUTH -->
   <div id="staff-auth-modal" class="fixed inset-0 bg-slate-900/60 z-50 flex items-end justify-center hidden backdrop-blur-sm transition-all">
     <div class="bg-white rounded-t-[32px] w-full p-6 max-h-[88vh] overflow-y-auto relative animate-slide-up shadow-2xl max-w-md mx-auto text-slate-800">
       <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-4"></div>
@@ -224,6 +222,7 @@
     </div>
   </div>
 
+  <!-- MAIN APP -->
   <div id="main-app" class="hidden w-full min-h-screen relative pb-40 max-w-4xl mx-auto shadow-2xl transition-all">
     <div id="app-header" class="flex justify-between items-center px-6 pt-6 pb-4 bg-white/90 backdrop-blur-md sticky top-0 z-30 border-b border-slate-200/80">
       <div>
@@ -246,6 +245,7 @@
       </div>
     </div>
 
+    <!-- ADMIN & MITRA CONTROL BAR -->
     <div id="admin-control-bar" class="hidden px-6 pt-5 mb-6">
       <div id="panel-card-box" class="relative overflow-hidden bg-gradient-to-br from-red-950 via-rose-900 to-red-900 text-white p-5 rounded-3xl flex flex-col sm:flex-row justify-between items-start sm:items-center shadow-xl shadow-red-900/40 border border-red-800/50 gap-4 mb-4 group">
         <div class="relative z-10 flex items-center gap-3.5">
@@ -302,6 +302,7 @@
 
     <div id="store-closed-banner" class="hidden px-6 pt-2 mb-4"><div class="bg-red-500 text-white font-black text-center text-xs py-4 px-5 rounded-2xl shadow-md flex items-center justify-center gap-2 animate-bounce"><i class="fa-solid fa-store-slash text-base"></i> MAAF, TOKO SEDANG TUTUP! PESANAN BELUM BISA DIPROSES.</div></div>
 
+    <!-- VIEW TOKO -->
     <div id="view-toko">
       <div class="px-6 pt-3 mb-5">
         <div class="bg-gradient-to-r from-red-900 via-rose-700 to-rose-600 rounded-3xl p-6 flex justify-between items-center shadow-lg shadow-rose-900/20 relative overflow-hidden text-white">
@@ -327,11 +328,12 @@
       </div>
 
       <div class="px-6 mb-8">
-        <h3 id="current-store-title" class="text-[11px] font-black uppercase text-slate-400 tracking-wider mb-3.5">PRODUK TERLARIS (SEMUA WARUNG)</h3>
+        <h3 id="current-store-title" class="text-[11px] font-black uppercase text-slate-400 tracking-wider mb-3.5">PRODUK (SEMUA WARUNG)</h3>
         <div id="product-container" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"></div>
       </div>
     </div>
 
+    <!-- VIEW STATUS -->
     <div id="view-status" class="hidden px-6 pt-3 mb-8">
       <div class="flex justify-between items-center mb-4">
         <h3 id="status-tab-title" class="text-xs font-black uppercase text-slate-500 tracking-wider">RIWAYAT & STATUS PESANAN</h3>
@@ -344,6 +346,7 @@
       <i class="fa-brands fa-whatsapp"></i>
     </a>
 
+    <!-- BOTTOM NAVBAR -->
     <div class="fixed bottom-0 left-0 right-0 z-40 p-4 pointer-events-none">
       <div class="bg-white/95 backdrop-blur-xl rounded-full shadow-2xl py-3 px-8 flex justify-around items-center border border-slate-200/80 max-w-md mx-auto pointer-events-auto">
         <button type="button" onclick="switchTab('toko')" id="nav-toko" class="flex flex-col items-center text-rose-600 font-bold transition-all active:scale-90 px-4"><i class="fa-solid fa-store text-lg mb-0.5"></i><span class="text-[10px]">Toko</span></button>
@@ -353,7 +356,7 @@
     </div>
   </div>
 
-  <!-- IN-APP CHAT MODAL (SUPABASE DATABASE) -->
+  <!-- IN-APP CHAT MODAL -->
   <div id="inapp-chat-modal" class="fixed inset-0 bg-slate-900/70 z-50 flex items-center justify-center hidden backdrop-blur-sm p-4">
     <div class="bg-white rounded-3xl w-full max-w-md p-5 shadow-2xl flex flex-col h-[80vh] animate-slide-up text-slate-800">
       <div class="flex justify-between items-center border-b border-slate-100 pb-3">
@@ -378,6 +381,7 @@
     </div>
   </div>
 
+  <!-- CHAT LIST MODAL -->
   <div id="merchant-chat-list-modal" class="fixed inset-0 bg-slate-900/70 z-50 flex items-center justify-center hidden backdrop-blur-sm p-4">
     <div class="bg-white rounded-3xl w-full max-w-md p-6 shadow-2xl space-y-4 max-h-[85vh] overflow-y-auto animate-slide-up text-slate-800">
       <div class="flex justify-between items-center border-b border-slate-100 pb-3">
@@ -388,6 +392,7 @@
     </div>
   </div>
 
+  <!-- WITHDRAW MODALS -->
   <div id="withdraw-modal" class="fixed inset-0 bg-slate-900/70 z-50 flex items-center justify-center hidden backdrop-blur-sm p-4">
     <div class="bg-white rounded-3xl w-full max-w-xs p-6 shadow-2xl space-y-4 max-w-md mx-auto animate-slide-up text-slate-800">
       <div class="flex justify-between items-center border-b border-slate-100 pb-3">
@@ -445,6 +450,7 @@
     </div>
   </div>
 
+  <!-- DELIVERY PROOF MODAL -->
   <div id="delivery-proof-modal" class="fixed inset-0 bg-slate-900/80 z-50 flex items-center justify-center hidden backdrop-blur-sm p-4">
     <div class="bg-white rounded-3xl w-full max-w-xs p-5 shadow-2xl space-y-4 max-w-md mx-auto animate-slide-up">
       <div class="flex justify-between items-center border-b border-slate-100 pb-2">
@@ -467,6 +473,7 @@
     </div>
   </div>
 
+  <!-- ADMIN MENU MODAL -->
   <div id="admin-menu-modal" class="fixed inset-0 bg-slate-900/60 z-50 flex items-end justify-center hidden backdrop-blur-sm transition-all">
     <div class="bg-white rounded-t-[32px] w-full p-6 max-h-[85vh] overflow-y-auto relative animate-slide-up shadow-2xl space-y-4 max-w-md mx-auto">
       <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-2"></div>
@@ -478,6 +485,7 @@
     </div>
   </div>
 
+  <!-- ADD STORE MODAL -->
   <div id="add-store-modal" class="fixed inset-0 bg-slate-900/60 z-50 flex items-end justify-center hidden backdrop-blur-sm transition-all">
     <div class="bg-white rounded-t-[32px] w-full p-6 max-h-[85vh] overflow-y-auto relative animate-slide-up shadow-2xl max-w-md mx-auto">
       <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-4"></div>
@@ -496,6 +504,7 @@
     </div>
   </div>
 
+  <!-- COURIER APPROVAL & LIST MODAL -->
   <div id="courier-approval-modal" class="fixed inset-0 bg-slate-900/70 z-50 flex items-center justify-center hidden backdrop-blur-sm p-4">
     <div class="bg-white rounded-3xl w-full max-w-md p-6 shadow-2xl space-y-4 max-h-[85vh] overflow-y-auto animate-slide-up">
       <div class="flex justify-between items-center border-b border-slate-100 pb-3">
@@ -516,6 +525,7 @@
     </div>
   </div>
 
+  <!-- PROFILE MODAL -->
   <div id="profile-modal" class="fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center hidden backdrop-blur-sm p-4">
     <div class="bg-white rounded-3xl w-full max-w-md p-6 shadow-2xl space-y-4 relative animate-slide-up max-h-[85vh] overflow-y-auto text-slate-800">
       <div class="flex justify-between items-center border-b border-slate-100 pb-3">
@@ -527,6 +537,7 @@
     </div>
   </div>
 
+  <!-- CART MODAL -->
   <div id="cart-modal" class="fixed inset-0 bg-slate-900/60 z-50 flex items-end justify-center hidden backdrop-blur-sm transition-all">
     <div class="bg-white rounded-t-[32px] w-full p-6 max-h-[88vh] overflow-y-auto relative animate-slide-up shadow-2xl max-w-md mx-auto">
       <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-4"></div>
@@ -569,6 +580,7 @@
     </div>
   </div>
 
+  <!-- ADD PRODUCT MODAL -->
   <div id="add-product-modal" class="fixed inset-0 bg-slate-900/60 z-50 flex items-end justify-center hidden backdrop-blur-sm transition-all">
     <div class="bg-white rounded-t-[32px] w-full p-6 max-h-[85vh] overflow-y-auto relative animate-slide-up shadow-2xl max-w-md mx-auto">
       <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-4"></div>
@@ -589,6 +601,7 @@
     </div>
   </div>
 
+  <!-- ZOOM IMAGE MODAL -->
   <div id="image-modal" class="fixed inset-0 bg-slate-900/90 z-[80] flex items-center justify-center hidden backdrop-blur-md p-4" onclick="closeImageModal()">
     <div class="relative max-w-sm w-full flex flex-col items-center" onclick="event.stopPropagation()">
       <button type="button" onclick="closeImageModal()" class="absolute -top-12 right-0 w-10 h-10 rounded-full bg-white/20 text-white flex items-center justify-center font-bold text-base active:scale-90"><i class="fa-solid fa-xmark"></i></button>
@@ -597,6 +610,7 @@
     </div>
   </div>
 
+  <!-- RECEIPT MODAL -->
   <div id="receipt-modal" class="fixed inset-0 bg-slate-900/70 z-50 flex items-center justify-center hidden backdrop-blur-sm p-4">
     <div class="bg-white rounded-3xl w-full max-w-xs p-5 shadow-2xl space-y-4 max-w-md mx-auto">
       <div class="flex justify-between items-center border-b border-slate-100 pb-2"><h3 class="text-xs font-black text-slate-900 flex items-center gap-1.5"><i class="fa-solid fa-print text-rose-600"></i> Pratinjau Struk Thermal</h3><button type="button" onclick="closeReceiptModal()" class="w-7 h-7 bg-slate-100 rounded-full text-slate-500 flex items-center justify-center text-xs font-bold"><i class="fa-solid fa-xmark"></i></button></div>
@@ -616,6 +630,7 @@
     </div>
   </div>
 
+  <!-- GPS TRACKING MODAL -->
   <div id="tracking-modal" class="fixed inset-0 bg-slate-950/80 z-50 flex items-end justify-center hidden backdrop-blur-md transition-all">
     <div class="bg-slate-900 text-white rounded-t-[36px] w-full overflow-hidden shadow-2xl flex flex-col max-h-[92vh] animate-slide-up max-w-lg mx-auto border-t border-slate-800">
       <div class="bg-slate-900/90 backdrop-blur-md px-5 py-4 flex justify-between items-center border-b border-slate-800">
@@ -664,6 +679,7 @@
     </div>
   </div>
 
+<!-- JAVASCRIPT LOGIC -->
 <script>
     const SUPABASE_URL = 'https://zsutpgbychoctxszpmch.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpzdXRwZ2J5Y2hvY3R4c3pwbWNoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc2NzY0MjQsImV4cCI6MjEwMzI1MjQyNH0.VVmGEsbT6pmz5yJxqZiBL5Jbvv7U__azNoafbbT4o20';
@@ -717,19 +733,27 @@
 
     async function callApiGet(action, params = {}) {
       try {
+        if (!db) return null;
         if (action === 'getStores') {
-          let { data: stores } = await db.from('stores').select('*');
+          let { data: stores, error } = await db.from('stores').select('*');
+          if (error) console.error("Error getStores:", error);
           let { data: setting } = await db.from('settings').select('*').eq('key', 'store_order').maybeSingle();
           
           let formattedStores = (stores || []).map(s => ({
-            id: s.id, name: s.name, image: s.image, address: s.address, phone: s.phone, password: s.password, status: s.status || 'BUKA'
+            id: String(s.id), 
+            name: s.name, 
+            image: s.image || "https://images.unsplash.com/photo-1552566626-52f8b828add9?w=300", 
+            address: s.address, 
+            phone: s.phone, 
+            password: s.password, 
+            status: s.status || 'BUKA'
           }));
 
           if (setting && setting.value) {
             try {
-              let orderIds = JSON.parse(setting.value);
+              let orderIds = JSON.parse(setting.value).map(String);
               formattedStores.sort((a, b) => {
-                let idxA = orderIds.indexOf(a.id), idxB = orderIds.indexOf(b.id);
+                let idxA = orderIds.indexOf(String(a.id)), idxB = orderIds.indexOf(String(b.id));
                 return (idxA === -1 ? 999 : idxA) - (idxB === -1 ? 999 : idxB);
               });
             } catch(e) {}
@@ -737,9 +761,18 @@
           return formattedStores.length > 0 ? formattedStores : null;
         }
         else if (action === 'getProducts') {
-          let { data: prods } = await db.from('products').select('*').limit(16);
+          // MEMUAT SEMUA PRODUK DARI SUPABASE TANPA LIMIT
+          let { data: prods, error } = await db.from('products').select('*');
+          if (error) console.error("Error getProducts:", error);
           return (prods || []).map(p => ({
-            id: p.id, name: p.name, price: Number(p.price), storeId: p.store_id, image: p.image, desc: p.description, inStock: p.stock !== 'Habis', terlaris: p.terlaris
+            id: String(p.id), 
+            name: p.name, 
+            price: Number(p.price || 0), 
+            storeId: String(p.store_id || p.storeId || ''), 
+            image: p.image || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300", 
+            desc: p.description || p.desc || "", 
+            inStock: p.stock !== 'Habis', 
+            terlaris: p.terlaris !== false
           }));
         }
         else if (action === 'getOrders') {
@@ -793,22 +826,37 @@
 
     async function callApiPost(action, data = {}) {
       try {
+        if (!db) return null;
         if (action === 'saveProduct') {
           let p = data.product;
-          await db.from('products').upsert({ id: p.id, name: p.name, price: p.price, store_id: p.storeId, image: p.image, description: p.desc, stock: p.inStock !== false ? 'Tersedia' : 'Habis', terlaris: p.terlaris });
+          let { error } = await db.from('products').upsert({ 
+            id: p.id, 
+            name: p.name, 
+            price: p.price, 
+            store_id: String(p.storeId), 
+            image: p.image, 
+            description: p.desc, 
+            stock: p.inStock !== false ? 'Tersedia' : 'Habis', 
+            terlaris: p.terlaris !== false 
+          });
+          if (error) {
+            console.error("Gagal simpan produk:", error);
+            return { status: "Error", message: error.message };
+          }
           return { status: "Success" };
         }
         else if (action === 'saveStore') {
           let s = data.store;
-          await db.from('stores').upsert({ id: s.id, name: s.name, image: s.image, address: s.address, phone: s.phone, password: s.password });
+          let { error } = await db.from('stores').upsert({ id: String(s.id), name: s.name, image: s.image, address: s.address, phone: s.phone, password: s.password, status: 'BUKA' });
+          if (error) return { status: "Error", message: error.message };
           return { status: "Success" };
         }
         else if (action === 'updateStoreImage') {
-          await db.from('stores').update({ image: data.newImage }).eq('id', data.storeId);
+          await db.from('stores').update({ image: data.newImage }).eq('id', String(data.storeId));
           return { status: "Success" };
         }
         else if (action === 'updateStoreIndividualStatus') {
-          await db.from('stores').update({ status: data.status }).eq('id', data.storeId);
+          await db.from('stores').update({ status: data.status }).eq('id', String(data.storeId));
           return { status: "Success" };
         }
         else if (action === 'saveStoreOrder') {
@@ -884,7 +932,7 @@
           let { data: stores } = await db.from('stores').select('*');
           let store = (stores || []).find(s => normalizePhone(s.phone) === phoneClean);
           if (!store) return { status: "Error", message: "Warung tidak ditemukan!" };
-          if (String(store.password || "123") === String(data.password)) return { status: "Success", id: store.id, name: store.name, phone: store.phone, address: store.address };
+          if (String(store.password || "123") === String(data.password)) return { status: "Success", id: String(store.id), name: store.name, phone: store.phone, address: store.address };
           return { status: "Error", message: "Password salah!" };
         }
         else if (action === 'approveCourier') {
@@ -1222,7 +1270,7 @@
       callApiPost('approveCourier', { phone: phone }).then(() => {
         showToast("Kurir " + name + " berhasil di-ACC!");
         openCourierApprovalModal(); checkPendingCouriersCount();
-        window.open("https://wa.me/" + formatWhatsAppNumber(phone) + "?text=" + encodeURIComponent("Halo " + name + ", selamat! Lamaran kurir Anda di Beli Disini! telah DISETujui."), '_blank');
+        window.open("https://wa.me/" + formatWhatsAppNumber(phone) + "?text=" + encodeURIComponent("Halo " + name + ", selamat! Lamaran kurir Anda di Beli Disini! telah DISETUJUI."), '_blank');
       });
     }
 
@@ -1394,7 +1442,7 @@
 
       callApiPost('loginMerchant', { phone: phone, password: password }).then(res => {
         if (res && res.status === "Success") {
-          currentUser = { id: res.id, storeId: res.id, name: res.name, phone: res.phone, address: res.address, role: 'merchant' };
+          currentUser = { id: String(res.id), storeId: String(res.id), name: res.name, phone: res.phone, address: res.address, role: 'merchant' };
           safeStorage.setItem('app_active_session', JSON.stringify(currentUser));
           showToast("Login Warung Berhasil!"); 
           closeStaffAuthModal();
@@ -1539,85 +1587,94 @@
         });
       }
     }
-  async function saveNewStore() {
-  var name = document.getElementById('new-store-name').value.trim();
-  var address = document.getElementById('new-store-address').value.trim();
-  var phone = document.getElementById('new-store-phone').value.trim();
-  var password = document.getElementById('new-store-password').value.trim();
-  var fileInput = document.getElementById('new-store-image-file').files[0];
 
-  if (!name || !address || !phone || !password) {
-    alert("Lengkapi seluruh kolom formulir warung baru!");
-    return;
-  }
+    async function saveNewStore() {
+      var name = document.getElementById('new-store-name').value.trim();
+      var address = document.getElementById('new-store-address').value.trim();
+      var phone = document.getElementById('new-store-phone').value.trim();
+      var password = document.getElementById('new-store-password').value.trim();
+      var fileInput = document.getElementById('new-store-image-file').files[0];
 
-  showToast("Mengunggah foto warung...");
-  var imageBase64 = fileInput ? await compressImageFile(fileInput, 600, 600, 0.6) : "https://images.unsplash.com/photo-1552566626-52f8b828add9?w=300";
-  
-  var newStoreId = "store_" + Date.now();
-  var storeData = {
-    id: newStoreId,
-    name: name,
-    image: imageBase64,
-    address: address,
-    phone: phone,
-    password: password
-  };
+      if (!name || !address || !phone || !password) {
+        alert("Lengkapi seluruh kolom formulir warung baru!");
+        return;
+      }
 
-  callApiPost('saveStore', { store: storeData }).then(res => {
-    if (res && res.status === "Success") {
-      showToast("Warung baru berhasil disimpan!");
-      toggleAddStoreModal();
-      initApp(); // Memuat ulang data toko
-    } else {
-      alert("Gagal menyimpan warung ke database.");
-    }
-  });
-}
-  async function saveNewProduct() {
-  var name = document.getElementById('new-prod-name').value.trim();
-  var price = parseFloat(document.getElementById('new-prod-price').value);
-  var storeId = document.getElementById('new-prod-store').value;
-  var desc = document.getElementById('new-prod-desc').value.trim();
-  var fileInput = document.getElementById('new-prod-image-file').files[0];
-
-  if (!name || isNaN(price) || !storeId) {
-    alert("Lengkapi Nama Produk, Harga, dan Pilih Warung Mitra!");
-    return;
-  }
-
-  showToast("Mengunggah foto produk...");
-  var imageBase64 = fileInput ? await compressImageFile(fileInput, 600, 600, 0.6) : "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300";
-  
-  var newProdId = "prod_" + Date.now();
-  var productData = {
-    id: newProdId,
-    name: name,
-    price: price,
-    storeId: storeId,
-    image: imageBase64,
-    desc: desc,
-    inStock: true,
-    terlaris: true
-  };
-
-  callApiPost('saveProduct', { product: productData }).then(res => {
-    if (res && res.status === "Success") {
-      showToast("Produk baru berhasil disimpan & disinkronkan!");
-      toggleAddProductModal();
+      showToast("Mengunggah foto warung...");
+      var imageBase64 = fileInput ? await compressImageFile(fileInput, 600, 600, 0.6) : "https://images.unsplash.com/photo-1552566626-52f8b828add9?w=300";
       
-      // Reset form
-      document.getElementById('new-prod-name').value = '';
-      document.getElementById('new-prod-price').value = '';
-      document.getElementById('new-prod-desc').value = '';
-      document.getElementById('new-prod-image-file').value = '';
-      
-      initApp(); // Memuat ulang daftar produk
-    } else {
-      alert("Gagal menyimpan produk ke database Supabase.");
+      var newStoreId = "store_" + Date.now();
+      var storeData = {
+        id: newStoreId,
+        name: name,
+        image: imageBase64,
+        address: address,
+        phone: phone,
+        password: password
+      };
+
+      callApiPost('saveStore', { store: storeData }).then(res => {
+        if (res && res.status === "Success") {
+          showToast("Warung baru berhasil disimpan!");
+          toggleAddStoreModal();
+          initApp();
+        } else {
+          alert("Gagal menyimpan warung ke database.");
+        }
+      });
     }
-  });
-}
+
+    async function saveNewProduct() {
+      var name = document.getElementById('new-prod-name').value.trim();
+      var price = parseFloat(document.getElementById('new-prod-price').value);
+      var storeId = document.getElementById('new-prod-store').value;
+      var desc = document.getElementById('new-prod-desc').value.trim();
+      var fileInput = document.getElementById('new-prod-image-file').files[0];
+
+      if (!name || isNaN(price) || !storeId) {
+        alert("Lengkapi Nama Produk, Harga, dan Pilih Warung Mitra!");
+        return;
+      }
+
+      showToast("Mengunggah foto produk...");
+      var imageBase64 = fileInput ? await compressImageFile(fileInput, 600, 600, 0.6) : "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300";
+      
+      var newProdId = "prod_" + Date.now();
+      var productData = {
+        id: newProdId,
+        name: name,
+        price: price,
+        storeId: String(storeId),
+        image: imageBase64,
+        desc: desc,
+        inStock: true,
+        terlaris: true
+      };
+
+      var res = await callApiPost('saveProduct', { product: productData });
+      if (res && res.status === "Success") {
+        showToast("Produk baru berhasil disimpan & disinkronkan!");
+        toggleAddProductModal();
+        
+        document.getElementById('new-prod-name').value = '';
+        document.getElementById('new-prod-price').value = '';
+        document.getElementById('new-prod-desc').value = '';
+        document.getElementById('new-prod-image-file').value = '';
+        
+        // Memuat ulang langsung dari Supabase
+        var freshProducts = await callApiGet('getProducts');
+        if (freshProducts && freshProducts.length > 0) {
+          allProducts = freshProducts;
+          safeStorage.setItem('cached_products', JSON.stringify(allProducts));
+        } else {
+          allProducts.unshift(productData);
+          safeStorage.setItem('cached_products', JSON.stringify(allProducts));
+        }
+        renderProducts();
+      } else {
+        alert("Gagal menyimpan produk ke database Supabase: " + (res ? res.message : 'Koneksi bermasalah'));
+      }
+    }
 
     async function updateMerchantStorePhoto() {
       var fileInput = document.getElementById('merchant-new-store-photo').files[0];
@@ -1672,7 +1729,7 @@
     function toggleStoreIndividualStatus(storeId, currentStatus) {
       var newStatus = (currentStatus === 'BUKA') ? 'TUTUP' : 'BUKA';
       for(var i=0; i<allStores.length; i++) {
-        if(allStores[i].id === storeId) {
+        if(String(allStores[i].id) === String(storeId)) {
           allStores[i].status = newStatus;
           break;
         }
@@ -1795,7 +1852,7 @@
           allStores = JSON.parse(cachedStores);
           allProducts = JSON.parse(cachedProducts);
           if (currentUser && currentUser.role === 'merchant') {
-            currentStoreId = currentUser.storeId;
+            currentStoreId = String(currentUser.storeId);
           }
           renderStores();
           renderProducts();
@@ -1814,7 +1871,7 @@
         safeStorage.setItem('cached_products', JSON.stringify(allProducts));
 
         if (currentUser && currentUser.role === 'merchant') {
-          currentStoreId = currentUser.storeId;
+          currentStoreId = String(currentUser.storeId);
         }
 
         renderStores();
@@ -1869,7 +1926,7 @@
     function setStorePriority(storeId) {
       var targetIndex = -1;
       for (var i = 0; i < allStores.length; i++) {
-        if (allStores[i].id === storeId) { targetIndex = i; break; }
+        if (String(allStores[i].id) === String(storeId)) { targetIndex = i; break; }
       }
       if (targetIndex > 0) {
         var store = allStores.splice(targetIndex, 1)[0];
@@ -1928,7 +1985,7 @@
       for (var i = 0; i < allStores.length; i++) {
         var s = allStores[i];
         if (s.id === "Semua") continue;
-        var isActive = currentStoreId === s.id;
+        var isActive = String(currentStoreId) === String(s.id);
         var sStatus = s.status || 'BUKA';
         
         var dragAttrs = isAdmin ? ' draggable="true" ondragstart="onStoreDragStart(event, ' + i + ')" ondragover="event.preventDefault()" ondrop="onStoreDrop(event, ' + i + ')" title="Tarik untuk mengubah urutan rekomendasi"' : '';
@@ -1956,37 +2013,36 @@
     }
 
     function selectStore(storeId) {
-      currentStoreId = storeId;
-      var storeTitle = "Produk Terlaris";
+      currentStoreId = String(storeId);
+      var storeTitle = "Semua Warung";
       if (storeId !== "Semua") {
         for (var i = 0; i < allStores.length; i++) {
-          if (allStores[i].id === storeId) { storeTitle = allStores[i].name; break; }
+          if (String(allStores[i].id) === String(storeId)) { storeTitle = allStores[i].name; break; }
         }
       }
-      document.getElementById('current-store-title').innerText = (storeId === "Semua" ? "PRODUK TERLARIS (SEMUA WARUNG)" : "DAFTAR PRODUK (" + storeTitle.toUpperCase() + ")");
+      document.getElementById('current-store-title').innerText = (storeId === "Semua" ? "PRODUK (SEMUA WARUNG)" : "DAFTAR PRODUK (" + storeTitle.toUpperCase() + ")");
       renderStores();
       renderProducts();
     }
 
     function renderProducts() {
       var container = document.getElementById('product-container');
-      var searchVal = document.getElementById('search-input').value.toLowerCase();
+      var searchVal = document.getElementById('search-input').value.toLowerCase().trim();
       var isMerchant = currentUser && currentUser.role === 'merchant';
       
       var filtered = allProducts.filter(function(p) {
+        var pStoreId = String(p.storeId || '').trim();
+        var cStoreId = String(currentStoreId || '').trim();
+        var matchesSearch = (p.name || '').toLowerCase().indexOf(searchVal) !== -1;
+
         if (isMerchant) {
-          return String(p.storeId) === String(currentUser.storeId) && p.name.toLowerCase().indexOf(searchVal) !== -1;
-        } else if (currentStoreId === "Semua") {
-          return (p.terlaris === true) && (p.name.toLowerCase().indexOf(searchVal) !== -1);
+          return pStoreId === String(currentUser.storeId || '').trim() && matchesSearch;
+        } else if (cStoreId === "Semua") {
+          return matchesSearch;
         } else {
-          var matchesStore = (String(p.storeId) === String(currentStoreId));
-          return matchesStore && p.name.toLowerCase().indexOf(searchVal) !== -1;
+          return pStoreId === cStoreId && matchesSearch;
         }
       });
-
-      if (!isMerchant && currentStoreId === "Semua" && filtered.length === 0 && !searchVal) {
-        filtered = allProducts.filter(function(p) { return p.name.toLowerCase().indexOf(searchVal) !== -1; });
-      }
 
       if (filtered.length === 0) { 
         container.innerHTML = '<div class="bg-white/5 rounded-3xl p-6 text-center text-slate-400 font-bold text-xs shadow-xs border border-slate-800 col-span-full">Tidak ada produk ditemukan.</div>'; 
@@ -2917,7 +2973,7 @@
       window.open("https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(message), '_blank');
     }
 
-    function openLiveTracking(invId) {
+  function openLiveTracking(invId) {
       document.getElementById('tracking-modal').classList.remove('hidden');
       document.getElementById('tracking-invoice-id').innerText = invId;
 
@@ -3003,7 +3059,7 @@
       for (var i = 0; i < allStores.length; i++) {
         var s = allStores[i];
         if (s.id !== "Semua") {
-          if (isMerchant && s.id !== currentUser.storeId) continue;
+          if (isMerchant && String(s.id) !== String(currentUser.storeId)) continue;
           html += '<option value="' + s.id + '">' + s.name + '</option>';
         }
       }
